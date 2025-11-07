@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 
 
 User = get_user_model()
@@ -28,11 +27,13 @@ class Pet(models.Model):
     animal_type = models.ForeignKey(
         AnimalType,
         on_delete=models.SET_NULL,
+        null=True,
         related_name='pets',
     )
     breed = models.ForeignKey(
         Breed,
         on_delete=models.SET_NULL,
+        null=True,
         related_name='pets',
     )
     is_male = models.BooleanField()
@@ -52,7 +53,7 @@ class Pet(models.Model):
 
 
 class PetInfo(models.Model):
-    pet = models.ForeignKey(
+    pet = models.OneToOneField(
         Pet,
         on_delete=models.CASCADE,
         related_name='pet_info',
@@ -69,9 +70,9 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='comments',
     )
-    pet_info_card = models.ForeignKey(
+    pet_info_card = models.OneToOneField(
         PetInfo,
         on_delete=models.CASCADE,
         related_name='comments',
     )
-    date_create = models.DateTimeField(default=timezone.now)
+    date_create = models.DateTimeField(auto_now_add=True)

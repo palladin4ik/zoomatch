@@ -21,17 +21,27 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+
+    class Role(models.IntegerChoices):
+        USER = 0, 'User'
+        BREEDER = 1, 'Breeder'
+        ADMIN = 2, 'Admin'
+
     name = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=50)
     avatar = models.FilePathField(blank=True, null=True)
     location = models.TextField()
+
     phone_number = models.CharField(
         max_length=20,
         unique=True,
         blank=True, null=True)
-    role = models.PositiveSmallIntegerField(default=0)
-    chats = models.TextField()  # Many to Many с чатами
+
+    role = models.PositiveSmallIntegerField(
+        choices=Role.choices,
+        default=Role.USER)
+
     last_seen = models.DateTimeField(default=timezone.now)
 
     is_active = models.BooleanField(default=True)
