@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth import get_user_model
 
+from drf_spectacular.utils import extend_schema
+
 from .serializers import (
     UserCreateSerializer, UserSerializer,
     UserUpdateSerializer, ChangePasswordSerializer
@@ -21,10 +23,19 @@ class RegistrationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 class ProfileViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
+    @extend_schema(
+            summary='Профиль текущего пользователя',
+            responses=UserSerializer,
+    )
     def retrieve(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
+    @extend_schema(
+            summary='Изменение профиля текущего пользователя',
+            request=UserUpdateSerializer,
+            responses=UserUpdateSerializer,
+    )
     def partial_update(self, request):
         serializer = UserUpdateSerializer(request.user, data=request.data,
                                           partial=True)
@@ -32,10 +43,19 @@ class ProfileViewSet(viewsets.ViewSet):
         serializer.save()
         return Response(serializer.data)
 
+    @extend_schema(
+            summary='Удаление текущего пароля',
+            responses={"204": {"description": "Пользователь удален"}}
+    )
     def destroy(self, request):
         request.user.delete()
         return Response({'detail': 'Пользователь удален'}, status=204)
 
+    @extend_schema(
+            summary='Смена пароля текущего пользователя',
+            request=ChangePasswordSerializer,
+            responses={'200': {'detail': 'Пароль успешно изменен'}}
+    )
     @action(detail=False, methods=['patch'], url_path='change-password')
     def change_password(self, request):
         serializer = ChangePasswordSerializer(

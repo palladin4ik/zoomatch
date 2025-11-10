@@ -5,13 +5,16 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
     TokenRefreshView
 )
+from drf_spectacular.views import (
+    SpectacularAPIView, SpectacularSwaggerView,
+    SpectacularRedocView
+)
 
 from users.views import RegistrationViewSet, ProfileViewSet, UserViewSet
 
 
 router_v1 = DefaultRouter()
 router_v1.register('register', RegistrationViewSet, basename='register')
-router_v1.register('me', ProfileViewSet, basename='me')
 router_v1.register('users', UserViewSet, basename='users')
 
 profile = ProfileViewSet.as_view({
@@ -31,4 +34,9 @@ urlpatterns = [
     path('v1/me/change-password/', change_password, name='change_password'),
     path('v1/me/', profile, name='profile'),
     path('v1/', include(router_v1.urls)),
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'),
+         name='swagger'),
+    path('docs/redoc/', SpectacularRedocView.as_view(url_name='schema'),
+         name='redoc'),
 ]
