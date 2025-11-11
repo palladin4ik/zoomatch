@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="form_state_login">Login</string>
+  <string name="form_state_sign_up">Sign up</string>
+  <string name="prompt_username">username</string>
+</resources>
