@@ -43,10 +43,14 @@ class Pet(models.Model):
         on_delete=models.CASCADE,
         related_name='pets'
     )
-    avatar = models.FilePathField(blank=True, null=True)
+    avatar = models.FilePathField(path='media/pet-files/avatars',
+                                  blank=True, null=True)
     location = models.TextField()
     has_pedigree = models.BooleanField(default=False)
-    pedigree_documents = models.FilePathField()
+    pedigree_documents = models.FilePathField(
+        path='media/pet-files/pedigree-documents',
+        blank=True, null=True
+        )
     awards = models.TextField(blank=True, null=True)
     tags = models.ManyToManyField(
         Tag,

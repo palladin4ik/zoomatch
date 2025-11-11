@@ -13,10 +13,14 @@ class AnimalTypeSerializer(serializers.ModelSerializer):
 
 class BreedSerializer(serializers.ModelSerializer):
     animal_type = AnimalTypeSerializer(read_only=True)
+    animal_type_id = serializers.PrimaryKeyRelatedField(
+        queryset=AnimalType.objects.all(), write_only=True
+    )
 
     class Meta:
         model = Breed
-        fields = ('id', 'name', 'animal_type')
+        fields = ('id', 'name', 'animal_type_id', 'animal_type')
+        read_only_fields = ('id',)
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -24,13 +28,14 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'tag')
+        read_only_fields = ('id',)
 
 
 class PetSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)
     animal_type = AnimalTypeSerializer(read_only=True)
     breed = BreedSerializer(read_only=True)
-    tags = TagSerializer(many=True, read_only=True)
+    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Pet
@@ -40,20 +45,28 @@ class PetSerializer(serializers.ModelSerializer):
                   'is_active')
         read_only_fields = ('id',)
 
+    def get_tags(self, obj):
+        return TagSerializer(obj.tags.all(), many=True).data
+
 
 class PetCreateUpdateSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(
         child=serializers.CharField(max_length=50),
-        required=False
+        required=False,
+        write_only=True
     )
+    tags_list = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Pet
         fields = ('id', 'name', 'animal_type', 'breed', 'is_male',
                   'age', 'avatar', 'location', 'has_pedigree',
-                  'pedigree_documents', 'awards', 'tags', 'description',
-                  'is_active')
+                  'pedigree_documents', 'awards', 'tags', 'tags_list',
+                  'description', 'is_active')
         read_only_fields = ('id',)
+
+    def get_tags_list(self, obj):
+        return TagSerializer(obj.tags.all(), many=True).data
 
     def validate_tags(self, values):
         cleaned = []
@@ -65,6 +78,11 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         tags_data = validated_data.pop('tags', [])
+
+        breed = validated_data.get('breed')
+        if breed:
+            validated_data['animal_type'] = breed.animal_type
+
         pet = Pet.objects.create(**validated_data)
 
         for tag_name in tags_data:
@@ -72,9 +90,13 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
             pet.tags.add(tag)
 
         return pet
-    
+
     def update(self, instance, validated_data):
         tags_data = validated_data.pop('tags', None)
+
+        breed = validated_data.get('breed')
+        if breed:
+            validated_data['animal_type'] = breed.animal_type
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
@@ -84,7 +106,7 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
             for tag_name in tags_data:
                 tag, _ = Tag.objects.get_or_create(tag=tag_name)
                 instance.tags.add(tag)
-        
+
         return instance
 
 
