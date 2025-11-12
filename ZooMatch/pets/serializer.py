@@ -2,7 +2,7 @@ from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 
 from .models import AnimalType, Breed, Tag, Pet, PetInfo, Comment
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, Base64FileField
 
 
 class AnimalTypeSerializer(serializers.ModelSerializer):
@@ -38,7 +38,7 @@ class PetSerializer(serializers.ModelSerializer):
     breed = BreedSerializer(read_only=True)
     tags = serializers.SerializerMethodField()
 
-    avatar = serializers.CharField(read_only=True)
+    avatar = Base64FileField(read_only=True)
     pedigree_documents = serializers.CharField(read_only=True)
 
     class Meta:
@@ -62,8 +62,8 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
     )
     tags_list = serializers.SerializerMethodField(read_only=True)
 
-    avatar = serializers.CharField()
-    pedigree_documents = serializers.CharField()
+    avatar = Base64FileField(required=False, allow_null=True)
+    pedigree_documents = Base64FileField(required=False, allow_null=True)
 
     class Meta:
         model = Pet

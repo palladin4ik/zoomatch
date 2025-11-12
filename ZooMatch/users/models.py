@@ -30,7 +30,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)
-    avatar = models.FilePathField(path='media/avatars', blank=True, null=True)
+    avatar = models.TextField(blank=True, null=True)
     location = models.TextField()
 
     phone_number = models.CharField(

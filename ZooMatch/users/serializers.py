@@ -1,8 +1,29 @@
+import base64
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 
 User = get_user_model()
+
+
+class Base64FileField(serializers.CharField):
+
+    def to_internal_value(self, data):
+        if not isinstance(data, str):
+            raise serializers.ValidationError('Нужна строка Base64')
+
+        try:
+            decoded = base64.b64decode(data)
+        except Exception:
+            raise serializers.ValidationError('Неверный формат Base64')
+
+        if len(decoded) > 10_000_000:
+            raise serializers.ValidationError('Файл размером больше 10Мб')
+        return data
+
+    def to_representation(self, value):
+        return value
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -19,7 +40,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    avatar = serializers.CharField(read_only=True)
+    avatar = Base64FileField(read_only=True)
 
     class Meta:
         model = User
@@ -29,7 +50,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
-    avatar = serializers.CharField()
+    avatar = Base64FileField(required=False, allow_null=True)
 
     class Meta:
         model = User
