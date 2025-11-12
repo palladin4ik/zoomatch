@@ -1,9 +1,8 @@
-package com.example.zoomatch.data
+package com.example.zoomatch.data.startScreen
 
-/**
- * A generic class that holds a value with its loading status.
- * @param <T>
- */
+interface UserDisplay {
+  val displayName: String
+}
 sealed class Result<out T : Any> {
 
   data class Success<out T : Any>(val data: T) : Result<T>()
