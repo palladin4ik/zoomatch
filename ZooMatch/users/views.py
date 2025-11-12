@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth import get_user_model
 
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from .serializers import (
     UserCreateSerializer, UserSerializer,
@@ -18,6 +18,13 @@ class RegistrationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserCreateSerializer
     permission_classes = [permissions.AllowAny]
+
+    @extend_schema(
+            summary='Регистрация пользователя',
+            description='Регистрирует пользователя, права доступа AllowAny'
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
 
 class ProfileViewSet(viewsets.ViewSet):
@@ -66,7 +73,17 @@ class ProfileViewSet(viewsets.ViewSet):
         return Response({'detail': 'Пароль успешно изменен'})
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary='Список всех пользователей',
+        description='Доступно все авторизованным пользователям'
+    ),
+    retrieve=extend_schema(
+        summary='Пользователь по id',
+        description='Доступно все авторизованным пользователям'
+    )
+)
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all().prefetch_related('pets')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]

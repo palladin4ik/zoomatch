@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 
 from .models import AnimalType, Breed, Tag, Pet, PetInfo, Comment
 from users.serializers import UserSerializer
@@ -37,6 +38,9 @@ class PetSerializer(serializers.ModelSerializer):
     breed = BreedSerializer(read_only=True)
     tags = serializers.SerializerMethodField()
 
+    avatar = serializers.CharField(read_only=True)
+    pedigree_documents = serializers.CharField(read_only=True)
+
     class Meta:
         model = Pet
         fields = ('id', 'name', 'animal_type', 'breed', 'is_male',
@@ -45,6 +49,7 @@ class PetSerializer(serializers.ModelSerializer):
                   'is_active')
         read_only_fields = ('id',)
 
+    @extend_schema_field(TagSerializer(many=True))
     def get_tags(self, obj):
         return TagSerializer(obj.tags.all(), many=True).data
 
@@ -57,6 +62,9 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
     )
     tags_list = serializers.SerializerMethodField(read_only=True)
 
+    avatar = serializers.CharField()
+    pedigree_documents = serializers.CharField()
+
     class Meta:
         model = Pet
         fields = ('id', 'name', 'animal_type', 'breed', 'is_male',
@@ -65,6 +73,7 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
                   'description', 'is_active')
         read_only_fields = ('id',)
 
+    @extend_schema_field(TagSerializer(many=True))
     def get_tags_list(self, obj):
         return TagSerializer(obj.tags.all(), many=True).data
 

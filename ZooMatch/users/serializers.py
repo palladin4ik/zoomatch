@@ -19,6 +19,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    avatar = serializers.CharField(read_only=True)
 
     class Meta:
         model = User
@@ -28,6 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
+    avatar = serializers.CharField()
 
     class Meta:
         model = User
@@ -44,10 +46,6 @@ class ChangePasswordSerializer(serializers.Serializer):
         if not user.check_password(value):
             raise serializers.ValidationError('Неверный старый пароль')
         return value
-
-    # def validate(self, attrs):
-    #     self.validate_old_password(attrs['old_password'])
-    #     return attrs
 
     def update(self, instance, validated_data):
         instance.set_password(validated_data['new_password'])

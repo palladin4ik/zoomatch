@@ -127,6 +127,12 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'ZooMatch API',
+    'DESCRIPTION': 'API для приложения ZooMatch',
+    'VERSION': '1.0.0',
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
