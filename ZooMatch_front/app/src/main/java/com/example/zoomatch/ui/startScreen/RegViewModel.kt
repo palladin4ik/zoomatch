@@ -18,7 +18,7 @@ class RegViewModel(private val regRepository: RegRepository) : ViewModel() {
 
 
   fun register(email: String, password: String, username: String) {
-    val result = regRepository.register(username, password, username)
+    val result = regRepository.register(email, password, username)
     _regResult.value = if (result is Result.Success) {
       RegResult(success = result.data)
     } else {

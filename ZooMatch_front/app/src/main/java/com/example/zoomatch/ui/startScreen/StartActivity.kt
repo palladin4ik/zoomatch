@@ -13,10 +13,10 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.zoomatch.MainActivity
 import com.example.zoomatch.R
 import com.example.zoomatch.data.startScreen.UserDisplay
 import com.example.zoomatch.databinding.ActivityStartBinding
+import com.example.zoomatch.ui.homeScreen.HomeActivity
 
 class StartActivity : AppCompatActivity() {
 
@@ -162,7 +162,7 @@ class StartActivity : AppCompatActivity() {
     Toast.makeText(
       applicationContext, "$welcome $displayName", Toast.LENGTH_LONG
     ).show()
-    startActivity(Intent(this, MainActivity::class.java))
+    startActivity(Intent(this, HomeActivity::class.java))
   }
 
   private fun showLoginFailed(@StringRes errorString: Int) {

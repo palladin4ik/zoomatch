@@ -11,6 +11,10 @@
     android:supportsRtl="true"
     android:theme="@style/Theme.ZooMatch">
     <activity
+      android:name=".ui.homeScreen.HomeActivity"
+      android:exported="false"
+      android:label="@string/title_activity_home" />
+    <activity
       android:name=".ui.startScreen.StartActivity"
       android:exported="true"
       android:label="@string/title_activity_start">
@@ -20,9 +24,6 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-    <activity
-      android:name=".MainActivity"
-      android:exported="false"/>
   </application>
 
 </manifest>

@@ -35,6 +35,7 @@ android {
   }
 }
 
+
 dependencies {
 
   implementation(libs.androidx.core.ktx)
@@ -45,6 +46,13 @@ dependencies {
   implementation(libs.androidx.annotation)
   implementation(libs.androidx.lifecycle.livedata.ktx)
   implementation(libs.androidx.lifecycle.viewmodel.ktx)
+  implementation(libs.androidx.navigation.fragment.ktx)
+  implementation(libs.androidx.navigation.ui.ktx)
+  implementation(libs.androidx.cardview)
+  implementation(libs.androidx.viewpager2)
+  implementation(libs.androidx.recyclerview)
+  implementation(libs.mpandroidchart)
+  implementation(libs.glide)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
