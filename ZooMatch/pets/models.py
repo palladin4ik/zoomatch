@@ -43,11 +43,16 @@ class Pet(models.Model):
         on_delete=models.CASCADE,
         related_name='pets'
     )
-    avatar = models.FilePathField(blank=True, null=True)
+    avatar = models.TextField(blank=True, null=True)
     location = models.TextField()
     has_pedigree = models.BooleanField(default=False)
-    pedigree_documents = models.FilePathField()
+    pedigree_documents = models.TextField(blank=True, null=True)
     awards = models.TextField(blank=True, null=True)
+    tags = models.ManyToManyField(
+        Tag,
+        related_name='pets',
+        blank=True
+        )
     description = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=False)
 
@@ -65,7 +70,7 @@ class PetInfo(models.Model):
 class Comment(models.Model):
     content = models.TextField()
     likes = models.PositiveIntegerField(default=0)
-    user = models.ForeignKey(
+    author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='comments',
