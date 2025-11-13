@@ -62,8 +62,9 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
     )
     tags_list = serializers.SerializerMethodField(read_only=True)
 
-    avatar = Base64FileField(required=False, allow_null=True)
-    pedigree_documents = Base64FileField(required=False, allow_null=True)
+    avatar = Base64FileField(required=False, allow_null=True, allow_blank=True)
+    pedigree_documents = Base64FileField(required=False, allow_null=True,
+                                         allow_blank=True)
 
     class Meta:
         model = Pet
