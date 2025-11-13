@@ -20,6 +20,18 @@ pip install -r requirements.txt
 5. Настройте переменные окружения
 
 Создайте файл `.env` в корне проекта и добавьте необходимые переменные
+**Структура `.env`:**
+```bash
+# DATABSE
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+DB_PORT=
+
+# Django SECRET_KEY
+SECRET_KEY=
+```
 
 6. Выполните миграции
 ```bash
