@@ -32,6 +32,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(max_length=128)
     avatar = models.TextField(blank=True, null=True)
     location = models.TextField()
+    status = models.TextField(blank=True, null=True)
 
     phone_number = models.CharField(
         max_length=20,
