@@ -4,25 +4,29 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.zoomatch.R
 import com.example.zoomatch.data.startScreen.RegFormState
 import com.example.zoomatch.data.startScreen.RegRepository
 import com.example.zoomatch.data.startScreen.RegResult
+import com.example.zoomatch.data.startScreen.RegUserView
 import com.example.zoomatch.data.startScreen.Result
+import kotlinx.coroutines.launch
 
-class RegViewModel(private val regRepository: RegRepository) : ViewModel() {
+class RegViewModel(private val repository: RegRepository) : ViewModel() {
   private val _regForm = MutableLiveData<RegFormState>()
   val regFormState: LiveData<RegFormState> = _regForm
   private val _regResult = MutableLiveData<RegResult>()
   val regResult: LiveData<RegResult> = _regResult
 
 
-  fun register(email: String, password: String, username: String) {
-    val result = regRepository.register(email, password, username)
-    _regResult.value = if (result is Result.Success) {
-      RegResult(success = result.data)
-    } else {
-      RegResult(error = R.string.login_failed)
+  fun register(email: String, password: String, name: String) {
+    viewModelScope.launch {
+      val result = repository.registerAndLogin(email, password, name)
+      _regResult.value = when (result) {
+        is Result.Success -> RegResult(success = RegUserView(result.data))
+        is Result.Error -> RegResult(error = R.string.login_failed)
+      }
     }
   }
 

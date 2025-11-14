@@ -1,15 +1,18 @@
 package com.example.zoomatch.data.startScreen
 
-import java.io.IOException
-import java.util.UUID
+import com.example.zoomatch.data.db.Network.zooMatchApi
 
 class RegDataSource {
-  fun register(email: String, password: String, username: String): Result<RegUser> {
-    try {
-      val fakeUser = RegUser(UUID.randomUUID().toString(), email, username)
-      return Result.Success(fakeUser)
-    } catch (e: Throwable) {
-      return Result.Error(IOException("Error logging in", e))
+  suspend fun register(email: String, password: String, name: String): Result<RegUserResponse> {
+    return try {
+      val response = zooMatchApi.registerUser(RegUser(email, password, name))
+      if (response.isSuccessful && response.body() != null) {
+        Result.Success(response.body()!!)
+      } else {
+        Result.Error(response.message() ?: "Registration failed")
+      }
+    } catch (e: Exception) {
+      Result.Error(e.message ?: "Network error")
     }
   }
 }

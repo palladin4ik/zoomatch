@@ -4,13 +4,16 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.zoomatch.R
+import com.example.zoomatch.data.startScreen.LoggedInUserView
 import com.example.zoomatch.data.startScreen.LoginFormState
 import com.example.zoomatch.data.startScreen.LoginRepository
 import com.example.zoomatch.data.startScreen.LoginResult
 import com.example.zoomatch.data.startScreen.Result
+import kotlinx.coroutines.launch
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
   private val _loginForm = MutableLiveData<LoginFormState>()
   val loginFormState: LiveData<LoginFormState> = _loginForm
   private val _loginResult = MutableLiveData<LoginResult>()
@@ -18,11 +21,12 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
 
   fun login(email: String, password: String) {
-    val result = loginRepository.login(email, password)
-    _loginResult.value = if (result is Result.Success) {
-      LoginResult(success = result.data)
-    } else {
-      LoginResult(error = R.string.login_failed)
+    viewModelScope.launch {
+      val result = repository.login(email, password)
+      _loginResult.value = when (result) {
+        is Result.Success -> LoginResult(success = LoggedInUserView(result.data))
+        is Result.Error -> LoginResult(error = R.string.login_failed)
+      }
     }
   }
 

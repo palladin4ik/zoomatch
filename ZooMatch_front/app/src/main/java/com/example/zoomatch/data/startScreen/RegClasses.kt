@@ -17,7 +17,12 @@ data class RegUserView(
 ) : UserDisplay
 
 data class RegUser(
-  val userId: String,
   val email: String,
-  val displayName: String
+  val password: String,
+  val name: String
+)
+
+data class RegUserResponse(
+  val email: String,
+  val name: String
 )

@@ -30,8 +30,10 @@ class StartActivity : AppCompatActivity() {
     binding = ActivityStartBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    loginViewModel = ViewModelProvider(this, LoginViewModelFactory())[LoginViewModel::class.java]
-    regViewModel = ViewModelProvider(this, RegViewModelFactory())[RegViewModel::class.java]
+    loginViewModel =
+      ViewModelProvider(this, LoginViewModelFactory(application))[LoginViewModel::class.java]
+    regViewModel =
+      ViewModelProvider(this, RegViewModelFactory(application))[RegViewModel::class.java]
     initListeners()
 
     loginViewModel.loginFormState.observe(this) { state ->
@@ -130,13 +132,18 @@ class StartActivity : AppCompatActivity() {
     }
 
     login.setOnClickListener {
-      val emailText = email.text.toString()
-      val passText = password.text.toString()
-      val userText = username.text.toString()
-      if (currentMode == 0) loginViewModel.login(emailText, passText)
-      else regViewModel.register(emailText, passText, userText)
+      val email = email.text.toString()
+      val password = password.text.toString()
+      val name = username.text.toString()
+
+      if (currentMode == 0) {
+        loginViewModel.login(email, password)
+      } else {
+        regViewModel.register(email, password, name)
+      }
     }
   }
+
 
   private fun toggleForm(param: Int) {
     if (param == currentMode) return

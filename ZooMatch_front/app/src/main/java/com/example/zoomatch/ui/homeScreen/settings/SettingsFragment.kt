@@ -1,31 +1,39 @@
 package com.example.zoomatch.ui.homeScreen.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.example.zoomatch.databinding.HomeFragmentSettingsBinding
+import com.example.zoomatch.ui.startScreen.StartActivity
 
 class SettingsFragment : Fragment() {
-  private var _binding: HomeFragmentSettingsBinding? = null
 
-  // This property is only valid between onCreateView and
-  // onDestroyView.
+  private var _binding: HomeFragmentSettingsBinding? = null
   private val binding get() = _binding!!
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View {
-    val settingsViewModel =
-      ViewModelProvider(this)[SettingsViewModel::class.java]
+  private val viewModel: SettingsViewModel by viewModels {
+    SettingsViewModelFactory(requireActivity().application)
+  }
 
+  override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+  ): View {
     _binding = HomeFragmentSettingsBinding.inflate(inflater, container, false)
-    val root: View = binding.root
-    return root
+
+    binding.logOutLayout.setOnClickListener {
+      viewModel.onLogoutClicked()
+    }
+
+    viewModel.logoutEvent.observe(viewLifecycleOwner) {
+      requireActivity().finish()
+      startActivity(Intent(requireContext(), StartActivity::class.java))
+    }
+
+    return binding.root
   }
 
   override fun onDestroyView() {
