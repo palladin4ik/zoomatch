@@ -1,8 +1,10 @@
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django.db.models import Q
 
-from drf_spectacular.utils import extend_schema, extend_schema_view
+from drf_spectacular.utils import (extend_schema, extend_schema_view,
+                                   OpenApiParameter)
 
 from .serializer import (
     AnimalTypeSerializer, BreedSerializer,
@@ -105,12 +107,26 @@ class BreedViewSet(viewsets.ModelViewSet):
 @extend_schema_view(
     list=extend_schema(
         summary='Список всех животных',
-        description='Выводит список всех активных (is_active) животных\n\n' +
+        description='Выводит список всех активных (is_active) животных, '
+                    'у которых хозяин не пользователь, отправивший запрос'
+                    'если с запросом передан query параметр `animal_type`, '
+                    'то вывод питомцев этого типа\n\n' +
                     COMMON_OWNER_PERMISSION,
+        parameters=[
+            OpenApiParameter(
+                name='animal_type',
+                description='Фильтр по типу животного',
+                required=False,
+                type=int,
+                location=OpenApiParameter.QUERY,
+            ),
+        ]
     ),
     retrieve=extend_schema(
         summary='Животное по ID',
-        description='Возвращает конкретное животное по его `id`\n\n' +
+        description='Возвращает конкретное **активное** животное, '
+                    'если запросивший пользователь не его владелец, или любое '
+                    'конкретное животное владельца по его `id`\n\n' +
                     COMMON_OWNER_PERMISSION,
     ),
     create=extend_schema(
@@ -139,11 +155,24 @@ class PetViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        animal_type = self.request.query_params.get('animal_type')
+
         if self.action in ['update', 'partial_update', 'destroy']:
             return Pet.objects.filter(owner=user)
+
         if self.action == 'list':
-            return Pet.objects.filter(is_active=True)
-        return Pet.objects.all()
+            qs = Pet.objects.filter(is_active=True).exclude(owner=user)
+
+            if animal_type:
+                qs = qs.filter(animal_type=animal_type)
+            return qs
+
+        if self.action == 'retrieve':
+            return Pet.objects.filter(
+                Q(is_active=True) | Q(owner=user)
+            )
+
+        return Pet.objects.none()
 
     def get_serializer_class(self):
         if self.action in ['create', 'update', 'partial_update']:
