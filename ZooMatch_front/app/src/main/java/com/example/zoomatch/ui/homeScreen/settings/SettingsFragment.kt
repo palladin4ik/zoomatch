@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.zoomatch.databinding.HomeFragmentSettingsBinding
+import com.example.zoomatch.ui.LayoutWip
 import com.example.zoomatch.ui.startScreen.StartActivity
 
 class SettingsFragment : Fragment() {
@@ -31,6 +32,26 @@ class SettingsFragment : Fragment() {
     viewModel.logoutEvent.observe(viewLifecycleOwner) {
       requireActivity().finish()
       startActivity(Intent(requireContext(), StartActivity::class.java))
+    }
+
+    binding.termsOfUseLayout.setOnClickListener {
+      requireActivity().finish()
+      startActivity(Intent(requireContext(), LayoutWip::class.java))
+    }
+
+    binding.privacyPolicyLayout.setOnClickListener {
+      requireActivity().finish()
+      startActivity(Intent(requireContext(), LayoutWip::class.java))
+    }
+
+    binding.approveProfileLayout.setOnClickListener {
+      requireActivity().finish()
+      startActivity(Intent(requireContext(), LayoutWip::class.java))
+    }
+
+    binding.editPasswordLayout.setOnClickListener {
+      requireActivity().finish()
+      startActivity(Intent(requireContext(), LayoutWip::class.java))
     }
 
     return binding.root
