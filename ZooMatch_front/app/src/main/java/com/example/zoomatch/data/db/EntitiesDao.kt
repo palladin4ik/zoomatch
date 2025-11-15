@@ -13,5 +13,6 @@ data class UserEntity(
   val phone_number: String?,
   val role: Int,
   val last_seen: String,
-  val is_active: Boolean
+  val is_active: Boolean,
+  val description: String?
 )

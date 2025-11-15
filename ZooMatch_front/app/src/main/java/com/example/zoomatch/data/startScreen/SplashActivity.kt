@@ -22,14 +22,12 @@ class SplashActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    // можно показать лого, но не обязательно
 
     lifecycleScope.launch {
       val access = tokenManager.getAccessToken()
       val user = db.userDao().getCurrentUser()
 
       if (access != null && user != null) {
-        // пробуем быстрый запрос к /me/ — если токен живой
         try {
           val response = api.getProfile("Bearer $access")
           if (response.isSuccessful) {

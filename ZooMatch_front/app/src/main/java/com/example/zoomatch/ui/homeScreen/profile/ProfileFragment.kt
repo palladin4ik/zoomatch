@@ -12,6 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.zoomatch.R
+import com.example.zoomatch.data.db.UserEntity
+import com.example.zoomatch.data.homeScreen.profile.userUI
 import com.example.zoomatch.databinding.HomeFragmentProfileBinding
 import com.example.zoomatch.ui.homeScreen.HomeViewModelFactory
 import com.example.zoomatch.ui.homeScreen.profile.fragments.ReviewsFragment
@@ -23,6 +25,7 @@ class ProfileFragment : Fragment() {
   private var _binding: HomeFragmentProfileBinding? = null
   private val binding get() = _binding!!
 
+  private lateinit var user: userUI
   private val viewModel: ProfileViewModel by viewModels {
     HomeViewModelFactory(requireActivity().application)
   }
@@ -55,6 +58,7 @@ class ProfileFragment : Fragment() {
       }
     }
   }
+
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
