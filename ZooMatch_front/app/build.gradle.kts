@@ -58,6 +58,7 @@ dependencies {
   implementation(libs.retrofit)
   implementation(libs.converter.gson)
   implementation(libs.androidx.datastore.preferences)
+  implementation(libs.cronet.embedded)
   val room_version = "2.7.2"
   implementation("androidx.room:room-runtime:${room_version}")
   ksp("androidx.room:room-compiler:$room_version")

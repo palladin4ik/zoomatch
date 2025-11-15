@@ -1,35 +1,59 @@
 package com.example.zoomatch.ui.homeScreen.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.zoomatch.R
 import com.example.zoomatch.databinding.HomeFragmentProfileBinding
+import com.example.zoomatch.ui.homeScreen.HomeViewModelFactory
 import com.example.zoomatch.ui.homeScreen.profile.fragments.ReviewsFragment
 import com.example.zoomatch.ui.homeScreen.profile.fragments.StatisticFragment
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
   private var _binding: HomeFragmentProfileBinding? = null
-
-  // This property is only valid between onCreateView and
-  // onDestroyView.
   private val binding get() = _binding!!
+
+  private val viewModel: ProfileViewModel by viewModels {
+    HomeViewModelFactory(requireActivity().application)
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
-    val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
+
     _binding = HomeFragmentProfileBinding.inflate(inflater, container, false)
-    val root: View = binding.root
+
+    binding.editProfileButton.setOnClickListener {
+      viewModel.onEditProfileClick()
+    }
+
+    observeEvents()
+
     binding.userAvatar.setImageResource(R.drawable.test_avatar)
-    return root
+
+    return binding.root
+  }
+
+  private fun observeEvents() {
+    lifecycleScope.launch {
+      repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewModel.openEditProfile.collect {
+          startActivity(Intent(requireContext(), EditProfileActivity::class.java))
+        }
+      }
+    }
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

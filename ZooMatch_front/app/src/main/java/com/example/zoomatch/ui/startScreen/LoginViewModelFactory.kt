@@ -9,6 +9,7 @@ import com.example.zoomatch.data.startScreen.LoginDataSource
 import com.example.zoomatch.data.startScreen.LoginRepository
 
 class LoginViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+  @Suppress("UNCHECKED_CAST")
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
     val tokenManager = TokenManager(context)
     val db = AppDatabase.getDatabase(context)
