@@ -22,8 +22,8 @@
       android:id="@+id/profileImageCard"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal">
-
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="8dp">
 
       <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profileImageContainer"
@@ -42,6 +42,8 @@
           app:srcCompat="@drawable/test_avatar" />
 
         <com.google.android.material.button.MaterialButton
+
+          android:id="@+id/uploadImageButton"
           style="@style/Widget.Material3.Button.IconButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -49,42 +51,43 @@
           app:icon="@drawable/test_avatar"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent" />
+
       </androidx.constraintlayout.widget.ConstraintLayout>
-
     </com.google.android.material.card.MaterialCardView>
-
 
     <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/nameLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
+      android:layout_marginTop="8dp"
       app:hintEnabled="true">
 
       <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/nameField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name" />
+        android:hint="Имя" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/locationLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
       app:hintEnabled="true">
 
       <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/locationField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Location" />
+        android:hint="Город" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/descriptionLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
       app:counterEnabled="true"
       app:counterMaxLength="250"
       app:hintEnabled="true">
@@ -93,7 +96,7 @@
         android:id="@+id/descriptionField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Description"
+        android:hint="Описание"
         android:singleLine="false" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -101,7 +104,7 @@
       android:id="@+id/emailLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="24dp"
+      android:layout_marginTop="8dp"
       app:hintEnabled="true">
 
       <com.google.android.material.textfield.TextInputEditText
@@ -115,27 +118,28 @@
       android:id="@+id/phoneNumberLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
       app:hintEnabled="true">
 
       <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/phoneNumberField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Phone number" />
+        android:hint="Номер телефона" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-
-      android:layout_marginTop="12dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
       android:orientation="horizontal">
 
       <com.google.android.material.button.MaterialButton
+        android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Cancel" />
+        android:text="Закрыть" />
 
       <Space
         android:layout_width="wrap_content"
@@ -143,12 +147,12 @@
         android:layout_weight="4" />
 
       <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Save Changes" />
+        android:text="Сохранить" />
     </LinearLayout>
-
 
   </LinearLayout>
 
