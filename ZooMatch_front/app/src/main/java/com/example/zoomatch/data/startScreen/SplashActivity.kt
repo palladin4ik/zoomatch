@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.zoomatch.data.db.AppDatabase
 import com.example.zoomatch.data.db.Network
 import com.example.zoomatch.data.db.RefreshRequest
 import com.example.zoomatch.data.db.TokenManager
@@ -17,18 +16,17 @@ import kotlinx.coroutines.launch
 class SplashActivity : AppCompatActivity() {
 
   private val tokenManager by lazy { TokenManager(this) }
-  private val api by lazy { Network.zooMatchApi }         // твой retrofit-инстанс
-  private val db by lazy { AppDatabase.getDatabase(this) }
+  private val api by lazy { Network.zooMatchApi }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     lifecycleScope.launch {
       val access = tokenManager.getAccessToken()
-      val user = db.userDao().getCurrentUser()
 
-      if (access != null && user != null) {
+      if (access != null) {
         try {
+          // TODO: обоновить данные пользователя
           val response = api.getProfile("Bearer $access")
           if (response.isSuccessful) {
             goToHome()
@@ -52,7 +50,7 @@ class SplashActivity : AppCompatActivity() {
       val response = api.refreshToken(RefreshRequest(refresh))
       if (response.isSuccessful && response.body() != null) {
         val newAccess = response.body()!!.access
-        tokenManager.saveTokens(newAccess, refresh)  // refresh обычно не меняется
+        tokenManager.saveTokens(newAccess, refresh)
         true
       } else false
     } catch (e: Exception) {

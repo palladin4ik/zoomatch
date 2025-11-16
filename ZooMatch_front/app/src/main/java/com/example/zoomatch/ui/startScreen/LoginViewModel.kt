@@ -6,11 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.zoomatch.R
+import com.example.zoomatch.data.Result
 import com.example.zoomatch.data.startScreen.LoggedInUserView
 import com.example.zoomatch.data.startScreen.LoginFormState
 import com.example.zoomatch.data.startScreen.LoginRepository
 import com.example.zoomatch.data.startScreen.LoginResult
-import com.example.zoomatch.data.startScreen.Result
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: LoginRepository) : ViewModel() {

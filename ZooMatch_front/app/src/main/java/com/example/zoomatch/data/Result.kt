@@ -1,4 +1,4 @@
-package com.example.zoomatch.data.startScreen
+package com.example.zoomatch.data
 
 interface UserDisplay {
   val displayName: String

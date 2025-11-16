@@ -51,7 +51,7 @@ class ProfileViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     @extend_schema(
-            summary='Удаление текущего пароля',
+            summary='Удаление текущего пользователя',
             responses={"204": {"description": "Пользователь удален"}}
     )
     def destroy(self, request):

@@ -1,5 +1,6 @@
 package com.example.zoomatch.data.startScreen
 
+import com.example.zoomatch.data.Result
 import com.example.zoomatch.data.db.TokenManager
 import com.example.zoomatch.data.db.UserDao
 import com.example.zoomatch.data.db.UserEntity
@@ -19,14 +20,13 @@ class LoginRepository(
         userDao.insert(
           UserEntity(
             user.data.id,
-            user.data.email,
             user.data.name,
+            user.data.email,
             user.data.avatar,
             user.data.location,
+            user.data.status,
             user.data.phone_number,
             user.data.role,
-            user.data.last_seen,
-            user.data.is_active
           )
         )
         return Result.Success(user.data.name)

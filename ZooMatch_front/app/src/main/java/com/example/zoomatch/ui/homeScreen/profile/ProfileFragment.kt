@@ -12,8 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.zoomatch.R
-import com.example.zoomatch.data.db.UserEntity
-import com.example.zoomatch.data.homeScreen.profile.userUI
+import com.example.zoomatch.data.homeScreen.profile.ImageUtils
 import com.example.zoomatch.databinding.HomeFragmentProfileBinding
 import com.example.zoomatch.ui.homeScreen.HomeViewModelFactory
 import com.example.zoomatch.ui.homeScreen.profile.fragments.ReviewsFragment
@@ -24,41 +23,47 @@ import kotlinx.coroutines.launch
 class ProfileFragment : Fragment() {
   private var _binding: HomeFragmentProfileBinding? = null
   private val binding get() = _binding!!
-
-  private lateinit var user: userUI
   private val viewModel: ProfileViewModel by viewModels {
     HomeViewModelFactory(requireActivity().application)
   }
 
   override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
+    inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
   ): View {
-
     _binding = HomeFragmentProfileBinding.inflate(inflater, container, false)
-
-    binding.editProfileButton.setOnClickListener {
-      viewModel.onEditProfileClick()
-    }
-
-    observeEvents()
-
-    binding.userAvatar.setImageResource(R.drawable.test_avatar)
-
+    setupUI()
+    observeData()
     return binding.root
   }
 
-  private fun observeEvents() {
+  private fun setupUI() {
+    binding.editProfileButton.setOnClickListener {
+      viewModel.onEditProfileClick()
+    }
+    binding.userAvatar.setImageResource(R.drawable.test_avatar) // временное решение
+  }
+
+  private fun observeData() {
     lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
-        viewModel.openEditProfile.collect {
-          startActivity(Intent(requireContext(), EditProfileActivity::class.java))
+        launch {
+          viewModel.user.collect { user ->
+            binding.userName.text = user.name
+            binding.userGeo.text = user.geo
+            binding.userBio.text = user.status
+            ImageUtils.base64ToBitmap(user.avatar)?.let { bitmap ->
+              binding.userAvatar.setImageBitmap(bitmap)
+            } ?: binding.userAvatar.setImageResource(R.drawable.test_avatar)
+          }
+        }
+        launch {
+          viewModel.openEditProfile.collect {
+            startActivity(Intent(requireContext(), EditProfileActivity::class.java))
+          }
         }
       }
     }
   }
-
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -76,7 +81,6 @@ class ProfileFragment : Fragment() {
       }
     }.attach()
   }
-
 
   override fun onDestroyView() {
     super.onDestroyView()

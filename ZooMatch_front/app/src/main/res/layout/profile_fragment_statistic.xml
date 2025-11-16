@@ -1,139 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
 
   <LinearLayout
-      android:id="@+id/linearLayout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:layout_marginBottom="16dp"
-      android:layout_margin="10dp"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent">
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:orientation="horizontal"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_pets"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
+      android:id="@+id/card_pets"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginEnd="4dp"
+      android:layout_weight="1">
 
       <LinearLayout
-          android:layout_width="match_parent"
+        android:id="@+id/petsProfileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+          android:id="@+id/petsProfileText"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:orientation="vertical"
-          android:padding="16dp">
+          android:text="Pets in profile"
+          android:textColor="?android:textColorSecondary" />
 
         <TextView
-            android:id="@+id/petsProfileText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pets_in_profile"
-            android:textColor="?android:textColorSecondary" />
-
-        <TextView
-            android:id="@+id/petsCountText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"/>
+          android:id="@+id/petsCountText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="0"
+          android:textSize="32sp"
+          android:textStyle="bold" />
       </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_success"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
+      android:id="@+id/card_success"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginStart="4dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginEnd="8dp"
+      android:layout_weight="1">
 
       <LinearLayout
-          android:layout_width="match_parent"
+        android:id="@+id/matingsProfileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+          android:id="@+id/matingsProfileText"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:orientation="vertical"
-          android:padding="16dp">
+          android:text="Successful matings"
+          android:textColor="?android:textColorSecondary" />
 
         <TextView
-            android:id="@+id/matingsProfileText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/successful_matings"
-            android:textColor="?android:textColorSecondary" />
-
-        <TextView
-            android:id="@+id/matingsCountText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"/>
+          android:id="@+id/matingsCountText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="~"
+          android:textSize="32sp"
+          android:textStyle="bold" />
       </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
   </LinearLayout>
 
+  <!-- Карточка: Успешных вязок -->
+
+  <!-- Рейтинг -->
   <com.google.android.material.card.MaterialCardView
-      android:id="@+id/card_rating"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="8dp"
-      android:layout_marginEnd="8dp"
-      android:layout_marginTop="8dp"
-      app:cardCornerRadius="12dp"
-      app:layout_constraintTop_toBottomOf="@id/linearLayout"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent">
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="16dp"
+    app:cardCornerRadius="12dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+      android:id="@+id/ratingProfileLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="16dp">
+
+      <TextView
+        android:id="@+id/ratingProfileText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:text="Rating"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
       <TextView
-          android:id="@+id/ratingProfileText"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/rating"
-          android:textSize="16sp"
-          android:textStyle="bold"
-          app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintStart_toStartOf="parent"/>
+        android:id="@+id/ratingCountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  ~  "
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingDescText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ratingDescText" />
 
       <TextView
-          android:id="@+id/ratingCountText"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="4.8"
-          android:textSize="24sp"
-          android:textStyle="bold"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/ratingProfileText"
-          app:layout_constraintBottom_toBottomOf="@+id/ratingDescText"/>
-
-      <TextView
-          android:id="@+id/ratingDescText"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:text="lorem ipsum dolor sit amet"
-          android:textSize="14sp"
-          android:textColor="?android:textColorSecondary"
-          android:layout_marginStart="36dp"
-          app:layout_constraintStart_toEndOf="@id/ratingCountText"
-          app:layout_constraintTop_toTopOf="@id/ratingCountText"
-          app:layout_constraintBottom_toBottomOf="@id/ratingCountText"
-          app:layout_constraintEnd_toEndOf="parent"/>
+        android:id="@+id/ratingDescText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="16dp"
+        android:text="lorem ipsum dolor sit amet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ratingCountText"
+        app:layout_constraintTop_toBottomOf="@+id/ratingProfileText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
   </com.google.android.material.card.MaterialCardView>
 

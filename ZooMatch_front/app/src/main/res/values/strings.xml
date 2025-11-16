@@ -46,4 +46,8 @@
     <string name="pets_in_profile">Питомцев в профиле</string>
     <string name="successful_matings">Успешных случек</string>
     <string name="rating">Рейтинг</string>
+    <string name="error_to_update_profile">Ошибка обновления профиля</string>
+    <string name="invalid_name">Имя не может быть пустым</string>
+    <string name="invalid_phone">Используйте формат +7XXXXXXXXXX</string>
+    <string name="invalid_password2">Пароль слишком короткий или отличается</string>
 </resources>

@@ -28,8 +28,9 @@ class HomeFragment : Fragment() {
     val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
     _binding = HomeFragmentHomeBinding.inflate(inflater, container, false)
-    val root: View = binding.root
-    return root
+    binding.activityFilterGroup.check(binding.tabDay.id)
+
+    return binding.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

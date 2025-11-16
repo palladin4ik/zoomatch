@@ -1,5 +1,6 @@
 package com.example.zoomatch.data.startScreen
 
+import com.example.zoomatch.data.UserDisplay
 import com.google.gson.annotations.SerializedName
 
 data class LoginFormState(
@@ -20,6 +21,22 @@ data class LoggedInUserView(
 data class LoginRequest(
   val email: String,
   val password: String
+)
+
+data class UserProfileDto(
+  val id: Int,
+  val name: String,
+  val email: String,
+  val avatar: String?,
+  val location: String,
+  val status: String?,
+  val phone_number: String?,
+  val role: Int,
+  val pets: List<PetShortDto>
+)
+
+data class PetShortDto(
+  val id: Int
 )
 
 data class JwtResponse(

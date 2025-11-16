@@ -1,5 +1,7 @@
 package com.example.zoomatch.data.startScreen
 
+import com.example.zoomatch.data.UserDisplay
+
 data class RegFormState(
   val emailError: Int? = null,
   val passwordError: Int? = null,

@@ -3,6 +3,8 @@ import base64
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
+from pets.serializers_readonly import PetShortSerializer
+
 
 User = get_user_model()
 
@@ -41,11 +43,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     avatar = Base64FileField(read_only=True)
+    pets = PetShortSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'avatar',
-                  'location', 'phone_number', 'role', 'last_seen', 'is_active')
+        fields = ('id', 'name', 'email', 'avatar', 'location', 'status',
+                  'phone_number', 'role', 'last_seen', 'is_active', 'pets')
         read_only_fields = ('id', 'role', 'last_seen', 'is_active')
 
 
