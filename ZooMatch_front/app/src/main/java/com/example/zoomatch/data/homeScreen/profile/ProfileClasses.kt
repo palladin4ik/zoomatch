@@ -8,17 +8,17 @@ import java.io.ByteArrayOutputStream
 data class UserUI(
   val avatar: String,
   var name: String,
-  val geo: String,
-  val status: String,
+  val geo: String?,
+  val status: String?,
 )
 
 data class UserEditUI(
   val avatar: String? = null,
   var name: String,
-  val location: String,
-  val status: String,
+  val location: String?,
+  val status: String?,
   val email: String,
-  val phone_number: String
+  val phone_number: String?
 )
 
 data class UserEditResponse(

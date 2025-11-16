@@ -35,7 +35,5 @@ class SettingsRepository(
     } else {
       return result
     }
-
   }
-
 }

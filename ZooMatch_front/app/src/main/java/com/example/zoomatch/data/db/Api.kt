@@ -1,14 +1,19 @@
 package com.example.zoomatch.data.db
 
+import com.example.zoomatch.data.homeScreen.pets.PetCreateRequest
+import com.example.zoomatch.data.homeScreen.pets.PetResponse
+import com.example.zoomatch.data.homeScreen.pets.PetUpdateRequest
 import com.example.zoomatch.data.homeScreen.profile.UserEditResponse
 import com.example.zoomatch.data.homeScreen.profile.UserEditUI
 import com.example.zoomatch.data.homeScreen.settings.EditPassRequest
 import com.example.zoomatch.data.homeScreen.settings.EditPassResponse
+import com.example.zoomatch.data.startScreen.AnimalTypeResponse
+import com.example.zoomatch.data.startScreen.BreedResponse
 import com.example.zoomatch.data.startScreen.JwtResponse
 import com.example.zoomatch.data.startScreen.LoginRequest
+import com.example.zoomatch.data.startScreen.LoginResponse
 import com.example.zoomatch.data.startScreen.RegUser
 import com.example.zoomatch.data.startScreen.RegUserResponse
-import com.example.zoomatch.data.startScreen.UserProfileDto
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -18,6 +23,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 data class RefreshRequest(val refresh: String)
 
@@ -37,7 +43,7 @@ interface ZooMatchApi {
   @GET("me/")
   suspend fun getProfile(
     @Header("Authorization") auth: String
-  ): Response<UserProfileDto>
+  ): Response<LoginResponse>
 
   @PATCH("me/")
   suspend fun updateProfile(
@@ -55,6 +61,29 @@ interface ZooMatchApi {
   suspend fun delete(
     @Header("Authorization") auth: String,
   ): Response<String>
+
+  @GET("animal-type/")
+  suspend fun getAnimalTypes(
+    @Header("Authorization") auth: String
+  ): Response<List<AnimalTypeResponse>>
+
+  @GET("breed/")
+  suspend fun getBreeds(
+    @Header("Authorization") auth: String
+  ): Response<List<BreedResponse>>
+
+  @POST("pets/")
+  suspend fun createPet(
+    @Header("Authorization") auth: String,
+    @Body body: PetCreateRequest
+  ): Response<PetResponse>
+
+  @PATCH("pets/{id}/")
+  suspend fun updatePet(
+    @Header("Authorization") auth: String,
+    @Path("id") id: Int,
+    @Body body: PetUpdateRequest
+  ): Response<PetResponse>
 }
 
 object Network {

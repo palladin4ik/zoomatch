@@ -78,6 +78,7 @@ class EditProfileActivity : AppCompatActivity() {
       )
     }, debounceDelay)
   }
+
   private fun observeData() {
     lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {

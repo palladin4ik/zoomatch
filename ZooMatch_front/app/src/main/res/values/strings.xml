@@ -50,4 +50,5 @@
     <string name="invalid_name">Имя не может быть пустым</string>
     <string name="invalid_phone">Используйте формат +7XXXXXXXXXX</string>
     <string name="invalid_password2">Пароль слишком короткий или отличается</string>
+  <string name="invalid_age">Неправильный возраст</string>
 </resources>

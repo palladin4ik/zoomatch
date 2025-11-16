@@ -47,8 +47,10 @@ class StartActivity : AppCompatActivity() {
     loginViewModel.loginResult.observe(this) { result ->
       val r = result ?: return@observe
       if (r.error != null) showLoginFailed(r.error)
-      if (r.success != null) updateUiWithUser(r.success)
-      finish()
+      result.success?.let { model ->
+        updateUiWithUser(model)
+        finish()
+      }
     }
 
     regViewModel.regFormState.observe(this) { state ->
@@ -61,8 +63,10 @@ class StartActivity : AppCompatActivity() {
     regViewModel.regResult.observe(this) { result ->
       val r = result ?: return@observe
       if (r.error != null) showLoginFailed(r.error)
-      if (r.success != null) updateUiWithUser(r.success)
-      finish()
+      result.success?.let { model ->
+        updateUiWithUser(model)
+        finish()
+      }
     }
 
     val tabLogin = binding.tabLogin

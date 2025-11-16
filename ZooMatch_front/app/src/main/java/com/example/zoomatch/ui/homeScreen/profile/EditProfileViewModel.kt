@@ -24,7 +24,7 @@ class EditProfileViewModel(
   val user = repository.userFlow
     .map {
       UserEditUI(
-        it.avatar.orEmpty(),
+        it!!.avatar.orEmpty(),
         it.name,
         it.location.orEmpty(),
         it.status.orEmpty(),
@@ -36,7 +36,7 @@ class EditProfileViewModel(
       scope = viewModelScope,
       started = SharingStarted.WhileSubscribed(5000),
       initialValue = UserEditUI(
-        null,
+        "",
         "Загрузка...",
         "",
         "",

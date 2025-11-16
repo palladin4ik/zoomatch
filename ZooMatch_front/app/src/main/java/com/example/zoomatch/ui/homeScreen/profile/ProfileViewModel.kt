@@ -17,10 +17,10 @@ class ProfileViewModel(
   val user = repository.userFlow
     .map {
       UserUI(
-        it.avatar.orEmpty(),
-        it.name,
-        it.location.orEmpty(),
-        it.status.orEmpty()
+        it?.avatar.orEmpty(),
+        it?.name ?: "name",
+        it?.location.orEmpty(),
+        it?.status.orEmpty()
       )
     }
     .stateIn(

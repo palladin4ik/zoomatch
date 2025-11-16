@@ -1,10 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:fillViewport="true">
+
+
+  <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.homeScreen.pets.EditPetActivity">
+    tools:context=".ui.homeScreen.profile.EditPetActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+      android:id="@+id/editForm"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="40dp"
+      android:layout_marginTop="40dp"
+      android:layout_marginBottom="40dp"
+      android:orientation="vertical"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+      <com.google.android.material.card.MaterialCardView
+        android:id="@+id/profileImageCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/profileImageContainer"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+          <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="160dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/test_avatar" />
+
+          <com.google.android.material.button.MaterialButton
+            android:id="@+id/uploadImageButton"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="bottom|end"
+            app:icon="@drawable/test_avatar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+      </com.google.android.material.card.MaterialCardView>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:hintEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/nameField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Кличка" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/animalTypeLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <AutoCompleteTextView
+          android:id="@+id/animalTypeField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Тип животного"
+          android:inputType="none" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/breedLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <AutoCompleteTextView
+          android:id="@+id/breedField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Порода"
+          android:inputType="none" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/genderLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <AutoCompleteTextView
+          android:id="@+id/genderField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Пол"
+          android:inputType="none" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:hintEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/ageField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Возраст (лет)"
+          android:inputType="number" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/locationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:hintEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/locationField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Город" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/pedigreeCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Есть родословная" />
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/pedigreeDocsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:hintEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/pedigreeDocsField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Документы родословной" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/awardsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:hintEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/awardsField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Награды" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/descriptionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="250"
+        app:hintEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/descriptionField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Описание"
+          android:singleLine="false" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/activeCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="В поиске пары" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+          android:id="@+id/backButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="Закрыть" />
+
+        <Space
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="4" />
+
+        <com.google.android.material.button.MaterialButton
+          android:id="@+id/saveButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="Сохранить" />
+      </LinearLayout>
+
+    </LinearLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

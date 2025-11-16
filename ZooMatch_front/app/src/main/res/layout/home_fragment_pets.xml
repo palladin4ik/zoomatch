@@ -46,17 +46,39 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="@+id/viewChangeButton" />
 
+  <TextView
+    android:id="@+id/emptyPetsText"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Пока вы не добавили ни одного питомца"
+    android:visibility="visible"
+    app:layout_constraintBottom_toBottomOf="@+id/petsRecyclerView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/searchBar" />
+
   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/petsRecyclerView"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      android:layout_marginBottom="60dp"
-      android:clipToPadding="false"
-      android:paddingHorizontal="40dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/searchBar"
-      tools:listitem="@layout/item_pet" />
+    android:id="@+id/petsRecyclerView"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_marginBottom="100dp"
+    android:clipToPadding="false"
+    android:paddingHorizontal="40dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/searchBar"
+    tools:listitem="@layout/item_pet" />
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/addPetButton"
+    style="@style/Widget.Material3.FloatingActionButton.Large.Primary"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="40dp"
+    android:layout_marginBottom="120dp"
+    android:text="Добавить питомца"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

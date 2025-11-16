@@ -2,6 +2,7 @@ package com.example.zoomatch.data.startScreen
 
 import com.example.zoomatch.data.Result
 import com.example.zoomatch.data.db.Network.zooMatchApi
+import com.example.zoomatch.data.db.PetEntity
 import com.example.zoomatch.data.db.UserEntity
 
 class LoginDataSource {
@@ -18,24 +19,68 @@ class LoginDataSource {
     }
   }
 
-  suspend fun getUserInfo(token: String): Result<UserEntity> {
+  suspend fun getUserInfo(token: String): Result<Pair<UserEntity, List<PetEntity>>> {
     return try {
       val response = zooMatchApi.getProfile("Bearer $token")
       if (response.isSuccessful && response.body() != null) {
-        val dto = response.body()!!
-        val entity = UserEntity(
-          id = dto.id,
-          name = dto.name,
-          email = dto.email,
-          avatar = dto.avatar,
-          location = dto.location,
-          status = dto.status,
-          phone_number = dto.phone_number,
-          role = dto.role
+        val data = response.body()!!
+        val user = UserEntity(
+          id = data.id,
+          name = data.name,
+          email = data.email,
+          avatar = data.avatar,
+          location = data.location,
+          status = data.status,
+          phone_number = data.phone_number,
+          role = data.role
         )
-        Result.Success(entity)
+        val pets = data.pets.map { pet ->
+          PetEntity(
+            id = pet.id,
+            name = pet.name,
+            animal_type_id = null,
+            breed_id = null,
+            is_male = pet.is_male,
+            age = pet.age,
+            owner_id = data.id,
+            avatar = pet.avatar,
+            location = null,
+            has_pedigree = false,
+            pedigree_documents = null,
+            awards = null,
+            description = null,
+            is_active = pet.is_active
+          )
+        }
+        Result.Success(user to pets)
       } else {
-        Result.Error(response.message() ?: "Failed to fetch profile info")
+        Result.Error(response.message() ?: "Failed to fetch profile")
+      }
+    } catch (e: Exception) {
+      Result.Error(e.message ?: "Network error")
+    }
+  }
+
+  suspend fun getAnimalTypes(token: String): Result<List<AnimalTypeResponse>> {
+    return try {
+      val response = zooMatchApi.getAnimalTypes("Bearer $token")
+      if (response.isSuccessful && response.body() != null) {
+        Result.Success(response.body()!!)
+      } else {
+        Result.Error(response.message() ?: "Failed to fetch animal types")
+      }
+    } catch (e: Exception) {
+      Result.Error(e.message ?: "Network error")
+    }
+  }
+
+  suspend fun getBreeds(token: String): Result<List<BreedResponse>> {
+    return try {
+      val response = zooMatchApi.getBreeds("Bearer $token")
+      if (response.isSuccessful && response.body() != null) {
+        Result.Success(response.body()!!)
+      } else {
+        Result.Error(response.message() ?: "Failed to fetch breeds")
       }
     } catch (e: Exception) {
       Result.Error(e.message ?: "Network error")

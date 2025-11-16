@@ -13,7 +13,7 @@ class ProfileRepository(
   private val tokenManager: TokenManager,
   private val userDao: UserDao
 ) {
-  val userFlow: Flow<UserEntity> = userDao.getCurrentUserFlow()
+  val userFlow: Flow<UserEntity?> = userDao.getCurrentUserFlow()
     .flowOn(Dispatchers.IO)
 
   suspend fun updateProfile(

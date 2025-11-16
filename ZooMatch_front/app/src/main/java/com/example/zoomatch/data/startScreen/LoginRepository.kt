@@ -1,9 +1,10 @@
 package com.example.zoomatch.data.startScreen
 
 import com.example.zoomatch.data.Result
+import com.example.zoomatch.data.db.AnimalTypeEntity
+import com.example.zoomatch.data.db.BreedEntity
 import com.example.zoomatch.data.db.TokenManager
 import com.example.zoomatch.data.db.UserDao
-import com.example.zoomatch.data.db.UserEntity
 
 class LoginRepository(
   private val dataSource: LoginDataSource,
@@ -15,22 +16,30 @@ class LoginRepository(
     val result = dataSource.login(email, password)
     if (result is Result.Success) {
       tokenManager.saveTokens(result.data.access, result.data.refresh)
-      val user = dataSource.getUserInfo(result.data.access)
-      if (user is Result.Success) {
-        userDao.insert(
-          UserEntity(
-            user.data.id,
-            user.data.name,
-            user.data.email,
-            user.data.avatar,
-            user.data.location,
-            user.data.status,
-            user.data.phone_number,
-            user.data.role,
-          )
-        )
-        return Result.Success(user.data.name)
-      }
+
+      val userResult = dataSource.getUserInfo(result.data.access)
+      if (userResult !is Result.Success) return userResult as Result.Error
+
+      val (user, pets) = userResult.data
+
+      val typesResult = dataSource.getAnimalTypes(result.data.access)
+      if (typesResult !is Result.Success) return typesResult as Result.Error
+
+      val breedsResult = dataSource.getBreeds(result.data.access)
+      if (breedsResult !is Result.Success) return breedsResult as Result.Error
+
+//      userDao.clearAnimalTypes()
+//      userDao.clearBreeds()
+
+      val types = typesResult.data.map { AnimalTypeEntity(it.id, it.name) }
+      val breeds = breedsResult.data.map { BreedEntity(it.id, it.name, it.animal_type.id) }
+
+      userDao.insertAllAnimalTypes(types)
+      userDao.insertAllBreeds(breeds)
+      userDao.insert(user)
+      userDao.insertAllPets(pets)
+
+      return Result.Success(user.name)
     }
     return result as Result.Error
   }

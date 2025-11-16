@@ -23,7 +23,7 @@ data class LoginRequest(
   val password: String
 )
 
-data class UserProfileDto(
+data class LoginResponse(
   val id: Int,
   val name: String,
   val email: String,
@@ -32,11 +32,27 @@ data class UserProfileDto(
   val status: String?,
   val phone_number: String?,
   val role: Int,
-  val pets: List<PetShortDto>
+  val pets: List<PetShortResponse>
 )
 
-data class PetShortDto(
-  val id: Int
+data class PetShortResponse(
+  val id: Int,
+  val name: String,
+  val is_male: Boolean,
+  val age: Int,
+  val avatar: String?,
+  val is_active: Boolean
+)
+
+data class AnimalTypeResponse(
+  val id: Int,
+  val name: String
+)
+
+data class BreedResponse(
+  val id: Int,
+  val name: String,
+  val animal_type: AnimalTypeResponse
 )
 
 data class JwtResponse(

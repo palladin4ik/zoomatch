@@ -11,7 +11,7 @@ data class UserEntity(
   val name: String,
   val email: String,
   val avatar: String?,
-  val location: String,
+  val location: String?,
   val status: String?,
   val phone_number: String?,
   val role: Int = 0
@@ -21,20 +21,26 @@ data class UserEntity(
 data class AnimalTypeEntity(
   @PrimaryKey val id: Int,
   val name: String
-)
+) {
+  constructor() : this(0, "")
+}
 
 @Entity(tableName = "breed")
 data class BreedEntity(
   @PrimaryKey val id: Int,
   val name: String,
-  val animal_type: Int        // FK → AnimalType.id
-)
+  val animal_type: Int
+) {
+  constructor() : this(0, "", 0)
+}
 
 @Entity(tableName = "tag")
 data class TagEntity(
   @PrimaryKey val id: Int,
   val tag: String
-)
+) {
+  constructor() : this(0, "")
+}
 
 @Entity(
   tableName = "pet",
@@ -69,7 +75,7 @@ data class PetEntity(
   val age: Int,
   val owner_id: Int,
   val avatar: String?,
-  val location: String,
+  val location: String?,
   val has_pedigree: Boolean = false,
   val pedigree_documents: String?,
   val awards: String?,
@@ -81,9 +87,20 @@ data class PetEntity(
   tableName = "pet_tag",
   primaryKeys = ["pet_id", "tag_id"],
   foreignKeys = [
-    ForeignKey(PetEntity::class, ["id"], ["pet_id"]),
-    ForeignKey(TagEntity::class, ["id"], ["tag_id"])
-  ]
+    ForeignKey(
+      entity = PetEntity::class,
+      parentColumns = ["id"],
+      childColumns = ["pet_id"],
+      onDelete = ForeignKey.CASCADE
+    ),
+    ForeignKey(
+      entity = TagEntity::class,
+      parentColumns = ["id"],
+      childColumns = ["tag_id"],
+      onDelete = ForeignKey.CASCADE
+    )
+  ],
+  indices = [Index("pet_id"), Index("tag_id")]
 )
 data class PetTagCrossRef(
   val pet_id: Int,

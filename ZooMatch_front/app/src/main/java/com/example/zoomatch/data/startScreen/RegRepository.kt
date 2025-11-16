@@ -3,7 +3,6 @@ package com.example.zoomatch.data.startScreen
 import com.example.zoomatch.data.Result
 import com.example.zoomatch.data.db.TokenManager
 import com.example.zoomatch.data.db.UserDao
-import com.example.zoomatch.data.db.UserEntity
 
 
 class RegRepository(
@@ -21,20 +20,10 @@ class RegRepository(
         tokenManager.saveTokens(loginResult.data.access, loginResult.data.refresh)
         val user = loginDataSource.getUserInfo(loginResult.data.access)
         if (user is Result.Success) {
-          userDao.insert(
-            UserEntity(
-              user.data.id,
-              user.data.email,
-              user.data.name,
-              user.data.avatar,
-              user.data.location,
-              user.data.status,
-              user.data.phone_number,
-              user.data.role,
-
-            )
-          )
-          return Result.Success(regResult.data.name)
+          val (user, pets) = user.data
+          userDao.insert(user)
+          userDao.insertAllPets(pets)
+          return Result.Success(user.name)
         } else {
           return Result.Error((user as Result.Error).message)
         }

@@ -28,17 +28,6 @@ class SearchFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    // --- 1. Данные (заглушка) ---
-    val dummyPets = listOf(
-      PetsAdapter.Pet("1", "Барсик", "Британская", 2, "В активном поиске"),
-      PetsAdapter.Pet("2", "Мурка", "Мейн-кун", 1, "Не ищет пару"),
-      PetsAdapter.Pet("3", "Пушок", "Сибирская", 3, "В активном поиске"),
-      PetsAdapter.Pet("4", "Рекс", "Золотистый ретривер", 4, "На вязке")
-    )
-
-    // --- 2. Адаптер ---
-    adapter = PetsAdapter(dummyPets)
-    binding.petsRecyclerView.adapter = adapter
 
     // --- 3. Начальный LayoutManager (сетка 2 колонки) ---
     updateLayoutManager()

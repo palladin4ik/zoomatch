@@ -15,6 +15,7 @@ class SettingsViewModel(
   private val _logout = Channel<Unit>(Channel.CONFLATED)
   val logout = _logout.receiveAsFlow()
 
+
   fun logoutClick() = viewModelScope.launch {
     repository.logout()
     _logout.send(Unit)

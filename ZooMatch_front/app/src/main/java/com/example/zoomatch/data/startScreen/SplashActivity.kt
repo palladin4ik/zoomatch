@@ -5,6 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.zoomatch.data.Result
+import com.example.zoomatch.data.db.AnimalTypeEntity
+import com.example.zoomatch.data.db.AppDatabase
+import com.example.zoomatch.data.db.BreedEntity
 import com.example.zoomatch.data.db.Network
 import com.example.zoomatch.data.db.RefreshRequest
 import com.example.zoomatch.data.db.TokenManager
@@ -16,7 +20,8 @@ import kotlinx.coroutines.launch
 class SplashActivity : AppCompatActivity() {
 
   private val tokenManager by lazy { TokenManager(this) }
-  private val api by lazy { Network.zooMatchApi }
+  private val dataSource by lazy { LoginDataSource() }
+  private val userDao by lazy { AppDatabase.getDatabase(this).userDao() }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -25,34 +30,67 @@ class SplashActivity : AppCompatActivity() {
       val access = tokenManager.getAccessToken()
 
       if (access != null) {
-        try {
-          // TODO: обоновить данные пользователя
-          val response = api.getProfile("Bearer $access")
-          if (response.isSuccessful) {
-            goToHome()
-            return@launch
-          }
-        } catch (e: Exception) { /* игнор */
+        val updated = updateUserData("Bearer $access")
+        if (updated) {
+          goToHome()
+          return@launch
         }
 
         // токен умер → refresh
         val refreshed = refreshToken()
-        if (refreshed) goToHome() else goToLogin()
+        if (refreshed && updateUserData("Bearer ${tokenManager.getAccessToken()!!}")) {
+          goToHome()
+        } else {
+          goToLogin()
+        }
       } else {
         goToLogin()
       }
     }
   }
 
+  private suspend fun updateUserData(auth: String): Boolean {
+    return try {
+      val userResult = dataSource.getUserInfo(auth.substring(7))  // без "Bearer "
+      if (userResult !is Result.Success) return false
+      val (user, pets) = userResult.data
+
+      val typesResult = dataSource.getAnimalTypes(auth.substring(7))
+      if (typesResult !is Result.Success) return false
+
+      val breedsResult = dataSource.getBreeds(auth.substring(7))
+      if (breedsResult !is Result.Success) return false
+
+//      userDao.clearAnimalTypes()
+//      userDao.clearBreeds()
+      userDao.insert(user)
+      userDao.insertAllPets(pets)
+      userDao.insertAllAnimalTypes(typesResult.data.map { AnimalTypeEntity(it.id, it.name) })
+      userDao.insertAllBreeds(breedsResult.data.map {
+        BreedEntity(
+          it.id,
+          it.name,
+          it.animal_type.id
+        )
+      })
+
+      true
+    } catch (e: Exception) {
+      false
+    }
+  }
+
   private suspend fun refreshToken(): Boolean {
     val refresh = tokenManager.getRefreshToken() ?: return false
     return try {
-      val response = api.refreshToken(RefreshRequest(refresh))
+      val response = Network.zooMatchApi.refreshToken(RefreshRequest(refresh))
       if (response.isSuccessful && response.body() != null) {
-        val newAccess = response.body()!!.access
-        tokenManager.saveTokens(newAccess, refresh)
+        tokenManager.saveTokens(response.body()!!.access, refresh)
         true
-      } else false
+      } else {
+        tokenManager.clearTokens()
+        false
+      }
     } catch (e: Exception) {
       tokenManager.clearTokens()
       false

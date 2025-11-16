@@ -5,9 +5,24 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [UserEntity::class], version = 1, exportSchema = false)
+@Database(
+  entities = [
+    UserEntity::class,
+    AnimalTypeEntity::class,
+    BreedEntity::class,
+    TagEntity::class,
+    PetEntity::class,
+    PetTagCrossRef::class
+  ],
+  version = 1,
+  exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
   abstract fun userDao(): UserDao
+  abstract fun petDao(): PetDao
+  abstract fun animalTypeDao(): AnimalTypeDao
+  abstract fun breedDao(): BreedDao
+
   companion object {
     @Volatile
     private var INSTANCE: AppDatabase? = null
