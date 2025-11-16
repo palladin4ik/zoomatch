@@ -29,7 +29,7 @@
         android:id="@+id/oldPassField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Old password" />
+        android:hint="@string/old_password" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -43,7 +43,7 @@
         android:id="@+id/passField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="New password" />
+        android:hint="@string/new_password" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -57,7 +57,7 @@
         android:id="@+id/passConfField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Confirm password" />
+        android:hint="@string/confirm_password" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
@@ -72,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Cancel" />
+        android:text="@string/cancel" />
 
       <Space
         android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Change password" />
+        android:text="@string/change_password" />
     </LinearLayout>
 
   </LinearLayout>

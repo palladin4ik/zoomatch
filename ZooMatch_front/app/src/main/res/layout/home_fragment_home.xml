@@ -17,7 +17,7 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="40dp"
       android:layout_marginTop="20dp"
-      android:text="Recommendations"
+      android:text="@string/recommendations"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +41,7 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="40dp"
       android:layout_marginTop="80dp"
-      android:text="Your activity"
+      android:text="@string/your_activity"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/recommendationsRecyclerView" />
 
@@ -63,7 +63,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Day" />
+        android:text="@string/day" />
 
       <com.google.android.material.button.MaterialButton
         android:id="@+id/tabWeek"
@@ -71,7 +71,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Week" />
+        android:text="@string/week" />
 
       <com.google.android.material.button.MaterialButton
         android:id="@+id/tabMonth"
@@ -79,7 +79,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Month" />
+        android:text="@string/month" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <LinearLayout
@@ -117,11 +117,12 @@
 
             <ImageView
               android:id="@+id/ic_matings"
+                app:tint="?attr/colorOnSurfaceVariant"
               android:layout_width="36dp"
               android:layout_height="36dp"
               android:layout_marginStart="8dp"
               android:layout_marginTop="8dp"
-              android:src="@drawable/test_avatar"
+              android:src="@drawable/handshake_svgrepo_com"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toTopOf="parent" />
 
@@ -130,7 +131,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginStart="8dp"
-              android:text="Your matings"
+              android:text="@string/your_matings"
               android:textSize="12sp"
               app:layout_constraintBottom_toBottomOf="@+id/ic_matings"
               app:layout_constraintStart_toEndOf="@+id/ic_matings"
@@ -168,11 +169,12 @@
 
             <ImageView
               android:id="@+id/ic_rating"
+                app:tint="?attr/colorOnSurfaceVariant"
               android:layout_width="36dp"
               android:layout_height="36dp"
               android:layout_marginStart="8dp"
               android:layout_marginTop="8dp"
-              android:src="@drawable/test_avatar"
+              android:src="@drawable/rating_svgrepo_com"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toTopOf="parent" />
 
@@ -181,7 +183,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginStart="8dp"
-              android:text="Your rating"
+              android:text="@string/your_rating"
               android:textSize="12sp"
               app:layout_constraintBottom_toBottomOf="@+id/ic_rating"
               app:layout_constraintStart_toEndOf="@+id/ic_rating"
@@ -226,11 +228,12 @@
 
             <ImageView
               android:id="@+id/ic_newDialog"
+                app:tint="?attr/colorOnSurfaceVariant"
               android:layout_width="36dp"
               android:layout_height="36dp"
               android:layout_marginStart="8dp"
               android:layout_marginTop="8dp"
-              android:src="@drawable/test_avatar"
+              android:src="@drawable/dialog_svgrepo_com"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toTopOf="parent" />
 
@@ -239,7 +242,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginStart="8dp"
-              android:text="Your new dialogs"
+              android:text="@string/your_new_dialogs"
               android:textSize="12sp"
               app:layout_constraintBottom_toBottomOf="@+id/ic_newDialog"
               app:layout_constraintStart_toEndOf="@+id/ic_newDialog"
@@ -277,11 +280,12 @@
 
             <ImageView
               android:id="@+id/ic_views"
+                app:tint="?attr/colorOnSurfaceVariant"
               android:layout_width="36dp"
               android:layout_height="36dp"
               android:layout_marginStart="8dp"
               android:layout_marginTop="8dp"
-              android:src="@drawable/test_avatar"
+              android:src="@drawable/view_svgrepo_com"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toTopOf="parent" />
 
@@ -290,7 +294,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginStart="8dp"
-              android:text="Your views"
+              android:text="@string/your_views"
               android:textSize="12sp"
               app:layout_constraintBottom_toBottomOf="@+id/ic_views"
               app:layout_constraintStart_toEndOf="@+id/ic_views"
@@ -331,7 +335,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Your match dynamic"
+            android:text="@string/your_match_dynamic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

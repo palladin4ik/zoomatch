@@ -5,102 +5,87 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingTop="16dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="16dp"
+    android:padding="20dp"
     tools:context=".ui.startScreen.StartActivity">
 
-<!--    TODO: подобрать отступы между элементами формы, для одинакового отображения-->
     <LinearLayout
-      android:id="@+id/Form"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="40dp"
-      android:gravity="center"
-      android:orientation="vertical"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent">
+        android:id="@+id/Form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <!-- Переключатель Login / Register -->
         <com.google.android.material.button.MaterialButtonToggleGroup
-          android:id="@+id/tabGroup"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="60dp"
-          android:layout_marginTop="20dp"
-          android:layout_marginEnd="60dp"
-          app:singleSelection="true">
+            android:id="@+id/tabGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="16dp"
+            app:singleSelection="true">
 
             <com.google.android.material.button.MaterialButton
-              android:id="@+id/tabLogin"
-              style="@style/Widget.Material3.Button.OutlinedButton"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:text="@string/form_state_login" />
+                android:id="@+id/tabLogin"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/form_state_login" />
 
             <com.google.android.material.button.MaterialButton
-              android:id="@+id/tabRegister"
-              style="@style/Widget.Material3.Button.OutlinedButton"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:text="@string/form_state_sign_up" />
+                android:id="@+id/tabRegister"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/form_state_sign_up" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
+        <!-- Email -->
         <EditText
-          android:id="@+id/email"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="60dp"
-          android:layout_marginTop="20dp"
-          android:layout_marginEnd="60dp"
-          android:autofillHints="@string/prompt_email"
-          android:hint="@string/prompt_email"
-          android:inputType="textEmailAddress"
-          android:selectAllOnFocus="true"
-          android:textSize="20sp" />
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="@string/prompt_email"
+            android:inputType="textEmailAddress"
+            android:textSize="18sp" />
 
+        <!-- Password -->
         <EditText
-          android:id="@+id/password"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="60dp"
-          android:layout_marginTop="8dp"
-          android:layout_marginEnd="60dp"
-          android:autofillHints="@string/prompt_password"
-          android:hint="@string/prompt_password"
-          android:imeActionLabel="@string/action_sign_in_short"
-          android:imeOptions="actionDone"
-          android:inputType="textPassword"
-          android:selectAllOnFocus="true"
-          android:textSize="20sp" />
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="@string/prompt_password"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:textSize="18sp" />
 
+        <!-- Username -->
         <EditText
-          android:id="@+id/username"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="60dp"
-          android:layout_marginTop="8dp"
-          android:layout_marginEnd="60dp"
-          android:autofillHints="@string/prompt_username"
-          android:hint="@string/prompt_username"
-          android:inputType="textPersonName"
-          android:selectAllOnFocus="true"
-          android:textSize="20sp" />
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:hint="@string/prompt_username"
+            android:inputType="textPersonName"
+            android:textSize="18sp" />
 
+        <!-- Кнопка -->
         <Button
-          android:id="@+id/login"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:layout_marginStart="0dp"
-          android:layout_marginTop="16dp"
-          android:layout_marginEnd="0dp"
-          android:layout_marginBottom="64dp"
-          android:enabled="false"
-          android:text="@string/action_sign_in" />
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="32dp"
+            android:enabled="false"
+            android:text="@string/action_sign_in" />
 
     </LinearLayout>
 

@@ -12,7 +12,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="56dp"
     android:layout_marginTop="20dp"
-    android:text="App Settings"
+    android:text="@string/app_settings"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,10 +45,11 @@
 
         <ImageView
           android:id="@+id/ic_push"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/notification_svgrepo_com" />
 
         <TextView
           android:id="@+id/pushNotificationsText"
@@ -57,7 +58,7 @@
           android:layout_marginStart="8dp"
           android:layout_marginEnd="8dp"
           android:layout_weight="1"
-          android:text="Enable Push-notifications" />
+          android:text="@string/enable_push_notifications" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
           android:id="@+id/switchPush"
@@ -79,11 +80,12 @@
 
         <ImageView
           android:id="@+id/ic_email"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/email_svgrepo_com" />
 
         <TextView
           android:id="@+id/emailNotificationsText"
@@ -92,7 +94,7 @@
           android:layout_marginStart="8dp"
           android:layout_marginEnd="8dp"
           android:layout_weight="1"
-          android:text="Enable Email-notifications" />
+          android:text="@string/enable_email_notifications" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
           android:id="@+id/switchEmail"
@@ -114,11 +116,12 @@
 
         <ImageView
           android:id="@+id/ic_privacy"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/policy_svgrepo_com" />
 
         <TextView
           android:id="@+id/privacyPolicy"
@@ -127,7 +130,7 @@
           android:layout_marginStart="8dp"
           android:layout_marginEnd="8dp"
           android:layout_weight="1"
-          android:text="Privacy Policy" />
+          android:text="@string/privacy_policy" />
 
         <ImageView
           android:id="@+id/ic_chevron_right_1"
@@ -150,11 +153,12 @@
 
         <ImageView
           android:id="@+id/ic_terms"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/policy_svgrepo_com" />
 
         <TextView
           android:id="@+id/termsOfUse"
@@ -163,7 +167,7 @@
           android:layout_marginStart="8dp"
           android:layout_marginEnd="8dp"
           android:layout_weight="1"
-          android:text="Terms Of Use" />
+          android:text="@string/terms_of_use" />
 
         <ImageView
           android:id="@+id/ic_chevron_right_2"
@@ -183,7 +187,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="56dp"
     android:layout_marginTop="40dp"
-    android:text="Account Settings"
+    android:text="@string/account_settings"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/appSettingsCard" />
 
@@ -216,11 +220,12 @@
 
         <ImageView
           android:id="@+id/ic_approve"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/approve_svgrepo_com" />
 
         <TextView
           android:id="@+id/approveProfileText"
@@ -229,7 +234,7 @@
           android:layout_marginStart="8dp"
           android:layout_marginEnd="8dp"
           android:layout_weight="1"
-          android:text="Approve Profile" />
+          android:text="@string/approve_profile" />
 
         <ImageView
           android:id="@+id/ic_chevron_right_3"
@@ -252,11 +257,12 @@
 
         <ImageView
           android:id="@+id/ic_editPass"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/password_svgrepo_com" />
 
         <TextView
           android:id="@+id/editPasswordText"
@@ -265,7 +271,7 @@
           android:layout_marginStart="8dp"
           android:layout_marginEnd="8dp"
           android:layout_weight="1"
-          android:text="Edit Password" />
+          android:text="@string/edit_password" />
 
         <ImageView
           android:id="@+id/ic_chevron_right_4"
@@ -288,11 +294,12 @@
 
         <ImageView
           android:id="@+id/ic_logout"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/logout_svgrepo_com" />
 
         <TextView
           android:id="@+id/logOutText"
@@ -300,7 +307,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="8dp"
           android:layout_marginEnd="8dp"
-          android:text="Logout" />
+          android:text="@string/logout" />
       </LinearLayout>
 
       <LinearLayout
@@ -315,11 +322,12 @@
 
         <ImageView
           android:id="@+id/ic_delete"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/delete_svgrepo_com" />
 
         <TextView
           android:id="@+id/deleteAccountText"
@@ -327,7 +335,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="8dp"
           android:layout_marginEnd="8dp"
-          android:text="Delete Account" />
+          android:text="@string/delete_account" />
       </LinearLayout>
 
     </LinearLayout>
