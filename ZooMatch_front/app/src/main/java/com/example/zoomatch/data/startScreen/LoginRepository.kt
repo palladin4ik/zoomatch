@@ -20,15 +20,13 @@ class LoginRepository(
         userDao.insert(
           UserEntity(
             user.data.id,
-            user.data.email,
             user.data.name,
+            user.data.email,
             user.data.avatar,
             user.data.location,
+            user.data.status,
             user.data.phone_number,
             user.data.role,
-            user.data.last_seen,
-            user.data.is_active,
-            user.data.description
           )
         )
         return Result.Success(user.data.name)

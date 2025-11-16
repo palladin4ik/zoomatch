@@ -57,6 +57,7 @@ class EditProfileActivity : AppCompatActivity() {
         avatar = viewModel.avatarBase64.value,
         name = binding.nameField.text.toString(),
         location = binding.locationField.text.toString(),
+        status = binding.descriptionField.text.toString(),
         email = binding.emailField.text.toString(),
         phoneNumber = binding.phoneNumberField.text.toString()
       )
@@ -88,7 +89,7 @@ class EditProfileActivity : AppCompatActivity() {
 
             binding.nameField.setText(user.name)
             binding.locationField.setText(user.location)
-//            binding.descriptionField.setText(user.description)
+            binding.descriptionField.setText(user.status)
 
             binding.emailField.setText(user.email)
             binding.phoneNumberField.setText(user.phone_number)

@@ -76,7 +76,7 @@
           android:id="@+id/matingsCountText"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="0"
+          android:text="~"
           android:textSize="32sp"
           android:textStyle="bold" />
       </LinearLayout>
@@ -116,7 +116,7 @@
         android:id="@+id/ratingCountText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="4.8"
+        android:text="  ~  "
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/ratingDescText"

@@ -27,4 +27,17 @@ class SettingsDataSource {
       Result.Error(e.message ?: "Network error")
     }
   }
+
+  suspend fun delete(token: String?): Result<String> {
+    return try {
+      val response = zooMatchApi.delete("Bearer $token")
+      if (response.isSuccessful) {
+        Result.Success("Аккаунт удален")
+      } else {
+        Result.Error(response.message() ?: "Ошибка")
+      }
+    } catch (e: Exception) {
+      Result.Error(e.message ?: "Нет сети")
+    }
+  }
 }

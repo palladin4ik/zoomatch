@@ -1,18 +1,91 @@
 package com.example.zoomatch.data.db
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "users")
+@Entity(tableName = "user")
 data class UserEntity(
   @PrimaryKey val id: Int,
-  val email: String,
   val name: String,
+  val email: String,
   val avatar: String?,
-  val location: String?,
+  val location: String,
+  val status: String?,
   val phone_number: String?,
-  val role: Int,
-  val last_seen: String,
-  val is_active: Boolean,
-  val description: String?
+  val role: Int = 0
+)
+
+@Entity(tableName = "animal_type")
+data class AnimalTypeEntity(
+  @PrimaryKey val id: Int,
+  val name: String
+)
+
+@Entity(tableName = "breed")
+data class BreedEntity(
+  @PrimaryKey val id: Int,
+  val name: String,
+  val animal_type: Int        // FK → AnimalType.id
+)
+
+@Entity(tableName = "tag")
+data class TagEntity(
+  @PrimaryKey val id: Int,
+  val tag: String
+)
+
+@Entity(
+  tableName = "pet",
+  foreignKeys = [
+    ForeignKey(
+      entity = AnimalTypeEntity::class,
+      parentColumns = ["id"],
+      childColumns = ["animal_type_id"],
+      onDelete = ForeignKey.SET_NULL
+    ),
+    ForeignKey(
+      entity = BreedEntity::class,
+      parentColumns = ["id"],
+      childColumns = ["breed_id"],
+      onDelete = ForeignKey.SET_NULL
+    ),
+    ForeignKey(
+      entity = UserEntity::class,
+      parentColumns = ["id"],
+      childColumns = ["owner_id"],
+      onDelete = ForeignKey.CASCADE
+    )
+  ],
+  indices = [Index("animal_type_id"), Index("breed_id"), Index("owner_id")]
+)
+data class PetEntity(
+  @PrimaryKey val id: Int,
+  val name: String,
+  val animal_type_id: Int?,
+  val breed_id: Int?,
+  val is_male: Boolean,
+  val age: Int,
+  val owner_id: Int,
+  val avatar: String?,
+  val location: String,
+  val has_pedigree: Boolean = false,
+  val pedigree_documents: String?,
+  val awards: String?,
+  val description: String?,
+  val is_active: Boolean = false
+)
+
+@Entity(
+  tableName = "pet_tag",
+  primaryKeys = ["pet_id", "tag_id"],
+  foreignKeys = [
+    ForeignKey(PetEntity::class, ["id"], ["pet_id"]),
+    ForeignKey(TagEntity::class, ["id"], ["tag_id"])
+  ]
+)
+data class PetTagCrossRef(
+  val pet_id: Int,
+  val tag_id: Int
 )

@@ -50,7 +50,7 @@ class ProfileFragment : Fragment() {
           viewModel.user.collect { user ->
             binding.userName.text = user.name
             binding.userGeo.text = user.geo
-            binding.userBio.text = user.description
+            binding.userBio.text = user.status
             ImageUtils.base64ToBitmap(user.avatar)?.let { bitmap ->
               binding.userAvatar.setImageBitmap(bitmap)
             } ?: binding.userAvatar.setImageResource(R.drawable.test_avatar)

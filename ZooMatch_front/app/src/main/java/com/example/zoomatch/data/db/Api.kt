@@ -8,10 +8,12 @@ import com.example.zoomatch.data.startScreen.JwtResponse
 import com.example.zoomatch.data.startScreen.LoginRequest
 import com.example.zoomatch.data.startScreen.RegUser
 import com.example.zoomatch.data.startScreen.RegUserResponse
+import com.example.zoomatch.data.startScreen.UserProfileDto
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
@@ -27,7 +29,7 @@ interface ZooMatchApi {
   suspend fun registerUser(@Body user: RegUser): Response<RegUserResponse>
 
   @POST("jwt/create/")
-  suspend fun loginUser(@Body credentials: LoginRequest): Response<JwtResponse>
+  suspend fun loginUser(@Body body: LoginRequest): Response<JwtResponse>
 
   @POST("jwt/refresh/")
   suspend fun refreshToken(@Body body: RefreshRequest): Response<RefreshResponse>
@@ -35,7 +37,7 @@ interface ZooMatchApi {
   @GET("me/")
   suspend fun getProfile(
     @Header("Authorization") auth: String
-  ): Response<UserEntity>
+  ): Response<UserProfileDto>
 
   @PATCH("me/")
   suspend fun updateProfile(
@@ -48,6 +50,11 @@ interface ZooMatchApi {
     @Header("Authorization") auth: String,
     @Body body: EditPassRequest
   ): Response<EditPassResponse>
+
+  @DELETE("me/")
+  suspend fun delete(
+    @Header("Authorization") auth: String,
+  ): Response<String>
 }
 
 object Network {

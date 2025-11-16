@@ -20,7 +20,7 @@ class ProfileRepository(
     avatar: String?,
     name: String,
     location: String,
-//    description: String,
+    status: String,
     email: String,
     phoneNumber: String
   ): Result<String> {
@@ -30,7 +30,7 @@ class ProfileRepository(
         avatar,
         name,
         location,
-//        description,
+        status,
         email,
         phoneNumber,
       )
@@ -41,7 +41,7 @@ class ProfileRepository(
           name = result.data.name,
           location = result.data.location,
           email = result.data.email,
-//          description = result.data.description,
+          status = result.data.status,
           phoneNumber = result.data.phone_number,
           avatar = result.data.avatar
         )

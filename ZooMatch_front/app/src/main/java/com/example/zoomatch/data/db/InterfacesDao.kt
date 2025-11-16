@@ -13,14 +13,15 @@ interface UserDao {
 
   @Query(
     """
-    UPDATE users SET 
-    name = :name,
-    location = :location,
-    email = :email,
-    phone_number = :phoneNumber,
-    avatar = :avatar
-    WHERE id = :id
-    """
+        UPDATE user SET 
+        name = :name,
+        location = :location,
+        email = :email,
+        phone_number = :phoneNumber,
+        avatar = :avatar,
+        status = :status
+        WHERE id = :id
+        """
   )
   suspend fun update(
     id: Int,
@@ -28,12 +29,13 @@ interface UserDao {
     location: String,
     email: String,
     phoneNumber: String?,
-    avatar: String?
+    avatar: String?,
+    status: String?
   )
 
-  @Query("SELECT * FROM users LIMIT 1")
+  @Query("SELECT * FROM user LIMIT 1")
   fun getCurrentUserFlow(): Flow<UserEntity>
 
-  @Query("DELETE FROM users")
+  @Query("DELETE FROM user")
   suspend fun clear()
 }

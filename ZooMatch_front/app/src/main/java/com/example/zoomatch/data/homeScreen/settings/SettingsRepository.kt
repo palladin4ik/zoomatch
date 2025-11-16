@@ -25,4 +25,17 @@ class SettingsRepository(
     tokenManager.clearTokens()
     userDao.clear()
   }
+
+  suspend fun delete() : Result<String>{
+    val result = dataSource.delete(tokenManager.getAccessToken())
+    if (result is Result.Success){
+      tokenManager.clearTokens()
+      userDao.clear()
+      return Result.Success("Аккаунт удален")
+    } else {
+      return result
+    }
+
+  }
+
 }

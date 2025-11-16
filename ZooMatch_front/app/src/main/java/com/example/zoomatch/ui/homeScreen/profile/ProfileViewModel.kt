@@ -20,7 +20,7 @@ class ProfileViewModel(
         it.avatar.orEmpty(),
         it.name,
         it.location.orEmpty(),
-        it.description.orEmpty()
+        it.status.orEmpty()
       )
     }
     .stateIn(

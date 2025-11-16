@@ -15,3 +15,7 @@ data class EditPassRequest(
   val old_password: String,
   val new_password: String
 )
+
+data class deleteAccResponse(
+  val res: String?
+)

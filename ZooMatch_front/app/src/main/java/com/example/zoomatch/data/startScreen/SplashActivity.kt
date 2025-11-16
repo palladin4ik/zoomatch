@@ -26,6 +26,7 @@ class SplashActivity : AppCompatActivity() {
 
       if (access != null) {
         try {
+          // TODO: обоновить данные пользователя
           val response = api.getProfile("Bearer $access")
           if (response.isSuccessful) {
             goToHome()

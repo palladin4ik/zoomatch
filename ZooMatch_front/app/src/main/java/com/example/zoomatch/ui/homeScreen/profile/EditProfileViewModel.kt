@@ -27,7 +27,7 @@ class EditProfileViewModel(
         it.avatar.orEmpty(),
         it.name,
         it.location.orEmpty(),
-//        it.description.orEmpty(),
+        it.status.orEmpty(),
         it.email,
         it.phone_number.orEmpty()
       )
@@ -39,7 +39,7 @@ class EditProfileViewModel(
         null,
         "Загрузка...",
         "",
-//        "",
+        "",
         "",
         ""
       )
@@ -81,13 +81,13 @@ class EditProfileViewModel(
     avatar: String?,
     name: String,
     location: String,
-//    description: String,
+    status: String,
     email: String,
     phoneNumber: String
   ) {
     viewModelScope.launch {
       val result = repository.updateProfile(
-        avatar, name, location, email, phoneNumber
+        avatar, name, location, status, email, phoneNumber
       )
       _updateResult.send(result)
     }

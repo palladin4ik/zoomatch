@@ -22,7 +22,18 @@ class LoginDataSource {
     return try {
       val response = zooMatchApi.getProfile("Bearer $token")
       if (response.isSuccessful && response.body() != null) {
-        Result.Success(response.body()!!)
+        val dto = response.body()!!
+        val entity = UserEntity(
+          id = dto.id,
+          name = dto.name,
+          email = dto.email,
+          avatar = dto.avatar,
+          location = dto.location,
+          status = dto.status,
+          phone_number = dto.phone_number,
+          role = dto.role
+        )
+        Result.Success(entity)
       } else {
         Result.Error(response.message() ?: "Failed to fetch profile info")
       }

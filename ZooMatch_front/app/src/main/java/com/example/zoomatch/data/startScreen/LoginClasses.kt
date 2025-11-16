@@ -23,6 +23,22 @@ data class LoginRequest(
   val password: String
 )
 
+data class UserProfileDto(
+  val id: Int,
+  val name: String,
+  val email: String,
+  val avatar: String?,
+  val location: String,
+  val status: String?,
+  val phone_number: String?,
+  val role: Int,
+  val pets: List<PetShortDto>
+)
+
+data class PetShortDto(
+  val id: Int
+)
+
 data class JwtResponse(
   @SerializedName("access") val access: String,
   @SerializedName("refresh") val refresh: String

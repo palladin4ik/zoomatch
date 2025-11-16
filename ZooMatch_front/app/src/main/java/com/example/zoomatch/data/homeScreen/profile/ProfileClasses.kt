@@ -9,14 +9,14 @@ data class UserUI(
   val avatar: String,
   var name: String,
   val geo: String,
-  val description: String,
+  val status: String,
 )
 
 data class UserEditUI(
   val avatar: String? = null,
   var name: String,
   val location: String,
-//  val description: String,
+  val status: String,
   val email: String,
   val phone_number: String
 )
@@ -26,7 +26,7 @@ data class UserEditResponse(
   val avatar: String?,
   var name: String,
   val location: String,
-//  val description: String,
+  val status: String,
   val email: String,
   val phone_number: String
 )

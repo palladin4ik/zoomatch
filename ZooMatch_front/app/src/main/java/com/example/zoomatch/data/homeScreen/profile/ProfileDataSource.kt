@@ -10,7 +10,7 @@ class ProfileDataSource {
     avatar: String?,
     name: String,
     location: String,
-//    description: String,
+    status: String,
     email: String,
     phoneNumber: String
   ): Result<UserEditResponse> {
@@ -21,7 +21,7 @@ class ProfileDataSource {
           avatar,
           name,
           location,
-//          description,
+          status,
           email,
           phoneNumber
         )
