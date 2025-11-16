@@ -52,11 +52,10 @@ class ProfileViewSet(viewsets.ViewSet):
 
     @extend_schema(
             summary='Удаление текущего пользователя',
-            responses={"204": {"description": "Пользователь удален"}}
     )
     def destroy(self, request):
         request.user.delete()
-        return Response({'detail': 'Пользователь удален'}, status=204)
+        return Response(status=204)
 
     @extend_schema(
             summary='Смена пароля текущего пользователя',
