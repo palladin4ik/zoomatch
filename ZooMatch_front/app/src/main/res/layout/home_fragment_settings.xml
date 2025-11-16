@@ -48,7 +48,7 @@
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/notification_svgrepo_com" />
 
         <TextView
           android:id="@+id/pushNotificationsText"
@@ -83,7 +83,7 @@
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/email_svgrepo_com" />
 
         <TextView
           android:id="@+id/emailNotificationsText"
@@ -118,7 +118,7 @@
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/policy_svgrepo_com" />
 
         <TextView
           android:id="@+id/privacyPolicy"
@@ -154,7 +154,7 @@
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/policy_svgrepo_com" />
 
         <TextView
           android:id="@+id/termsOfUse"
@@ -220,7 +220,7 @@
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/approve_svgrepo_com" />
 
         <TextView
           android:id="@+id/approveProfileText"
@@ -256,7 +256,7 @@
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/password_svgrepo_com" />
 
         <TextView
           android:id="@+id/editPasswordText"
@@ -292,7 +292,7 @@
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/logout_svgrepo_com" />
 
         <TextView
           android:id="@+id/logOutText"
@@ -319,7 +319,7 @@
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0"
-          android:src="@drawable/test_avatar" />
+          android:src="@drawable/delete_svgrepo_com" />
 
         <TextView
           android:id="@+id/deleteAccountText"
