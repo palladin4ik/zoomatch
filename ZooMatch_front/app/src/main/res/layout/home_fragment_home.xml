@@ -117,6 +117,7 @@
 
             <ImageView
               android:id="@+id/ic_matings"
+                app:tint="?attr/colorOnSurfaceVariant"
               android:layout_width="36dp"
               android:layout_height="36dp"
               android:layout_marginStart="8dp"
@@ -168,6 +169,7 @@
 
             <ImageView
               android:id="@+id/ic_rating"
+                app:tint="?attr/colorOnSurfaceVariant"
               android:layout_width="36dp"
               android:layout_height="36dp"
               android:layout_marginStart="8dp"
@@ -226,6 +228,7 @@
 
             <ImageView
               android:id="@+id/ic_newDialog"
+                app:tint="?attr/colorOnSurfaceVariant"
               android:layout_width="36dp"
               android:layout_height="36dp"
               android:layout_marginStart="8dp"
@@ -277,6 +280,7 @@
 
             <ImageView
               android:id="@+id/ic_views"
+                app:tint="?attr/colorOnSurfaceVariant"
               android:layout_width="36dp"
               android:layout_height="36dp"
               android:layout_marginStart="8dp"

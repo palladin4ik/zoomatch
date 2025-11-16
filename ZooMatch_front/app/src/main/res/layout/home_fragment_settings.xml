@@ -45,6 +45,7 @@
 
         <ImageView
           android:id="@+id/ic_push"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
@@ -79,6 +80,7 @@
 
         <ImageView
           android:id="@+id/ic_email"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
@@ -114,6 +116,7 @@
 
         <ImageView
           android:id="@+id/ic_privacy"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
@@ -150,6 +153,7 @@
 
         <ImageView
           android:id="@+id/ic_terms"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
@@ -216,6 +220,7 @@
 
         <ImageView
           android:id="@+id/ic_approve"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
@@ -252,6 +257,7 @@
 
         <ImageView
           android:id="@+id/ic_editPass"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
@@ -288,6 +294,7 @@
 
         <ImageView
           android:id="@+id/ic_logout"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
@@ -315,6 +322,7 @@
 
         <ImageView
           android:id="@+id/ic_delete"
+            app:tint="?attr/colorOnSurfaceVariant"
           android:layout_width="36dp"
           android:layout_height="36dp"
           android:layout_marginStart="8dp"
