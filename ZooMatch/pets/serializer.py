@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 
-from .models import AnimalType, Breed, Tag, Pet, PetInfo, Comment
+from .models import (AnimalType, Breed, Tag, Pet, PetInfo, Comment,
+                     Match)
 from users.serializers import UserSerializer, Base64FileField
 
 
@@ -118,6 +119,14 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
                 instance.tags.add(tag)
 
         return instance
+
+
+class MatchSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Match
+        fields = ('id', 'pet_from', 'pet_to', 'created_at')
+        read_only_fields = ('id', 'created_at')
 
 
 class PetInfoSerializer(serializers.ModelSerializer):
