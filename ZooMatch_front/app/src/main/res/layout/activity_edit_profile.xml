@@ -66,7 +66,7 @@
         android:id="@+id/nameField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Имя" />
+        android:hint="@string/name" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -80,7 +80,7 @@
         android:id="@+id/locationField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Город" />
+        android:hint="@string/location" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -96,7 +96,7 @@
         android:id="@+id/descriptionField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Описание"
+        android:hint="@string/description"
         android:singleLine="false" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -111,7 +111,7 @@
         android:id="@+id/emailField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email" />
+        android:hint="@string/email" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -125,7 +125,7 @@
         android:id="@+id/phoneNumberField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Номер телефона" />
+        android:hint="@string/phone_number" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
@@ -139,7 +139,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Закрыть" />
+        android:text="@string/cancel" />
 
       <Space
         android:layout_width="wrap_content"
@@ -151,7 +151,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Сохранить" />
+        android:text="@string/save" />
     </LinearLayout>
 
   </LinearLayout>

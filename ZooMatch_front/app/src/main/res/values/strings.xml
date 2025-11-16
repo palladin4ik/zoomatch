@@ -50,4 +50,15 @@
     <string name="invalid_name">Имя не может быть пустым</string>
     <string name="invalid_phone">Используйте формат +7XXXXXXXXXX</string>
     <string name="invalid_password2">Пароль слишком короткий или отличается</string>
+    <string name="old_password">Старый пароль</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="confirm_password">Повторите пароль</string>
+    <string name="cancel">Закрыть</string>
+    <string name="change_password">Изменить пароль</string>
+    <string name="name">Имя</string>
+    <string name="location">Город</string>
+    <string name="description">Описание</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="save">Сохранить</string>
 </resources>

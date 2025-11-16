@@ -45,4 +45,18 @@
     <string name="pets_in_profile">Pets in profile</string>
     <string name="successful_matings">Successful maitings</string>
     <string name="rating">Rating</string>
+    <string name="error_to_update_profile">Error to update profile</string>
+    <string name="invalid_name">Invalid name</string>
+    <string name="invalid_phone">Invalid phone</string>
+    <string name="invalid_password2">Invalid password</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="cancel">Cancel</string>
+    <string name="change_password">Change password</string>
+    <string name="name">Name</string>
+    <string name="location">Location</string>
+    <string name="description">Description</string>
+    <string name="phone_number">Phone number</string>
+    <string name="save">Save</string>
 </resources>
