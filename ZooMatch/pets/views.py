@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, mixins, serializers
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db.models import Q
@@ -9,9 +9,10 @@ from drf_spectacular.utils import (extend_schema, extend_schema_view,
 from .serializer import (
     AnimalTypeSerializer, BreedSerializer,
     PetSerializer, PetCreateUpdateSerializer,
-    PetInfoSerializer, CommentSerializer
+    PetInfoSerializer, CommentSerializer,
+    MatchSerializer
 )
-from .models import AnimalType, Breed, Pet, PetInfo, Comment
+from .models import AnimalType, Breed, Pet, PetInfo, Comment, Match
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 
 
@@ -192,3 +193,53 @@ class PetViewSet(viewsets.ModelViewSet):
         queryset = Pet.objects.filter(owner=request.user)
         serializer = PetSerializer(queryset, many=True)
         return Response(serializer.data)
+
+
+@extend_schema_view(
+    create=extend_schema(
+        summary='Создать метч',
+        description='Создает метч между 2 питомцами\n\n',
+        request=MatchSerializer,
+        responses=MatchSerializer
+    ),
+    list_matches=extend_schema(
+        summary='Список метчей питомца',
+        description='Возвращает список всех метчей питомца по его `id`'
+    )
+)
+class MatchViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    queryset = Match.objects.all()
+    serializer_class = MatchSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        pet_from_id = self.request.data.get('pet_from')
+
+        try:
+            pet_from = Pet.objects.get(id=pet_from_id)
+        except Pet.DoesNotExist:
+            raise serializers.ValidationError(
+                {"pet_from": "Питомец не найден"}
+            )
+
+        if pet_from.owner != self.request.user:
+            raise serializers.ValidationError(
+                {"detail": "Метч от имени чужого питомца"}
+            )
+
+        serializer.save()
+
+    @action(detail=True, methods=['get'], url_path='list-matches')
+    def list_matches(self, request, pk=None):
+        try:
+            pet = Pet.objects.get(id=pk)
+        except Pet.DoesNotExist:
+            return Response({"detail": "Питомец не найден"}, status=404)
+
+        if pet.owner != request.user:
+            return Response({"detail": "Нет доступа"}, status=403)
+
+        matches = Match.objects.filter(pet_from=pet)
+        pet_list = matches.values_list('pet_to_id', flat=True)
+
+        return Response({"matches": list(pet_list)})
