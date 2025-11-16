@@ -1,5 +1,6 @@
 package com.example.zoomatch.data.startScreen
 
+import com.example.zoomatch.data.Result
 import com.example.zoomatch.data.db.Network.zooMatchApi
 
 class RegDataSource {

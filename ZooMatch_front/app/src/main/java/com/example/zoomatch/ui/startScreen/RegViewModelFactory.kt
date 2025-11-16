@@ -10,6 +10,7 @@ import com.example.zoomatch.data.startScreen.RegDataSource
 import com.example.zoomatch.data.startScreen.RegRepository
 
 class RegViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+  @Suppress("UNCHECKED_CAST")
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
     val tokenManager = TokenManager(context)
     val db = AppDatabase.getDatabase(context)

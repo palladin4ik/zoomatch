@@ -1,5 +1,6 @@
 package com.example.zoomatch.data.startScreen
 
+import com.example.zoomatch.data.Result
 import com.example.zoomatch.data.db.Network.zooMatchApi
 import com.example.zoomatch.data.db.UserEntity
 
@@ -17,7 +18,7 @@ class LoginDataSource {
     }
   }
 
-  suspend fun getUserInfo(token: String): Result<UserEntity>{
+  suspend fun getUserInfo(token: String): Result<UserEntity> {
     return try {
       val response = zooMatchApi.getProfile("Bearer $token")
       if (response.isSuccessful && response.body() != null) {

@@ -1,5 +1,6 @@
 package com.example.zoomatch.data.startScreen
 
+import com.example.zoomatch.data.UserDisplay
 import com.google.gson.annotations.SerializedName
 
 data class LoginFormState(

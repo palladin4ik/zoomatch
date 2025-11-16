@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.zoomatch.databinding.HomeFragmentSettingsBinding
 import com.example.zoomatch.ui.LayoutWip
 import com.example.zoomatch.ui.homeScreen.HomeViewModelFactory
+import com.example.zoomatch.ui.homeScreen.settings.utils.EditPassActivity
 import com.example.zoomatch.ui.startScreen.StartActivity
 import kotlinx.coroutines.launch
 
@@ -30,40 +31,41 @@ class SettingsFragment : Fragment() {
   ): View {
     _binding = HomeFragmentSettingsBinding.inflate(inflater, container, false)
 
-    setupClickListeners()
-    observeEvents()
+    setupUI()
+    observeData()
 
     return binding.root
   }
 
-  private fun setupClickListeners() {
-    binding.logOutLayout.setOnClickListener { viewModel.onLogoutClicked() }
-    binding.privacyPolicyLayout.setOnClickListener { viewModel.onOpenPrivacyClick() }
-    binding.termsOfUseLayout.setOnClickListener { viewModel.onOpenTermsClick() }
-    binding.approveProfileLayout.setOnClickListener { viewModel.onOpenApproveProfileClick() }
-    binding.editPasswordLayout.setOnClickListener { viewModel.onOpenEditPasswordClick() }
+  private fun setupUI() {
+    binding.logOutLayout.setOnClickListener { viewModel.logoutClick() }
+    binding.privacyPolicyLayout.setOnClickListener { openWip() }
+    binding.termsOfUseLayout.setOnClickListener { openWip() }
+    binding.approveProfileLayout.setOnClickListener { openWip() }
+    binding.editPasswordLayout.setOnClickListener { editPass() }
   }
 
-  private fun observeEvents() {
+  private fun observeData() {
     viewLifecycleOwner.lifecycleScope.launch {
       viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-        launch { viewModel.logout.collect { handleLogout() } }
-        launch { viewModel.openPrivacy.collect { openWip() } }
-        launch { viewModel.openTerms.collect { openWip() } }
-        launch { viewModel.openApproveProfile.collect { openWip() } }
-        launch { viewModel.openEditPassword.collect { openWip() } }
+        launch {
+          viewModel.logout.collect {
+            requireActivity().finish()
+            startActivity(Intent(requireContext(), StartActivity::class.java))
+          }
+        }
       }
     }
-  }
-
-  private fun handleLogout() {
-    requireActivity().finish()
-    startActivity(Intent(requireContext(), StartActivity::class.java))
   }
 
   private fun openWip() {
     startActivity(Intent(requireContext(), LayoutWip::class.java))
   }
+
+  private fun editPass(){
+    startActivity(Intent(requireContext(), EditPassActivity::class.java))
+  }
+
 
   override fun onDestroyView() {
     super.onDestroyView()

@@ -10,18 +10,24 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.zoomatch.R
-import com.example.zoomatch.data.startScreen.UserDisplay
+import com.example.zoomatch.data.UserDisplay
 import com.example.zoomatch.databinding.ActivityStartBinding
 import com.example.zoomatch.ui.homeScreen.HomeActivity
 
 class StartActivity : AppCompatActivity() {
 
-  private lateinit var loginViewModel: LoginViewModel
-  private lateinit var regViewModel: RegViewModel
+  private val loginViewModel: LoginViewModel by viewModels {
+    LoginViewModelFactory(application)
+  }
+  private val regViewModel: RegViewModel by viewModels {
+    RegViewModelFactory(application)
+  }
+
+
   private lateinit var binding: ActivityStartBinding
   private var currentMode = 1
 
@@ -30,10 +36,6 @@ class StartActivity : AppCompatActivity() {
     binding = ActivityStartBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    loginViewModel =
-      ViewModelProvider(this, LoginViewModelFactory(application))[LoginViewModel::class.java]
-    regViewModel =
-      ViewModelProvider(this, RegViewModelFactory(application))[RegViewModel::class.java]
     initListeners()
 
     loginViewModel.loginFormState.observe(this) { state ->
@@ -73,6 +75,7 @@ class StartActivity : AppCompatActivity() {
     binding.tabGroup.check(R.id.tabLogin)
   }
 
+  //same as setupUI
   private fun initListeners() {
     val email = binding.email
     val password = binding.password
@@ -143,7 +146,6 @@ class StartActivity : AppCompatActivity() {
       }
     }
   }
-
 
   private fun toggleForm(param: Int) {
     if (param == currentMode) return

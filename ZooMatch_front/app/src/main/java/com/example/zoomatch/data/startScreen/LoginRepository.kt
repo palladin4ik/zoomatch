@@ -1,5 +1,6 @@
 package com.example.zoomatch.data.startScreen
 
+import com.example.zoomatch.data.Result
 import com.example.zoomatch.data.db.TokenManager
 import com.example.zoomatch.data.db.UserDao
 import com.example.zoomatch.data.db.UserEntity
@@ -26,7 +27,8 @@ class LoginRepository(
             user.data.phone_number,
             user.data.role,
             user.data.last_seen,
-            user.data.is_active
+            user.data.is_active,
+            user.data.description
           )
         )
         return Result.Success(user.data.name)

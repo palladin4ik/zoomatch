@@ -1,21 +1,54 @@
 package com.example.zoomatch.data.homeScreen.profile
 
-import androidx.lifecycle.MutableLiveData
+import com.example.zoomatch.data.Result
+import com.example.zoomatch.data.db.TokenManager
 import com.example.zoomatch.data.db.UserDao
 import com.example.zoomatch.data.db.UserEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 
 class ProfileRepository(
+  private val dataSource: ProfileDataSource,
+  private val tokenManager: TokenManager,
   private val userDao: UserDao
 ) {
+  val userFlow: Flow<UserEntity> = userDao.getCurrentUserFlow()
+    .flowOn(Dispatchers.IO)
 
-  suspend fun getUser(): MutableLiveData<userUI>{
-    val user = userDao.getCurrentUser()
-    val userUI = userUI(
-      user?.avatar.toString(),
-      user?.name.toString(),
-      user?.location.toString(),
-      user?.description.toString())
-    return userUI as MutableLiveData<userUI>
+  suspend fun updateProfile(
+    avatar: String?,
+    name: String,
+    location: String,
+//    description: String,
+    email: String,
+    phoneNumber: String
+  ): Result<String> {
+    return when (
+      val result = dataSource.updateProfile(
+        tokenManager.getAccessToken(),
+        avatar,
+        name,
+        location,
+//        description,
+        email,
+        phoneNumber,
+      )
+    ) {
+      is Result.Success -> {
+        userDao.update(
+          id = result.data.id,
+          name = result.data.name,
+          location = result.data.location,
+          email = result.data.email,
+//          description = result.data.description,
+          phoneNumber = result.data.phone_number,
+          avatar = result.data.avatar
+        )
+        Result.Success("Данные обновлены")
+      }
+
+      is Result.Error -> result
+    }
   }
-
 }

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">ZooMatch</string>
-  <string name="title_activity_start">StartActivity</string>
-  <string name="prompt_email">Email</string>
-  <string name="prompt_password">Password</string>
-  <string name="prompt_username">Username</string>
-  <string name="action_sign_in">Sign in or register</string>
-  <string name="action_sign_in_short">Sign in</string>
-  <string name="welcome">"Welcome !"</string>
-  <string name="invalid_email">Not a valid email</string>
-  <string name="invalid_password">Password must be >5 characters</string>
-  <string name="invalid_username">Not a valid username</string>
-  <string name="login_failed">"Login failed"</string>
-  <string name="form_state_login">Login</string>
-  <string name="form_state_sign_up">Sign up</string>
+  <string name="app_name" translatable="false">ZooMatch</string>
+  <string name="title_activity_start">Начальная страница</string>
+  <string name="prompt_email" translatable="false">Email</string>
+  <string name="prompt_password">Пароль</string>
+  <string name="prompt_username">Имя пользователя</string>
+  <string name="action_sign_in">Войдите или зарегистрируйтесь</string>
+  <string name="action_sign_in_short">Войти</string>
+  <string name="welcome">Добро пожаловать</string>
+  <string name="invalid_email">Неподходящий email</string>
+  <string name="invalid_password">Пароль должен содержать больше 5 символов</string>
+  <string name="invalid_username">Недействительное имя пользователя</string>
+  <string name="login_failed">Ошибка входа</string>
+  <string name="form_state_login">Войти</string>
+  <string name="form_state_sign_up">Зарегистрироваться</string>
 </resources>

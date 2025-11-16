@@ -6,11 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.zoomatch.R
+import com.example.zoomatch.data.Result
 import com.example.zoomatch.data.startScreen.RegFormState
 import com.example.zoomatch.data.startScreen.RegRepository
 import com.example.zoomatch.data.startScreen.RegResult
 import com.example.zoomatch.data.startScreen.RegUserView
-import com.example.zoomatch.data.startScreen.Result
 import kotlinx.coroutines.launch
 
 class RegViewModel(private val repository: RegRepository) : ViewModel() {
