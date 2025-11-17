@@ -34,14 +34,6 @@ data class BreedEntity(
   constructor() : this(0, "", 0)
 }
 
-@Entity(tableName = "tag")
-data class TagEntity(
-  @PrimaryKey val id: Int,
-  val tag: String
-) {
-  constructor() : this(0, "")
-}
-
 @Entity(
   tableName = "pet",
   foreignKeys = [
@@ -83,26 +75,34 @@ data class PetEntity(
   val is_active: Boolean = false
 )
 
-@Entity(
-  tableName = "pet_tag",
-  primaryKeys = ["pet_id", "tag_id"],
-  foreignKeys = [
-    ForeignKey(
-      entity = PetEntity::class,
-      parentColumns = ["id"],
-      childColumns = ["pet_id"],
-      onDelete = ForeignKey.CASCADE
-    ),
-    ForeignKey(
-      entity = TagEntity::class,
-      parentColumns = ["id"],
-      childColumns = ["tag_id"],
-      onDelete = ForeignKey.CASCADE
-    )
-  ],
-  indices = [Index("pet_id"), Index("tag_id")]
-)
-data class PetTagCrossRef(
-  val pet_id: Int,
-  val tag_id: Int
-)
+//@Entity(tableName = "tag")
+//data class TagEntity(
+//  @PrimaryKey val id: Int,
+//  val tag: String
+//) {
+//  constructor() : this(0, "")
+//}
+
+//@Entity(
+//  tableName = "pet_tag",
+//  primaryKeys = ["pet_id", "tag_id"],
+//  foreignKeys = [
+//    ForeignKey(
+//      entity = PetEntity::class,
+//      parentColumns = ["id"],
+//      childColumns = ["pet_id"],
+//      onDelete = ForeignKey.CASCADE
+//    ),
+//    ForeignKey(
+//      entity = TagEntity::class,
+//      parentColumns = ["id"],
+//      childColumns = ["tag_id"],
+//      onDelete = ForeignKey.CASCADE
+//    )
+//  ],
+//  indices = [Index("pet_id"), Index("tag_id")]
+//)
+//data class PetTagCrossRef(
+//  val pet_id: Int,
+//  val tag_id: Int
+//)

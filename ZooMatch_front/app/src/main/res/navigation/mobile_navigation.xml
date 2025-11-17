@@ -7,9 +7,9 @@
 
   <fragment
     android:id="@+id/navigation_search"
-    android:name="com.example.zoomatch.ui.homeScreen.search.SearchFragment"
+    android:name="com.example.zoomatch.ui.homeScreen.search.MatchFragment"
     android:label="@string/title_search"
-    tools:layout="@layout/home_fragment_search" />
+    tools:layout="@layout/home_fragment_match" />
 
   <fragment
     android:id="@+id/navigation_pets"

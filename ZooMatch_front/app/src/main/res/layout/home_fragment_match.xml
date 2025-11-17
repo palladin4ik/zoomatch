@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:padding="16dp">
+
+  <com.google.android.material.tabs.TabLayout
+    android:id="@+id/tabLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
+    app:tabGravity="fill"
+    app:tabMode="fixed">
+
+    <com.google.android.material.tabs.TabItem
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Поиск пары" />
+
+    <com.google.android.material.tabs.TabItem
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Ваши заявки" />
+  </com.google.android.material.tabs.TabLayout>
+
+
+  <com.google.android.material.button.MaterialButtonToggleGroup
+    android:id="@+id/tabGroup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    app:checkedButton="@id/viewListButton"
+    app:layout_constraintTop_toBottomOf="@id/tabLayout"
+    app:singleSelection="true">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/viewListButton"
+      style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      app:icon="@drawable/list_svgrepo_com"
+      app:iconGravity="textStart"
+      app:iconTint="?attr/colorOnSurfaceVariant" />
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/viewGroupButton"
+      style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      app:icon="@drawable/grid_svgrepo_com"
+      app:iconGravity="textStart"
+      app:iconTint="?attr/colorOnSurfaceVariant" />
+  </com.google.android.material.button.MaterialButtonToggleGroup>
+
+  <androidx.viewpager2.widget.ViewPager2
+    android:id="@+id/viewPager"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_marginTop="16dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/tabGroup" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -96,4 +96,17 @@ class PetsDataSource {
       Result.Error(e.message ?: "Network error")
     }
   }
+
+  suspend fun deletePet(token: String?, id: Int): Result<String> {
+    return try {
+      val response = zooMatchApi.deletePet("Bearer $token", id)
+      if (response.isSuccessful) {
+        Result.Success("Питомец удалён")
+      } else {
+        Result.Error(response.message() ?: "Invalid Data")
+      }
+    } catch (e: Exception) {
+      Result.Error(e.message ?: "Network error")
+    }
+  }
 }

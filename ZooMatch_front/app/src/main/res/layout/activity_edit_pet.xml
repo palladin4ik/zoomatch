@@ -156,34 +156,34 @@
         android:layout_marginTop="8dp"
         android:text="Есть родословная" />
 
-      <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/pedigreeDocsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:hintEnabled="true">
+      <!--      <com.google.android.material.textfield.TextInputLayout-->
+      <!--        android:id="@+id/pedigreeDocsLayout"-->
+      <!--        android:layout_width="match_parent"-->
+      <!--        android:layout_height="wrap_content"-->
+      <!--        android:layout_marginTop="8dp"-->
+      <!--        app:hintEnabled="true">-->
 
-        <com.google.android.material.textfield.TextInputEditText
-          android:id="@+id/pedigreeDocsField"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:hint="Документы родословной" />
-      </com.google.android.material.textfield.TextInputLayout>
+      <!--        <com.google.android.material.textfield.TextInputEditText-->
+      <!--          android:id="@+id/pedigreeDocsField"-->
+      <!--          android:layout_width="match_parent"-->
+      <!--          android:layout_height="wrap_content"-->
+      <!--          android:hint="Документы родословной" />-->
+      <!--      </com.google.android.material.textfield.TextInputLayout>-->
 
 
-      <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/awardsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:hintEnabled="true">
+      <!--      <com.google.android.material.textfield.TextInputLayout-->
+      <!--        android:id="@+id/awardsLayout"-->
+      <!--        android:layout_width="match_parent"-->
+      <!--        android:layout_height="wrap_content"-->
+      <!--        android:layout_marginTop="8dp"-->
+      <!--        app:hintEnabled="true">-->
 
-        <com.google.android.material.textfield.TextInputEditText
-          android:id="@+id/awardsField"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:hint="Награды" />
-      </com.google.android.material.textfield.TextInputLayout>
+      <!--        <com.google.android.material.textfield.TextInputEditText-->
+      <!--          android:id="@+id/awardsField"-->
+      <!--          android:layout_width="match_parent"-->
+      <!--          android:layout_height="wrap_content"-->
+      <!--          android:hint="Награды" />-->
+      <!--      </com.google.android.material.textfield.TextInputLayout>-->
 
       <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/descriptionLayout"
@@ -222,10 +222,17 @@
           android:layout_weight="1"
           android:text="Закрыть" />
 
+        <com.google.android.material.button.MaterialButton
+          android:id="@+id/deleteButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="Удалить" />
+
         <Space
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_weight="4" />
+          android:layout_weight="2" />
 
         <com.google.android.material.button.MaterialButton
           android:id="@+id/saveButton"

@@ -51,7 +51,7 @@ class SplashActivity : AppCompatActivity() {
 
   private suspend fun updateUserData(auth: String): Boolean {
     return try {
-      val userResult = dataSource.getUserInfo(auth.substring(7))  // без "Bearer "
+      val userResult = dataSource.getUserInfo(auth.substring(7))
       if (userResult !is Result.Success) return false
       val (user, pets) = userResult.data
 
@@ -61,18 +61,25 @@ class SplashActivity : AppCompatActivity() {
       val breedsResult = dataSource.getBreeds(auth.substring(7))
       if (breedsResult !is Result.Success) return false
 
-//      userDao.clearAnimalTypes()
-//      userDao.clearBreeds()
+      val existingPetsMap = userDao.getAllPets().associateBy { it.id }
+
+      val mergedPets = pets.map { serverPet ->
+        existingPetsMap[serverPet.id]?.copy(
+          name = serverPet.name,
+          is_male = serverPet.is_male,
+          age = serverPet.age,
+          avatar = serverPet.avatar ?: existingPetsMap[serverPet.id]?.avatar,
+          is_active = serverPet.is_active
+        ) ?: serverPet
+      }
+
+      val types = typesResult.data.map { AnimalTypeEntity(it.id, it.name) }
+      val breeds = breedsResult.data.map { BreedEntity(it.id, it.name, it.animal_type.id) }
+
+      userDao.insertAllAnimalTypes(types)
+      userDao.insertAllBreeds(breeds)
       userDao.insert(user)
-      userDao.insertAllPets(pets)
-      userDao.insertAllAnimalTypes(typesResult.data.map { AnimalTypeEntity(it.id, it.name) })
-      userDao.insertAllBreeds(breedsResult.data.map {
-        BreedEntity(
-          it.id,
-          it.name,
-          it.animal_type.id
-        )
-      })
+      userDao.insertAllPets(mergedPets)
 
       true
     } catch (e: Exception) {

@@ -58,3 +58,21 @@ data class PetResponse(
   val description: String?,
   val is_active: Boolean
 )
+
+data class PetEditUI(
+  val avatar: String?,
+  val name: String,
+  val location: String?,
+  val description: String?,
+  val has_pedigree: Boolean,
+  val pedigree_documents: String?,
+  val awards: String?,
+  val is_active: Boolean,
+  val age: Int
+)
+
+data class EditPetFormState(
+  val nameError: Int? = null,
+  val ageError: Int? = null,
+  val isDataValid: Boolean = false
+)

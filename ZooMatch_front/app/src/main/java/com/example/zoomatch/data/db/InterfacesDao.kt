@@ -1,13 +1,9 @@
 package com.example.zoomatch.data.db
 
 import androidx.room.Dao
-import androidx.room.Embedded
 import androidx.room.Insert
-import androidx.room.Junction
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Relation
-import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -52,6 +48,9 @@ interface UserDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertAllBreeds(breed: List<BreedEntity>)
 
+  @Query("SELECT * FROM pet")
+  suspend fun getAllPets(): List<PetEntity>
+
 //  @Query("DELETE FROM animal_type")
 //  suspend fun clearAnimalTypes()
 //
@@ -60,6 +59,9 @@ interface UserDao {
 
   @Query("SELECT COUNT(*) FROM pet WHERE owner_id = (SELECT id FROM user LIMIT 1)")
   fun getPetCountForCurrentUser(): Flow<Int>
+
+  @Query("SELECT id FROM pet WHERE owner_id = (SELECT id FROM user LIMIT 1)")
+  suspend fun getCurrentUserPetIds(): List<Int>
 }
 
 @Dao
@@ -67,18 +69,24 @@ interface PetDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insert(pet: PetEntity)
 
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  suspend fun insertPetTags(tags: List<PetTagCrossRef>)
+  @Query("SELECT * FROM pet WHERE id = :id")
+  suspend fun getPetById(id: Int): PetEntity?
 
-  @Transaction
-  @Query("SELECT * FROM pet WHERE owner_id = (SELECT id FROM user LIMIT 1)")
-  fun getPetsWithTags(): Flow<List<PetWithTags>>
+//  @Insert(onConflict = OnConflictStrategy.REPLACE)
+//  suspend fun insertPetTags(tags: List<PetTagCrossRef>)
+//
+//  @Transaction
+//  @Query("SELECT * FROM pet WHERE owner_id = (SELECT id FROM user LIMIT 1)")
+//  fun getPetsWithTags(): Flow<List<PetWithTags>>
 
   @Query("SELECT * FROM pet WHERE owner_id = (SELECT id FROM user LIMIT 1)")
   fun getPetsFlow(): Flow<List<PetEntity>>
 
-  @Query("DELETE FROM pet_tag WHERE pet_id = :petId")
-  suspend fun deletePetTags(petId: Int)
+  @Query("DELETE FROM pet WHERE id = :id")
+  suspend fun deleteById(id: Int)
+
+//  @Query("DELETE FROM pet_tag WHERE pet_id = :petId")
+//  suspend fun deletePetTags(petId: Int)
 
 //  @Transaction
 //  suspend fun upsertPetWithTags(pet: PetEntity, tagIds: List<Int>) {
@@ -88,6 +96,7 @@ interface PetDao {
 //      insertPetTags(tagIds.map { PetTagCrossRef(pet.id, it) })
 //    }
 //  }
+
 }
 
 @Dao
@@ -101,18 +110,18 @@ interface BreedDao {
   @Query("SELECT * FROM breed")
   fun getAllFlow(): Flow<List<BreedEntity>>
 }
-
-data class PetWithTags(
-  @Embedded val pet: PetEntity,
-
-  @Relation(
-    parentColumn = "id",
-    entityColumn = "id",
-    associateBy = Junction(
-      PetTagCrossRef::class,
-      parentColumn = "pet_id",
-      entityColumn = "tag_id"
-    )
-  )
-  val tags: List<TagEntity>
-)
+//
+//data class PetWithTags(
+//  @Embedded val pet: PetEntity,
+//
+//  @Relation(
+//    parentColumn = "id",
+//    entityColumn = "id",
+//    associateBy = Junction(
+//      PetTagCrossRef::class,
+//      parentColumn = "pet_id",
+//      entityColumn = "tag_id"
+//    )
+//  )
+//  val tags: List<TagEntity>
+//)

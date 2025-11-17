@@ -1,5 +1,6 @@
 package com.example.zoomatch.data.homeScreen.pets
 
+import android.util.Log
 import com.example.zoomatch.data.Result
 import com.example.zoomatch.data.db.AnimalTypeDao
 import com.example.zoomatch.data.db.BreedDao
@@ -10,6 +11,7 @@ import com.example.zoomatch.data.db.UserDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 class PetsRepository(
   private val dataSource: PetsDataSource,
@@ -19,9 +21,9 @@ class PetsRepository(
   private val breedDao: BreedDao,
   private val userDao: UserDao
 ) {
-  val petsFlow = petDao.getPetsFlow().flowOn(Dispatchers.IO)
-  val animalTypesFlow = animalTypeDao.getAllFlow().flowOn(Dispatchers.IO)
   val breedsFlow = breedDao.getAllFlow().flowOn(Dispatchers.IO)
+  val animalTypesFlow = animalTypeDao.getAllFlow().flowOn(Dispatchers.IO)
+  val petsFlow = petDao.getPetsFlow().flowOn(Dispatchers.IO)
 
   suspend fun createPet(
     name: String,
@@ -68,6 +70,7 @@ class PetsRepository(
 //        petDao.upsertPetWithTags(pet, tags)
         Result.Success("Питомец добавлен")
       }
+
       is Result.Error -> result
     }
   }
@@ -87,8 +90,8 @@ class PetsRepository(
     tags: List<Int>?,
     description: String?,
     is_active: Boolean?
-  ): Result<String> {
-    return when (
+  ): Result<String> = withContext(Dispatchers.IO) {
+    when (
       val result = dataSource.updatePet(
         tokenManager.getAccessToken(),
         id,
@@ -99,27 +102,42 @@ class PetsRepository(
       )
     ) {
       is Result.Success -> {
-        val current = petDao.getPetsFlow().first().find { it.id == id }
-          ?: return Result.Error("Питомец не найден")
-        val updated = current.copy(
-          name = name ?: current.name,
-          animal_type_id = animal_type ?: current.animal_type_id,
-          breed_id = breed ?: current.breed_id,
-          is_male = is_male ?: current.is_male,
-          age = age ?: current.age,
-          avatar = avatar ?: current.avatar,
-          location = location ?: current.location,
-          has_pedigree = has_pedigree ?: current.has_pedigree,
-          pedigree_documents = pedigree_documents ?: current.pedigree_documents,
-          awards = awards ?: current.awards,
-          description = description ?: current.description,
-          is_active = is_active ?: current.is_active
-        )
-        petDao.insert(updated)
-//        val tagList = tags ?: emptyList()
-//        petDao.upsertPetWithTags(updated, tagList)
+        withContext(Dispatchers.IO) {
+          val current = petDao.getPetById(id)
+            ?: return@withContext Result.Error("Питомец не найден")
+
+          val updated = current.copy(
+            name = name ?: current.name,
+            animal_type_id = animal_type ?: current.animal_type_id,
+            breed_id = breed ?: current.breed_id,
+            is_male = is_male ?: current.is_male,
+            age = age ?: current.age,
+            avatar = avatar ?: current.avatar,
+            location = location ?: current.location,
+            has_pedigree = has_pedigree ?: current.has_pedigree,
+            pedigree_documents = pedigree_documents ?: current.pedigree_documents,
+            awards = awards ?: current.awards,
+            description = description ?: current.description,
+            is_active = is_active ?: current.is_active
+          )
+          Log.d("UPDATE", "Before: ${petDao.getPetById(id)}")
+          petDao.insert(updated)
+          Log.d("UPDATE", "After: ${petDao.getPetById(id)}")
+        }
         Result.Success("Питомец обновлён")
       }
+
+      is Result.Error -> result
+    }
+  }
+
+  suspend fun deletePet(id: Int): Result<String> {
+    return when (val result = dataSource.deletePet(tokenManager.getAccessToken(), id)) {
+      is Result.Success -> {
+        petDao.deleteById(id)
+        Result.Success("Питомец удалён")
+      }
+
       is Result.Error -> result
     }
   }

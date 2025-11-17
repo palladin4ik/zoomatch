@@ -10,9 +10,9 @@ import androidx.room.RoomDatabase
     UserEntity::class,
     AnimalTypeEntity::class,
     BreedEntity::class,
-    TagEntity::class,
+//    TagEntity::class,
     PetEntity::class,
-    PetTagCrossRef::class
+//    PetTagCrossRef::class
   ],
   version = 1,
   exportSchema = false

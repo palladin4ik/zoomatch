@@ -49,7 +49,11 @@ object ImageUtils {
 
   fun base64ToBitmap(base64: String?): Bitmap? {
     return try {
-      val bytes = Base64.decode(base64, Base64.NO_WRAP)
+      var data = base64 ?: return null
+      if (data.startsWith("data:image/")) {
+        data = data.substringAfter(",")
+      }
+      val bytes = Base64.decode(data, Base64.NO_WRAP)
       BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
     } catch (e: Exception) {
       null

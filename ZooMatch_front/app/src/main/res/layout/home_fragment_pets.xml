@@ -10,15 +10,22 @@
     android:paddingStart="16dp"
     android:paddingEnd="16dp">
 
-  <com.google.android.material.search.SearchBar
-      android:id="@+id/searchBar"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="8dp"
-      android:hint="@string/find_by_name"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toStartOf="@+id/viewChangeButton"
-      app:layout_constraintTop_toTopOf="parent" />
+  <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/searchLayout"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:hint="@string/find_by_name"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/viewChangeButton"
+    app:layout_constraintTop_toTopOf="parent"
+    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+    <com.google.android.material.textfield.TextInputEditText
+      android:id="@+id/searchEditText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+
+  </com.google.android.material.textfield.TextInputLayout>
 
   <com.google.android.material.button.MaterialButton
       android:id="@+id/viewChangeButton"
@@ -28,9 +35,9 @@
       android:layout_marginEnd="8dp"
       android:contentDescription="viewChange"
       app:icon="@drawable/exchange_change_svgrepo_com"
-      app:layout_constraintStart_toEndOf="@id/searchBar"
-      app:layout_constraintTop_toTopOf="@id/searchBar"
-      app:layout_constraintBottom_toBottomOf="@id/searchBar" />
+      app:layout_constraintStart_toEndOf="@id/searchLayout"
+      app:layout_constraintTop_toTopOf="@id/searchLayout"
+      app:layout_constraintBottom_toBottomOf="@id/searchLayout" />
 
   <com.google.android.material.button.MaterialButton
       android:id="@+id/filterButton"
@@ -54,7 +61,7 @@
     app:layout_constraintBottom_toBottomOf="@+id/petsRecyclerView"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/searchBar" />
+    app:layout_constraintTop_toBottomOf="@id/searchLayout" />
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/petsRecyclerView"
@@ -66,7 +73,7 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/searchBar"
+    app:layout_constraintTop_toBottomOf="@id/searchLayout"
     tools:listitem="@layout/item_pet" />
 
   <com.google.android.material.button.MaterialButton

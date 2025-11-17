@@ -5,6 +5,10 @@ import com.example.zoomatch.data.homeScreen.pets.PetResponse
 import com.example.zoomatch.data.homeScreen.pets.PetUpdateRequest
 import com.example.zoomatch.data.homeScreen.profile.UserEditResponse
 import com.example.zoomatch.data.homeScreen.profile.UserEditUI
+import com.example.zoomatch.data.homeScreen.search.MatchRequest
+import com.example.zoomatch.data.homeScreen.search.MatchResponse
+import com.example.zoomatch.data.homeScreen.search.MatchesListResponse
+import com.example.zoomatch.data.homeScreen.search.PetLongResponse
 import com.example.zoomatch.data.homeScreen.settings.EditPassRequest
 import com.example.zoomatch.data.homeScreen.settings.EditPassResponse
 import com.example.zoomatch.data.startScreen.AnimalTypeResponse
@@ -24,6 +28,7 @@ import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 data class RefreshRequest(val refresh: String)
 
@@ -84,6 +89,37 @@ interface ZooMatchApi {
     @Path("id") id: Int,
     @Body body: PetUpdateRequest
   ): Response<PetResponse>
+
+  @GET("pets/")
+  suspend fun getActivePets(
+    @Header("Authorization") auth: String,
+    @Query("animal_type") animalType: Int? = null
+  ): Response<List<PetLongResponse>>
+
+  @POST("matches/")
+  suspend fun createMatch(
+    @Header("Authorization") auth: String,
+    @Body body: MatchRequest
+  ): Response<MatchResponse>
+
+  @DELETE("pets/{id}/")
+  suspend fun deletePet(
+    @Header("Authorization") auth: String,
+    @Path("id") id: Int
+  ): Response<Void>
+
+  @GET("matches/{id}/list-matches/")
+  suspend fun getMatches(
+    @Header("Authorization") auth: String,
+    @Path("id") id: Int
+  ): Response<MatchesListResponse>
+
+  @GET("pets/{id}/")
+  suspend fun getPetById(
+    @Header("Authorization") auth: String,
+    @Path("id") id: Int
+  ): Response<PetLongResponse>
+
 }
 
 object Network {

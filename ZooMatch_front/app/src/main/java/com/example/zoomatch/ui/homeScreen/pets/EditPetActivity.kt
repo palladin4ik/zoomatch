@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +22,7 @@ import com.example.zoomatch.databinding.ActivityEditPetBinding
 import com.example.zoomatch.ui.homeScreen.HomeViewModelFactory
 import com.example.zoomatch.ui.startScreen.afterTextChanged
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -84,14 +86,29 @@ class EditPetActivity : AppCompatActivity() {
 
     binding.animalTypeField.setOnItemClickListener { _, _, position, _ ->
       viewModel.selectAnimalType(position)
+      debounceValidate()
     }
     binding.breedField.setOnItemClickListener { _, _, position, _ ->
       viewModel.selectBreed(position)
+      debounceValidate()
     }
 
-    // Пол
+    val genderAdapter = ArrayAdapter(
+      this, android.R.layout.simple_dropdown_item_1line, listOf("Самец", "Самка")
+    )
+    binding.genderField.setAdapter(genderAdapter)
+
     binding.genderField.setOnItemClickListener { _, _, position, _ ->
       viewModel.setIsMale(position == 0)
+    }
+
+    if (petId != null) {
+      binding.deleteButton.visibility = View.VISIBLE
+      binding.deleteButton.setOnClickListener {
+        viewModel.deletePet(petId!!)
+      }
+    } else {
+      binding.deleteButton.visibility = View.GONE
     }
   }
 
@@ -129,34 +146,43 @@ class EditPetActivity : AppCompatActivity() {
         }
 
         launch {
-          viewModel.animalTypes.collect { list ->
+          combine(viewModel.animalTypes, viewModel.selectedAnimalType) { list, selected ->
+            Pair(list, selected)
+          }.collect { (list, selected) ->
             val adapter = ArrayAdapter(
               this@EditPetActivity,
               android.R.layout.simple_dropdown_item_1line,
               list.map { it.name }
             )
             binding.animalTypeField.setAdapter(adapter)
-            viewModel.selectedAnimalType.value?.let { selected ->
+            if (selected != null) {
               val pos = list.indexOfFirst { it.id == selected.id }
               if (pos >= 0) binding.animalTypeField.setText(list[pos].name, false)
+            } else {
+              binding.animalTypeField.setText("", false)
             }
           }
         }
 
         launch {
-          viewModel.breeds.collect { list ->
+          combine(viewModel.breeds, viewModel.selectedBreed) { list, selected ->
+            Pair(list, selected)
+          }.collect { (list, selected) ->
             val adapter = ArrayAdapter(
               this@EditPetActivity,
               android.R.layout.simple_dropdown_item_1line,
               list.map { it.name }
             )
             binding.breedField.setAdapter(adapter)
-            viewModel.selectedBreed.value?.let { selected ->
+            if (selected != null) {
               val pos = list.indexOfFirst { it.id == selected.id }
               if (pos >= 0) binding.breedField.setText(list[pos].name, false)
+            } else {
+              binding.breedField.setText("", false)
             }
           }
         }
+
 
         launch {
           viewModel.formState.collect { state ->
@@ -171,9 +197,28 @@ class EditPetActivity : AppCompatActivity() {
             when (result) {
               is Result.Success -> {
                 Toast.makeText(this@EditPetActivity, result.data, Toast.LENGTH_SHORT).show()
+                Handler(Looper.getMainLooper()).postDelayed({
+                  finish()
+                }, 500)
+              }
+              is Result.Error -> {
+                Toast.makeText(this@EditPetActivity, result.message, Toast.LENGTH_LONG).show()
+              }
+            }
+          }
+        }
+        launch {
+          viewModel.isMale.collect { isMale ->
+            binding.genderField.setText(if (isMale) "Самец" else "Самка", false)
+          }
+        }
+        launch {
+          viewModel.deleteResult.collect { result ->
+            when (result) {
+              is Result.Success -> {
+                Toast.makeText(this@EditPetActivity, "Питомец удалён", Toast.LENGTH_SHORT).show()
                 finish()
               }
-
               is Result.Error -> {
                 Toast.makeText(this@EditPetActivity, result.message, Toast.LENGTH_LONG).show()
               }
