@@ -74,5 +74,8 @@ data class PetEditUI(
 data class EditPetFormState(
   val nameError: Int? = null,
   val ageError: Int? = null,
+  val typeError: Int? = null,
+  val breedError: Int? = null,
+  val locationError: Int? = null,
   val isDataValid: Boolean = false
 )

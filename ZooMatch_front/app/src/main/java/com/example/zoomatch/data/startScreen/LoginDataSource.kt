@@ -38,8 +38,8 @@ class LoginDataSource {
           PetEntity(
             id = pet.id,
             name = pet.name,
-            animal_type_id = null,
-            breed_id = null,
+            animal_type_id = pet.animal_type,
+            breed_id = pet.breed,
             is_male = pet.is_male,
             age = pet.age,
             owner_id = data.id,

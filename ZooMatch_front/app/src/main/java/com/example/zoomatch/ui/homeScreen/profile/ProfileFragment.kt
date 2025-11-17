@@ -75,8 +75,8 @@ class ProfileFragment : Fragment() {
 
     TabLayoutMediator(tabs, pager) { tab, position ->
       tab.text = when (position) {
-        0 -> "Statistic"
-        1 -> "Reviews"
+        0 -> "Статистика"
+        1 -> "Отзывы"
         else -> ""
       }
     }.attach()

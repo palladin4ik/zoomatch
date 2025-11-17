@@ -92,6 +92,7 @@ class EditPetActivity : AppCompatActivity() {
       viewModel.selectBreed(position)
       debounceValidate()
     }
+    binding.locationField.afterTextChanged { debounceValidate() }
 
     val genderAdapter = ArrayAdapter(
       this, android.R.layout.simple_dropdown_item_1line, listOf("Самец", "Самка")
@@ -118,7 +119,8 @@ class EditPetActivity : AppCompatActivity() {
     handler.postDelayed({
       viewModel.validate(
         name = binding.nameField.text.toString(),
-        age = binding.ageField.text.toString()
+        age = binding.ageField.text.toString(),
+        location = binding.locationField.text.toString()
       )
     }, debounceDelay)
   }
@@ -189,6 +191,9 @@ class EditPetActivity : AppCompatActivity() {
             binding.saveButton.isEnabled = state.isDataValid
             binding.nameField.error = state.nameError?.let { getString(it) }
             binding.ageField.error = state.ageError?.let { getString(it) }
+            binding.animalTypeField.error = state.typeError?.let { getString(it) }
+            binding.breedField.error = state.breedError?.let { getString(it) }
+            binding.locationField.error = state.locationError?.let { getString(it) }
           }
         }
 

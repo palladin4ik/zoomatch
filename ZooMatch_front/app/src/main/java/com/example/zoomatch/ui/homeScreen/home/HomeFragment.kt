@@ -21,6 +21,7 @@ import com.example.zoomatch.data.homeScreen.home.RecType
 import com.example.zoomatch.data.homeScreen.home.Recommendation
 import com.example.zoomatch.databinding.HomeFragmentHomeBinding
 import com.example.zoomatch.databinding.ItemRecommendationBinding
+import com.example.zoomatch.ui.homeScreen.pets.EditPetActivity
 import com.example.zoomatch.ui.homeScreen.profile.EditProfileActivity
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -50,12 +51,19 @@ class HomeFragment : Fragment() {
 
     recAdapter = RecommendationAdapter(emptyList()) { type ->
       when (type) {
-        RecType.PROFILE_INCOMPLETE -> startActivity(Intent(requireContext(), EditProfileActivity::class.java))
-        RecType.NO_PETS -> { /* пока ничего */ }
+        RecType.PROFILE_INCOMPLETE -> startActivity(
+          Intent(
+            requireContext(),
+            EditProfileActivity::class.java
+          )
+        )
+
+        RecType.NO_PETS -> startActivity(Intent(requireContext(), EditPetActivity::class.java))
       }
     }
     binding.recommendationsRecyclerView.adapter = recAdapter
-    binding.recommendationsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+    binding.recommendationsRecyclerView.layoutManager =
+      LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
     observeRecommendations()
   }
@@ -102,7 +110,13 @@ class HomeFragment : Fragment() {
                     EditProfileActivity::class.java
                   )
                 )
-                RecType.NO_PETS -> { /* позже: добавить питомца */ }
+
+                RecType.NO_PETS -> startActivity(
+                  Intent(
+                    requireContext(),
+                    EditPetActivity::class.java
+                  )
+                )
               }
             }
             binding.recommendationsRecyclerView.adapter = recAdapter
@@ -127,7 +141,6 @@ class HomeFragment : Fragment() {
 }
 
 
-
 class RecommendationAdapter(
   private val items: List<Recommendation>,
   private val onAction: (RecType) -> Unit
@@ -149,7 +162,8 @@ class RecommendationAdapter(
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-    val binding = ItemRecommendationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    val binding =
+      ItemRecommendationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     return ViewHolder(binding)
   }
 

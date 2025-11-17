@@ -63,13 +63,17 @@ class EditPetViewModel(
   val formState: StateFlow<EditPetFormState> = _formState
 
   // TODO: валидация
-  fun validate(name: String, age: String) {
+  fun validate(name: String, age: String, location: String) {
     val nameError = if (name.isBlank()) R.string.invalid_name else null
     val ageError = if (age.toIntOrNull() == null || age.toInt() <= 0) R.string.invalid_age else null
-    val isValid = nameError == null && ageError == null &&
-        _selectedAnimalType.value != null && _selectedBreed.value != null
+    val typeError = if (_selectedAnimalType.value == null) R.string.invalid_type else null
+    val breedError = if (_selectedBreed.value == null) R.string.invalid_breed else null
+    val locationError = if (location.isBlank()) R.string.invalid_location else null
+    val isValid =
+      ((nameError == null) && (ageError == null) && (typeError == null) && (breedError == null) && (locationError == null))
 
-    _formState.value = EditPetFormState(nameError, ageError, isValid)
+    _formState.value =
+      EditPetFormState(nameError, ageError, typeError, breedError, locationError, isValid)
   }
 
   private val _saveResult = Channel<Result<String>>(Channel.CONFLATED)

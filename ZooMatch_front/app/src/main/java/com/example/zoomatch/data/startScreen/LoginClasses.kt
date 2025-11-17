@@ -41,7 +41,9 @@ data class PetShortResponse(
   val is_male: Boolean,
   val age: Int,
   val avatar: String?,
-  val is_active: Boolean
+  val is_active: Boolean,
+  val breed: Int,
+  val animal_type: Int
 )
 
 data class AnimalTypeResponse(
