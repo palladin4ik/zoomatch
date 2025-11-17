@@ -239,7 +239,7 @@ class MatchViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         if pet.owner != request.user:
             return Response({"detail": "Нет доступа"}, status=403)
 
-        matches = Match.objects.filter(pet_from=pet)
-        pet_list = matches.values_list('pet_to_id', flat=True)
+        matches = Match.objects.filter(pet_to=pet)
+        pet_list = matches.values_list('pet_from_id', flat=True)
 
-        return Response({"matches": list(pet_list)})
+        return Response({"liked_by": list(pet_list)})
