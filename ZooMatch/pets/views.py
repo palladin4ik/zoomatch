@@ -4,7 +4,8 @@ from rest_framework.decorators import action
 from django.db.models import Q
 
 from drf_spectacular.utils import (extend_schema, extend_schema_view,
-                                   OpenApiParameter)
+                                   OpenApiParameter, OpenApiResponse,
+                                   OpenApiTypes)
 
 from .serializer import (
     AnimalTypeSerializer, BreedSerializer,
@@ -65,6 +66,7 @@ class AnimalTypeViewSet(viewsets.ModelViewSet):
     queryset = AnimalType.objects.all()
     serializer_class = AnimalTypeSerializer
     permission_classes = [permissions.IsAuthenticated, IsAdminOrReadOnly]
+    pagination_class = None
 
 
 @extend_schema_view(
@@ -103,6 +105,7 @@ class BreedViewSet(viewsets.ModelViewSet):
     queryset = Breed.objects.all()
     serializer_class = BreedSerializer
     permission_classes = [permissions.IsAuthenticated, IsAdminOrReadOnly]
+    pagination_class = None
 
 
 @extend_schema_view(
@@ -186,11 +189,33 @@ class PetViewSet(viewsets.ModelViewSet):
     @extend_schema(
             summary='Получить всех питомцев пользователя',
             description='Возвращает всех питомцев владельца, '
-                        'отправившего запрос'
+                        'отправившего запрос',
+            parameters=[
+                OpenApiParameter(
+                    name='limit',
+                    description='Number of results to return per page.',
+                    required=False,
+                    type=OpenApiTypes.INT,
+                ),
+                OpenApiParameter(
+                    name='offset',
+                    description='The initial index from which to return the '
+                                'results.',
+                    required=False,
+                    type=OpenApiTypes.INT,
+                )
+                ],
+            responses=OpenApiResponse(PetSerializer(many=True)),
     )
     @action(detail=False, methods=['get'])
     def me(self, request):
         queryset = Pet.objects.filter(owner=request.user)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = PetSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
         serializer = PetSerializer(queryset, many=True)
         return Response(serializer.data)
 
