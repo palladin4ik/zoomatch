@@ -38,7 +38,26 @@ SECRET_KEY=
 ```bash
 python manage.py migrate
 ```
-7. Запустите сервер разработки
+
+7. Установите фикстуры для базы данных
+```bash
+python manage.py flush
+python manage.py loaddata ../fixtures/test_data.json
+```
+Для изменения паролей тестовых пользователей
+```bash
+python manage.py shell
+
+from users.models import User
+
+for u in User.objects.all():
+    u.set_password("<Любой пароль>")
+    u.save()
+
+exit()
+```
+
+8. Запустите сервер разработки
 ```bash
 python manage.py runserver
 ```
