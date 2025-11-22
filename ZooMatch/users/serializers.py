@@ -52,6 +52,16 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'role', 'last_seen', 'is_active')
 
 
+class SimpleUserSerializer(serializers.ModelSerializer):
+    avatar = Base64FileField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'name', 'email', 'avatar', 'location', 'status',
+                  'phone_number', 'role', 'last_seen', 'is_active')
+        read_only_fields = ('id', 'role', 'last_seen', 'is_active')
+
+
 class UserUpdateSerializer(serializers.ModelSerializer):
     avatar = Base64FileField(required=False, allow_null=True)
 

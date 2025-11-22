@@ -3,7 +3,8 @@ from drf_spectacular.utils import extend_schema_field
 
 from .models import (AnimalType, Breed, Tag, Pet, PetInfo, Comment,
                      Match)
-from users.serializers import UserSerializer, Base64FileField
+from users.serializers import (UserSerializer, SimpleUserSerializer,
+                               Base64FileField)
 
 
 class AnimalTypeSerializer(serializers.ModelSerializer):
@@ -25,6 +26,14 @@ class BreedSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
+class SimpleBreedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Breed
+        fields = ('id', 'name')
+        read_only_fields = ('id', 'name')
+
+
 class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -34,9 +43,9 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class PetSerializer(serializers.ModelSerializer):
-    owner = UserSerializer(read_only=True)
+    owner = SimpleUserSerializer(read_only=True)
     animal_type = AnimalTypeSerializer(read_only=True)
-    breed = BreedSerializer(read_only=True)
+    breed = SimpleBreedSerializer(read_only=True)
     tags = serializers.SerializerMethodField()
 
     avatar = Base64FileField(read_only=True)
