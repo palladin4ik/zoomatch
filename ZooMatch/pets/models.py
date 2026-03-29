@@ -84,8 +84,10 @@ class PetInfo(models.Model):
     likes = models.PositiveIntegerField()
 
 
+# Подумать
 class Comment(models.Model):
-    content = models.TextField()
+    text = models.TextField()  # new
+    media = models.TextField(blank=True, null=True)  # было content
     likes = models.PositiveIntegerField(default=0)
     author = models.ForeignKey(
         User,

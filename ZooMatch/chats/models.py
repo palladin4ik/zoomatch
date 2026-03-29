@@ -46,6 +46,12 @@ class Message(models.Model):
         null=True,
         related_name='sent_messages'
     )
+    recipient = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='receive_messages'
+    )
     content_type = models.CharField(
         max_length=10,
         choices=[

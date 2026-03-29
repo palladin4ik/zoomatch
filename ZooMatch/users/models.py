@@ -27,12 +27,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         BREEDER = 1, 'Breeder'
         ADMIN = 2, 'Admin'
 
-    name = models.CharField(max_length=200)
+    firstname = models.CharField(max_length=50)  # было name
+    lastname = models.CharField(max_length=50)  # new
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)
     avatar = models.TextField(blank=True, null=True)
     location = models.TextField()
-    status = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)  # было status
+
+    organization = models.CharField(max_length=150,
+                                    blank=True, null=True)  # new
 
     phone_number = models.CharField(
         max_length=20,
