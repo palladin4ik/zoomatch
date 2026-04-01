@@ -125,7 +125,7 @@ interface ZooMatchApi {
 object Network {
 
   private val retrofit = Retrofit.Builder()
-    .baseUrl("https://palladin4ik.pythonanywhere.com/api/v1/")
+    .baseUrl("http://192.168.0.123:8000/api/v1/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 

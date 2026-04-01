@@ -1,17 +1,70 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name" translatable="false">ZooMatch</string>
+  <string name="app_name">ZooMatch</string>
   <string name="title_activity_start">Начальная страница</string>
-  <string name="prompt_email" translatable="false">Email</string>
+  <string name="prompt_email">Email</string>
   <string name="prompt_password">Пароль</string>
   <string name="prompt_username">Имя пользователя</string>
-  <string name="action_sign_in">Войдите или зарегистрируйтесь</string>
+  <string name="action_sign_in">Войдите или зарегистрируйстесь</string>
   <string name="action_sign_in_short">Войти</string>
-  <string name="welcome">Добро пожаловать</string>
-  <string name="invalid_email">Неподходящий email</string>
+  <string name="welcome">Добро пожаловать!</string>
+  <string name="invalid_email">Email недействителен</string>
   <string name="invalid_password">Пароль должен содержать больше 5 символов</string>
   <string name="invalid_username">Недействительное имя пользователя</string>
   <string name="login_failed">Ошибка входа</string>
   <string name="form_state_login">Войти</string>
-  <string name="form_state_sign_up">Зарегистрироваться</string>
+  <string name="form_state_sign_up">Регистрация</string>
+  <string name="title_activity_home">Главная страница</string>
+  <string name="title_home">Главная</string>
+  <string name="title_search">Поиск</string>
+  <string name="title_pets">Питомцы</string>
+  <string name="title_profile">Профиль</string>
+  <string name="title_settings">Настройки</string>
+  <string name="recommendations">Рекомендации</string>
+  <string name="your_activity">Ваша активность</string>
+  <string name="day">День</string>
+  <string name="week">Неделя</string>
+  <string name="month">Месяц</string>
+  <string name="your_matings">Ваши совпадения</string>
+  <string name="your_rating">Ваш рейтинг</string>
+  <string name="your_new_dialogs">Ваши новые диалоги</string>
+  <string name="your_views">Ваши просмотры</string>
+  <string name="your_match_dynamic">Ваша динамика мэтчей</string>
+  <string name="find_by_name">Найти по имени</string>
+  <string name="filter">Фильтр</string>
+  <string name="edit_profile">Изменить профиль</string>
+  <string name="app_settings">Настройки приложения</string>
+  <string name="enable_push_notifications">Включить Push-уведомления</string>
+  <string name="enable_email_notifications">Включить Email-уведомления</string>
+  <string name="privacy_policy">Политика конфиденциальности</string>
+  <string name="terms_of_use">Условия использования</string>
+  <string name="account_settings">Настройки аккаунта</string>
+  <string name="approve_profile">Подтверждение профиля</string>
+  <string name="edit_password">Сменить пароль</string>
+  <string name="logout">Выйти из аккаунта</string>
+  <string name="delete_account">Удалить аккаунт</string>
+  <string name="do_it">Перейти</string>
+  <string name="pets_in_profile">Питомцев в профиле</string>
+  <string name="successful_matings">Успешных случек</string>
+  <string name="rating">Рейтинг</string>
+  <string name="error_to_update_profile">Ошибка обновления профиля</string>
+  <string name="invalid_name">Имя не может быть пустым</string>
+  <string name="invalid_phone">Используйте формат +7XXXXXXXXXX</string>
+  <string name="invalid_password2">Пароль слишком короткий или отличается</string>
+  <string name="invalid_age">Неправильный возраст</string>
+  <string name="old_password">Старый пароль</string>
+  <string name="new_password">Новый пароль</string>
+  <string name="confirm_password">Повторите пароль</string>
+  <string name="cancel">Закрыть</string>
+  <string name="change_password">Изменить пароль</string>
+  <string name="name">Имя</string>
+  <string name="location">Город</string>
+  <string name="description">Описание</string>
+  <string name="email" translatable="false">Email</string>
+  <string name="phone_number">Номер телефона</string>
+  <string name="save">Сохранить</string>
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="invalid_type">Выберите тип животного</string>
+  <string name="invalid_breed">Выберите породу животного</string>
+  <string name="invalid_location">Укажите город</string>
 </resources>

@@ -160,9 +160,9 @@ class StartActivity : AppCompatActivity() {
     binding.tabLogin.isSelected = param == 0
     binding.tabRegister.isSelected = param == 1
 
-    binding.email.text.clear()
-    binding.password.text.clear()
-    binding.username.text.clear()
+    binding.email.text?.clear()
+    binding.password.text?.clear()
+    binding.username.text?.clear()
 
     binding.email.error = null
     binding.password.error = null
