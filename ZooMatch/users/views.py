@@ -27,6 +27,7 @@ class RegistrationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         return super().create(request, *args, **kwargs)
 
 
+# Пагинация питомцев у пользователя, переработать эндпоинты!!!!!!
 class ProfileViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 

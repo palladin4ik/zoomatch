@@ -2,9 +2,11 @@ from rest_framework import viewsets, permissions, mixins, serializers
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 from drf_spectacular.utils import (extend_schema, extend_schema_view,
-                                   OpenApiParameter)
+                                   OpenApiParameter, OpenApiResponse,
+                                   OpenApiTypes)
 
 from .serializer import (
     AnimalTypeSerializer, BreedSerializer,
@@ -65,6 +67,7 @@ class AnimalTypeViewSet(viewsets.ModelViewSet):
     queryset = AnimalType.objects.all()
     serializer_class = AnimalTypeSerializer
     permission_classes = [permissions.IsAuthenticated, IsAdminOrReadOnly]
+    pagination_class = None
 
 
 @extend_schema_view(
@@ -100,9 +103,10 @@ class AnimalTypeViewSet(viewsets.ModelViewSet):
     ),
 )
 class BreedViewSet(viewsets.ModelViewSet):
-    queryset = Breed.objects.all()
+    queryset = Breed.objects.all().prefetch_related('animal_type')
     serializer_class = BreedSerializer
     permission_classes = [permissions.IsAuthenticated, IsAdminOrReadOnly]
+    pagination_class = None
 
 
 @extend_schema_view(
@@ -159,21 +163,25 @@ class PetViewSet(viewsets.ModelViewSet):
         animal_type = self.request.query_params.get('animal_type')
 
         if self.action in ['update', 'partial_update', 'destroy']:
-            return Pet.objects.filter(owner=user)
+            qs = Pet.objects.filter(owner=user)
 
-        if self.action == 'list':
+        elif self.action == 'list':
             qs = Pet.objects.filter(is_active=True).exclude(owner=user)
 
             if animal_type:
                 qs = qs.filter(animal_type=animal_type)
-            return qs
 
-        if self.action == 'retrieve':
-            return Pet.objects.filter(
-                Q(is_active=True) | Q(owner=user)
-            )
+        elif self.action == 'retrieve':
+            qs = Pet.objects.filter(Q(is_active=True) | Q(owner=user))
 
-        return Pet.objects.none()
+        else:
+            qs = Pet.objects.none()
+
+        qs = qs.select_related('owner', 'breed', 'animal_type')
+
+        qs = qs.prefetch_related('tags')
+
+        return qs
 
     def get_serializer_class(self):
         if self.action in ['create', 'update', 'partial_update']:
@@ -186,15 +194,40 @@ class PetViewSet(viewsets.ModelViewSet):
     @extend_schema(
             summary='Получить всех питомцев пользователя',
             description='Возвращает всех питомцев владельца, '
-                        'отправившего запрос'
+                        'отправившего запрос',
+            parameters=[
+                OpenApiParameter(
+                    name='limit',
+                    description='Number of results to return per page.',
+                    required=False,
+                    type=OpenApiTypes.INT,
+                ),
+                OpenApiParameter(
+                    name='offset',
+                    description='The initial index from which to return the '
+                                'results.',
+                    required=False,
+                    type=OpenApiTypes.INT,
+                )
+                ],
+            responses=OpenApiResponse(PetSerializer(many=True)),
     )
     @action(detail=False, methods=['get'])
     def me(self, request):
-        queryset = Pet.objects.filter(owner=request.user)
+        queryset = Pet.objects.filter(owner=request.user).select_related(
+            'owner', 'breed', 'animal_type'
+        ).prefetch_related('tags')
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = PetSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
         serializer = PetSerializer(queryset, many=True)
         return Response(serializer.data)
 
 
+# todo: Оптимизировать лишние запросы к пользователям!!!
 @extend_schema_view(
     create=extend_schema(
         summary='Создать метч',
@@ -208,19 +241,15 @@ class PetViewSet(viewsets.ModelViewSet):
     )
 )
 class MatchViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    queryset = Match.objects.all()
+    queryset = Match.objects.all().select_related('pet_from', 'pet_to')
     serializer_class = MatchSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def perform_create(self, serializer):
         pet_from_id = self.request.data.get('pet_from')
-
-        try:
-            pet_from = Pet.objects.get(id=pet_from_id)
-        except Pet.DoesNotExist:
-            raise serializers.ValidationError(
-                {"pet_from": "Питомец не найден"}
-            )
+        pet_from = get_object_or_404(Pet.objects.select_related(
+            'owner'
+        ), id=pet_from_id)
 
         if pet_from.owner != self.request.user:
             raise serializers.ValidationError(
@@ -231,15 +260,16 @@ class MatchViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
     @action(detail=True, methods=['get'], url_path='list-matches')
     def list_matches(self, request, pk=None):
-        try:
-            pet = Pet.objects.get(id=pk)
-        except Pet.DoesNotExist:
-            return Response({"detail": "Питомец не найден"}, status=404)
+        pet = get_object_or_404(Pet, id=pk)
 
         if pet.owner != request.user:
             return Response({"detail": "Нет доступа"}, status=403)
 
-        matches = Match.objects.filter(pet_to=pet)
-        pet_list = matches.values_list('pet_from_id', flat=True)
+        liked_by_ids = Match.objects.filter(pet_to=pet).select_related(
+                'pet_from',
+                'pet_to',
+            ).values_list(
+                'pet_from_id', flat=True
+            )
 
-        return Response({"liked_by": list(pet_list)})
+        return Response({"liked_by": list(liked_by_ids)})
