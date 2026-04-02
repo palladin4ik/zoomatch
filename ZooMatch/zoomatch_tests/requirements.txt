@@ -1,0 +1,10 @@
+# Django API тесты
+pytest==8.3.3
+pytest-django==4.9.1
+djangorestframework==3.15.2
+requests==2.32.3
+
+# UI мобильные тесты
+Appium-Python-Client==5.3.0
+allure-pytest==2.13.5
+pytest-xdist==3.6.1

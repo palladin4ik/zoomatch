@@ -1,3 +1,8 @@
+import os
+from pathlib import Path
+# Гарантируем, что Django видит настройки (важно для VS Code discovery)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ZooMatch.settings')
+
 import pytest
 from rest_framework.test import APIClient
 from django.core.management import call_command
@@ -11,7 +16,13 @@ def api_client():
 @pytest.fixture(scope='session')
 def load_data(django_db_setup, django_db_blocker):
     with django_db_blocker.unblock():
-        call_command('loaddata', 'C:/ZooMatch/fixtures/test_data.json')
+        fixtures_path = (
+            Path(__file__)
+            .parent
+            / "fixtures"
+            / "test_data.json"
+        )
+        call_command('loaddata', str(fixtures_path))
 
 
 @pytest.fixture
