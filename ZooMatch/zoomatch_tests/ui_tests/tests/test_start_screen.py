@@ -1,6 +1,5 @@
 import allure
 from pages.start_page import StartPage
-from data.test_data import new_user
 
 @allure.feature("Стартовая страница (Вход / Регистрация)")
 class TestStartScreen:
@@ -13,15 +12,21 @@ class TestStartScreen:
         assert "HomeActivity" in driver.current_activity
 
     @allure.title("Успешная регистрация + проверка через API")
-    def test_successful_register(self, driver, api_client):
+    def test_successful_register(self, driver, api_client, new_test_user):
         page = StartPage(driver)
-        page.register(new_user["email"], new_user["password"], new_user["name"])
+        page.register(
+            new_test_user["email"],
+            new_test_user["password"],
+            new_test_user["name"]
+        )
         page.wait_for_home_screen()
         assert "HomeActivity" in driver.current_activity
 
-        # token = api_client.login(new_user["email"], new_user["password"])
+        # Авторизуем API клиент после UI-регистрации
+        api_client.login(new_test_user["email"], new_test_user["password"])
+
         profile = api_client.get_profile()
-        assert profile["email"] == new_user["email"]
+        assert profile["email"] == new_test_user["email"]
 
     @allure.title("Валидация полей (кнопка отключена)")
     def test_invalid_data(self, driver):

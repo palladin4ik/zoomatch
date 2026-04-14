@@ -1,7 +1,7 @@
 import requests
 from typing import Dict, Optional
 
-BASE_URL = "http://192.168.0.123:8000/api/v1/"
+BASE_URL = "http://192.168.0.154:8000/api/v1/"
 
 class ApiClient:
     def __init__(self):

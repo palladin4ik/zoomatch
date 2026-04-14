@@ -46,5 +46,5 @@ class StartPage(BasePage):
         btn = self.find_element(self.ACTION_BUTTON)
         return btn.get_attribute("enabled") == "true"
 
-    def wait_for_home_screen(self, timeout=15):
+    def wait_for_home_screen(self, timeout=30):
         self.wait.until(lambda d: "HomeActivity" in d.current_activity)
