@@ -12,10 +12,12 @@ from .serializer import (
     AnimalTypeSerializer, BreedSerializer,
     PetSerializer, PetCreateUpdateSerializer,
     PetInfoSerializer, CommentSerializer,
-    MatchSerializer
 )
-from .models import AnimalType, Breed, Pet, PetInfo, Comment, Match
+from .models import AnimalType, Breed, Pet, PetInfo, Comment
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+
+from matching.models import Match
+from matching.serializer import MatchSerializer
 
 
 COMMON_PERMISSION_DESCRIPTION = '''

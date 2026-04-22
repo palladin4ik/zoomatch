@@ -57,23 +57,6 @@ class Pet(models.Model):
     is_active = models.BooleanField(default=False)
 
 
-class Match(models.Model):
-    pet_from = models.ForeignKey(
-        Pet,
-        on_delete=models.CASCADE,
-        related_name='matches_from'
-    )
-    pet_to = models.ForeignKey(
-        Pet,
-        on_delete=models.CASCADE,
-        related_name='matches_to'
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('pet_from', 'pet_to')
-
-
 class PetInfo(models.Model):
     pet = models.OneToOneField(
         Pet,

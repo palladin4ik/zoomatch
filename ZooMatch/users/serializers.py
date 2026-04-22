@@ -33,7 +33,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('name', 'email', 'password')
+        fields = ('firstname', 'lastname', 'email', 'password')
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -47,8 +47,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'avatar', 'location', 'status',
-                  'phone_number', 'role', 'last_seen', 'is_active', 'pets')
+        fields = ('id', 'firstname', 'lastname', 'email', 'avatar', 'location',
+                  'description', 'phone_number', 'role', 'last_seen',
+                  'organization', 'is_active', 'pets')
         read_only_fields = ('id', 'role', 'last_seen', 'is_active')
 
 
@@ -57,8 +58,9 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'avatar', 'location', 'status',
-                  'phone_number', 'role', 'last_seen', 'is_active')
+        fields = ('id', 'firstname', 'lastname', 'email', 'avatar', 'location',
+                  'description', 'phone_number', 'role', 'last_seen',
+                  'is_active')
         read_only_fields = ('id', 'role', 'last_seen', 'is_active')
 
 
@@ -67,8 +69,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'avatar', 'location', 'phone_number',
-                  'status')
+        fields = ('id', 'firstname', 'lastname', 'email', 'avatar', 'location',
+                  'organization', 'phone_number', 'description')
         read_only_fields = ('id',)
 
 

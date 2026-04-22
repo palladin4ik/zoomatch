@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 
-from .models import (AnimalType, Breed, Tag, Pet, PetInfo, Comment,
-                     Match)
+from .models import (AnimalType, Breed, Tag, Pet, PetInfo, Comment)
 from users.serializers import (UserSerializer, SimpleUserSerializer,
                                Base64FileField)
 
@@ -130,14 +129,6 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
         return instance
 
 
-class MatchSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Match
-        fields = ('id', 'pet_from', 'pet_to', 'created_at')
-        read_only_fields = ('id', 'created_at')
-
-
 class PetInfoSerializer(serializers.ModelSerializer):
     pet_id = serializers.PrimaryKeyRelatedField(
         queryset=Pet.objects.all(), source='pet'
@@ -157,8 +148,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id', 'content', 'likes', 'author', 'pet_info_card_id',
-                  'date_create')
+        fields = ('id', 'content', 'media', 'likes', 'author',
+                  'pet_info_card_id', 'date_create')
         read_only_fields = ('id', 'likes', 'author', 'date_create')
 
     def create(self, validated_data):
