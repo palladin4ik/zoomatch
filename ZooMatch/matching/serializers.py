@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .models import Match, Rejection, ActionCategory, Action
-from pets.serializer import PetSerializer
+from pets.serializers import PetSerializer
 from pets.models import Pet
 
 

@@ -8,7 +8,7 @@ from drf_spectacular.utils import (extend_schema, extend_schema_view,
                                    OpenApiParameter, OpenApiResponse,
                                    OpenApiTypes)
 
-from .serializer import (
+from .serializers import (
     AnimalTypeSerializer, BreedSerializer,
     PetSerializer, PetCreateUpdateSerializer,
     PetInfoSerializer, CommentSerializer,
@@ -17,7 +17,7 @@ from .models import AnimalType, Breed, Pet, PetInfo, Comment
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 
 from matching.models import Match
-from matching.serializer import MatchSerializer
+from matching.serializers import MatchSerializer
 
 
 COMMON_PERMISSION_DESCRIPTION = '''
