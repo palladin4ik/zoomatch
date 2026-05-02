@@ -29,7 +29,12 @@ class MessageSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'is_read')
 
     def validate(self, data):
-        sender = self.context.get('request').user
+        request = self.context.get('request')
+
+        if request.method != 'POST':
+            return data
+        
+        sender = request.user
         receiver = data.get('receiver')
 
         is_matched = Match.objects.filter(
