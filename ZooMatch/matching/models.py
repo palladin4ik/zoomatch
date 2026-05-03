@@ -21,7 +21,7 @@ class Match(models.Model):
         CLOSED = 3
 
     status = models.PositiveSmallIntegerField(choices=Status.choices,
-                                              default=0)
+                                              default=Status.PENDING)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -43,6 +43,9 @@ class Rejection(models.Model):
 
     count = models.PositiveIntegerField(default=1)
     last_rejected_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('pet_from', 'pet_to')
 
 
 class ActionCategory(models.Model):

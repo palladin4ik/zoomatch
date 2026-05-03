@@ -11,9 +11,9 @@ from drf_spectacular.views import (
 )
 
 from users.views import RegistrationViewSet, ProfileViewSet, UserViewSet
-from pets.views import (PetViewSet, AnimalTypeViewSet, BreedViewSet,
-                        MatchViewSet)
+from pets.views import PetViewSet, AnimalTypeViewSet, BreedViewSet
 from chats.views import MessageViewSet
+from matching.views import MatchViewSet
 
 
 router_v1 = DefaultRouter()
