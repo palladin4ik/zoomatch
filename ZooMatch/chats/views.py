@@ -1,13 +1,19 @@
 from rest_framework import mixins, permissions, viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from django.db.models import Q
+from django.db.models import Q, OuterRef, Subquery, Count
+from django.contrib.auth import get_user_model
 
 from drf_spectacular.utils import (extend_schema, extend_schema_view,
                                    OpenApiParameter, OpenApiTypes)
 
-from .serializers import MessageSerializer
+from .serializers import MessageSerializer, ChatSerializer
 from .models import Message
+
+from matching.models import Match
+
+
+User = get_user_model()
 
 
 @extend_schema_view(
@@ -49,6 +55,7 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                      viewsets.GenericViewSet):
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', 'post', 'patch', 'delete']
 
     def perform_create(self, serializer):
         serializer.save(sender=self.request.user)
@@ -99,9 +106,6 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def update(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
     @extend_schema(
             summary='Удалить сообщение для всех',
             description='Удаляет сообщение для всех, удалить может '
@@ -141,3 +145,43 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
             message.save()
         
         return Response({"status": "message read"}, status=status.HTTP_200_OK)
+
+
+@extend_schema_view(
+    list=extend_schema(
+        summary='Список чатов пользователя',
+        description='Возвращает список чатов пользователя, '
+                    'отправившего запрос с последним сообщением '
+                    'и количеством непрочитанных'
+    )
+)
+class ChatViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    serializer_class = ChatSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request):
+        user = request.user
+
+        last_message_qs = Message.objects.filter(
+            Q(sender=user, receiver=OuterRef('pk')) |
+            Q(sender=OuterRef('pk'), receiver=user)
+        ).order_by('-created_at').values('text')[:1]
+
+        unread_qs = Message.objects.filter(
+            sender=OuterRef('pk'),
+            receiver=user,
+            is_read=False
+        ).values('sender').annotate(c=Count('id')).values('c')
+
+        interlocutors = User.objects.filter(
+            Q(pets__sent_matches__pet_to__owner=user) |
+            Q(pets__received_matches__pet_from__owner=user),
+            Q(pets__sent_matches__status=Match.Status.ACCEPTED) |
+            Q(pets__received_matches__status=Match.Status.ACCEPTED)
+        ).distinct().annotate(
+            last_message_text=Subquery(last_message_qs),
+            unread_count=Subquery(unread_qs)
+        )
+
+        serializer = self.get_serializer(interlocutors, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

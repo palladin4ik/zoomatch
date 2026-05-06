@@ -12,7 +12,7 @@ from drf_spectacular.views import (
 
 from users.views import RegistrationViewSet, ProfileViewSet, UserViewSet
 from pets.views import PetViewSet, AnimalTypeViewSet, BreedViewSet
-from chats.views import MessageViewSet
+from chats.views import MessageViewSet, ChatViewSet
 from matching.views import MatchViewSet
 
 
@@ -21,7 +21,8 @@ router_v1.register('register', RegistrationViewSet, basename='register')
 router_v1.register('users', UserViewSet, basename='users')
 router_v1.register('pets', PetViewSet, basename='pets')
 router_v1.register('matches', MatchViewSet, basename='matches')
-router_v1.register('chats', MessageViewSet, basename='chats')
+router_v1.register('messages', MessageViewSet, basename='messages')
+router_v1.register('chats', ChatViewSet, basename='chats')
 
 # Admin only
 router_v1.register('animal-type', AnimalTypeViewSet, basename='animal_type')

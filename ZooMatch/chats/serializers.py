@@ -47,3 +47,9 @@ class MessageSerializer(serializers.ModelSerializer):
             return data
         else:
             raise serializers.ValidationError("Для начала общения нужен Match")
+
+
+class ChatSerializer(serializers.Serializer):
+    user = SimpleUserSerializer(source='*', read_only=True)
+    last_message_text = serializers.CharField(read_only=True, allow_null=True)
+    unread_count = serializers.IntegerField(read_only=True, allow_null=True)

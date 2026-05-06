@@ -6,8 +6,12 @@ from pets.models import Pet
 
 
 class MatchSerializer(serializers.ModelSerializer):
-    pet_from = serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all())
-    pet_to = serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all())
+    pet_from = serializers.PrimaryKeyRelatedField(
+        queryset=Pet.objects.all(), write_only=True
+        )
+    pet_to = serializers.PrimaryKeyRelatedField(
+        queryset=Pet.objects.all(), write_only=True
+        )
 
     pet_from_data = PetSerializer(source='pet_from', read_only=True)
     pet_to_data = PetSerializer(source='pet_to', read_only=True)
