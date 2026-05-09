@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'chats',
     'users',
     'matching',
+    'moderation',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +71,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ZooMatch.wsgi.application'
+
+ASGI_APPLICATION = 'ZooMatch.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 
 # Database

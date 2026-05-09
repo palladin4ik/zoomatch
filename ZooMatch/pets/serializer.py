@@ -5,6 +5,8 @@ from .models import (AnimalType, Breed, Tag, Pet, PetInfo, Comment)
 from users.serializers import (UserSerializer, SimpleUserSerializer,
                                Base64FileField)
 
+from moderation.models import ModerationRequest
+
 
 class AnimalTypeSerializer(serializers.ModelSerializer):
 
@@ -74,18 +76,33 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
     avatar = Base64FileField(required=False, allow_null=True, allow_blank=True)
     pedigree_documents = Base64FileField(required=False, allow_null=True,
                                          allow_blank=True)
+    
+    animal_type_custom = serializers.CharField(required=False, allow_blank=True)
+    breed_custom = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = Pet
         fields = ('id', 'name', 'animal_type', 'breed', 'is_male',
                   'age', 'avatar', 'location', 'has_pedigree',
                   'pedigree_documents', 'awards', 'tags', 'tags_list',
-                  'description', 'is_active')
+                  'description', 'is_active', 'animal_type_custom',
+                  'breed_custom')
         read_only_fields = ('id',)
 
     @extend_schema_field(TagSerializer(many=True))
     def get_tags_list(self, obj):
         return TagSerializer(obj.tags.all(), many=True).data
+    
+    def validate(self, data):
+        breed_custom = data.get('breed_custom')
+        animal_type = data.get('animal_type')
+        animal_type_custom = data.get('animal_type_custom')
+
+        if breed_custom and not animal_type and not animal_type_custom:
+            raise serializers.ValidationError(
+                'Укажите тип животного для новой породы'
+            )
+        return data
 
     def validate_tags(self, values):
         cleaned = []
@@ -96,13 +113,24 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
         return cleaned
 
     def create(self, validated_data):
+        animal_type_custom = validated_data.pop('animal_type_custom', None)
+        breed_custom = validated_data.pop('breed_custom', None)
+
         tags_data = validated_data.pop('tags', [])
+
+        if animal_type_custom or breed_custom:
+            validated_data['is_active'] = False
 
         breed = validated_data.get('breed')
         if breed:
             validated_data['animal_type'] = breed.animal_type
 
         pet = Pet.objects.create(**validated_data)
+
+        if animal_type_custom or breed_custom:
+            ModerationRequest.objects.create(pet=pet,
+                                                animal_type=animal_type_custom,
+                                                breed=breed_custom)
 
         for tag_name in tags_data:
             tag, _ = Tag.objects.get_or_create(tag=tag_name)

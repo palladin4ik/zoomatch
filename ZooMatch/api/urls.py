@@ -13,6 +13,7 @@ from drf_spectacular.views import (
 from users.views import RegistrationViewSet, ProfileViewSet, UserViewSet
 from pets.views import (PetViewSet, AnimalTypeViewSet, BreedViewSet,
                         MatchViewSet)
+from moderation.views import ModerationRequestViewSet
 
 
 router_v1 = DefaultRouter()
@@ -24,6 +25,7 @@ router_v1.register('matches', MatchViewSet, basename='matches')
 # Admin only
 router_v1.register('animal-type', AnimalTypeViewSet, basename='animal_type')
 router_v1.register('breed', BreedViewSet, basename='breed')
+router_v1.register('moderation', ModerationRequestViewSet, basename='moderation')
 
 profile = ProfileViewSet.as_view({
     'get': 'retrieve',
