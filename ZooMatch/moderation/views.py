@@ -17,7 +17,7 @@ class ModerationRequestViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAdminUser]
 
     @action(detail=True, methods=['post'])
-    def approve(self, request):
+    def approve(self, request, pk=None):
         moderation_request = self.get_object()
         pet = moderation_request.pet
 
@@ -53,7 +53,7 @@ class ModerationRequestViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     
     # Пока что питомец удаляется на совсем, на будущее soft delete
     @action(detail=True, methods=['post'])
-    def reject(self, request):
+    def reject(self, request, pk=None):
         moderation_request = self.get_object()
         pet = moderation_request.pet
 
