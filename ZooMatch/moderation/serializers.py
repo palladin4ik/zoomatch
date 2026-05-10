@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import ModerationRequest
 
-from pets.serializer import PetSerializer
+from pets.serializers import PetSerializer
 from users.serializers import SimpleUserSerializer
 
 
