@@ -14,6 +14,7 @@ from users.views import RegistrationViewSet, ProfileViewSet, UserViewSet
 from pets.views import PetViewSet, AnimalTypeViewSet, BreedViewSet
 from chats.views import MessageViewSet, ChatViewSet
 from matching.views import MatchViewSet
+from moderation.views import ModerationRequestViewSet
 
 
 router_v1 = DefaultRouter()
@@ -27,6 +28,7 @@ router_v1.register('chats', ChatViewSet, basename='chats')
 # Admin only
 router_v1.register('animal-type', AnimalTypeViewSet, basename='animal_type')
 router_v1.register('breed', BreedViewSet, basename='breed')
+router_v1.register('moderation', ModerationRequestViewSet, basename='moderation')
 
 profile = ProfileViewSet.as_view({
     'get': 'retrieve',
