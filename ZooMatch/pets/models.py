@@ -54,7 +54,14 @@ class Pet(models.Model):
         blank=True
         )
     description = models.TextField(blank=True, null=True)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False, db_index=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['animal_type', 'breed']),
+            models.Index(fields=['animal_type', 'is_active']),
+            models.Index(fields=['location', 'animal_type']),
+        ]
 
 
 class PetInfo(models.Model):
@@ -77,7 +84,7 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='comments',
     )
-    pet_info_card = models.OneToOneField(
+    pet_info_card = models.ForeignKey(
         PetInfo,
         on_delete=models.CASCADE,
         related_name='comments',

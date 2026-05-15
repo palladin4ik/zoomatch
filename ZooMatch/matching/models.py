@@ -26,7 +26,17 @@ class Match(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('pet_from', 'pet_to')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['pet_from', 'pet_to'],
+                name='unique_match'
+            )
+        ]
+
+        indexes = [
+            models.Index(fields=['status']),
+            models.Index(fields=['created_at']),
+        ]
 
 
 class Rejection(models.Model):
@@ -45,7 +55,10 @@ class Rejection(models.Model):
     last_rejected_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ('pet_from', 'pet_to')
+        indexes = [
+            models.Index(fields=['count']),
+            models.Index(fields=['last_rejected_at']),
+        ]
 
 
 class ActionCategory(models.Model):

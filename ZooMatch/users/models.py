@@ -45,11 +45,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     role = models.PositiveSmallIntegerField(
         choices=Role.choices,
-        default=Role.USER)
+        default=Role.USER,
+        db_index=True
+        )
 
-    last_seen = models.DateTimeField(default=timezone.now)
+    last_seen = models.DateTimeField(default=timezone.now, db_index=True)
 
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True, db_index=True)
     is_staff = models.BooleanField(default=False)
 
     objects = CustomUserManager()
