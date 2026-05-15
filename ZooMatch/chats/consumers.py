@@ -17,7 +17,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if not self.user.is_authenticated:
             await self.close()
             return
-        
+
         self.other_user_id = self.scope['url_route']['kwargs']['user_id']
 
         is_matched = await self.check_match()
@@ -41,7 +41,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-    async def receive(self, text_data = None, bytes_data = None):
+    async def receive(self, text_data=None, bytes_data=None):
         data = json.loads(text_data)
         message_type = data.get('type')
 
@@ -53,7 +53,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.handle_read(data)
         elif message_type == 'delivered':
             await self.handle_delivered(data)
-    
+
     async def handle_message(self, data):
         text = data.get('text')
 
@@ -69,7 +69,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'created_at': str(message.created_at),
             }
         )
-    
+
     async def handle_media_message(self, data):
         message_id = data.get('message_id')
         message = await self.get_message(message_id)
@@ -85,7 +85,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'has_media': True,
             }
         )
-    
+
     async def handle_read(self, data):
         message_id = data.get('message_id')
         await self.mark_as_read(message_id)
@@ -119,7 +119,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'created_at': event['created_at'],
             'has_media': event.get('has_media', False),
         }))
-    
+
     async def message_read(self, event):
         await self.send(text_data=json.dumps({
             'type': 'read',
@@ -131,7 +131,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'type': 'delivered',
             'message_id': event['message_id'],
         }))
-    
+
     @database_sync_to_async
     def get_message(self, message_id):
         return Message.objects.get(id=message_id, sender=self.user)
@@ -143,21 +143,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
             receiver_id=self.other_user_id,
             text=text,
         )
-    
+
     @database_sync_to_async
     def mark_as_read(self, message_id):
         Message.objects.filter(
             id=message_id,
             receiver=self.user
         ).update(is_read=True)
-    
+
     @database_sync_to_async
     def mark_as_delivered(self, message_id):
         Message.objects.filter(
             id=message_id,
             receiver=self.user
         ).update(is_delivered=True)
-    
+
     @database_sync_to_async
     def check_match(self):
         from matching.models import Match

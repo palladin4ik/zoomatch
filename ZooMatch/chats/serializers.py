@@ -33,7 +33,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
         if request.method != 'POST':
             return data
-        
+
         sender = request.user
         receiver = data.get('receiver')
 

@@ -33,6 +33,6 @@ class Message(models.Model):
     class Meta:
         ordering = ['-created_at']
         indexes = [
-            models.Index(fields=['sender', 'receiver', 'created_at']),
-            models.Index(fields=['receiver', 'sender', 'created_at']),
+            models.Index(fields=['sender', 'receiver', '-created_at']),
+            models.Index(fields=['receiver', 'sender', '-created_at']),
         ]

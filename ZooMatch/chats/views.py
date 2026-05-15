@@ -22,7 +22,8 @@ User = get_user_model()
         summary='Список всех сообщений пользователя',
         description='Возвращает список всех сообщений пользователя, '
                     'отправившего запрос, где пользователь или отправитель, '
-                    'или получатель.\n\nСообщения фильтруются по дате отправления.',
+                    'или получатель.\n\nСообщения фильтруются по дате '
+                    'отправления.',
         parameters=[
             OpenApiParameter(
                 name='receiver',
@@ -64,7 +65,7 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
     def get_queryset(self):
         user_1 = self.request.user
-        
+
         if self.action == 'list':
             user_2 = self.request.query_params.get('receiver')
 
@@ -101,13 +102,15 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
         if message.sender != user:
             return Response(status=status.HTTP_403_FORBIDDEN)
-        
-        serializer = self.get_serializer(message, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)  # Двойная проверка валидности (делить сериализаторы)
+
+        serializer = self.get_serializer(message,
+                                         data=request.data, partial=True)
+        # Двойная проверка валидности (делить сериализаторы)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
-        
+
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     @extend_schema(
             summary='Удалить сообщение для всех',
             description='Удаляет сообщение для всех, удалить может '
@@ -145,7 +148,7 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
         if not message.is_read:
             message.is_read = True
             message.save()
-        
+
         return Response({"status": "message read"}, status=status.HTTP_200_OK)
 
 
