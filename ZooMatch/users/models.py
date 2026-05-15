@@ -32,7 +32,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)
     avatar = models.TextField(blank=True, null=True)
-    location = models.TextField()
+    location = models.CharField(max_length=100,
+                                blank=True, null=True)
     description = models.TextField(blank=True, null=True)  # было status
 
     organization = models.CharField(max_length=150,

@@ -44,7 +44,8 @@ class Pet(models.Model):
         related_name='pets'
     )
     avatar = models.TextField(blank=True, null=True)
-    location = models.TextField()
+    location = models.CharField(max_length=100,
+                                blank=True, null=True)
     has_pedigree = models.BooleanField(default=False)
     pedigree_documents = models.TextField(blank=True, null=True)
     awards = models.TextField(blank=True, null=True)
