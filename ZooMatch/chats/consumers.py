@@ -35,17 +35,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
-        delivered_ids = await self.mark_pending_as_delivered()
-
-        for message_id in delivered_ids:
-            await self.channel_layer.group_send(
-                self.room_name,
-                {
-                    'type': 'message_delivered',
-                    'message_id': message_id,
-                }
-            )
-
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
             self.room_name,
@@ -179,15 +168,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
             Q(pet_from__owner_id=self.other_user_id, pet_to__owner=self.user),
             status=Match.Status.ACCEPTED
         ).exists()
-    
-    @database_sync_to_async
-    def mark_pending_as_delivered(self):
-        messages = Message.objects.filter(
-            receiver=self.user,
-            sender_id=self.other_user_id,
-            is_delivered=False
-        )
-        ids = list(messages.values_list('id', flat=True))
-        messages.update(is_delivered=True)
-
-        return ids

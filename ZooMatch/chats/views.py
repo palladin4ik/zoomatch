@@ -9,6 +9,7 @@ from drf_spectacular.utils import (extend_schema, extend_schema_view,
 
 from .serializers import MessageSerializer, ChatSerializer
 from .models import Message
+from .pagination import MessagePagination
 
 from matching.models import Match
 
@@ -55,6 +56,7 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                      viewsets.GenericViewSet):
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = MessagePagination
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def perform_create(self, serializer):
@@ -66,7 +68,7 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
         if self.action == 'list':
             user_2 = self.request.query_params.get('receiver')
 
-            if not user_2:  # Изменить поведение, if not user_2: все сообщения user_1 (мб сгруппировать)
+            if not user_2:
                 return Message.objects.none()
 
             return Message.objects.filter(
