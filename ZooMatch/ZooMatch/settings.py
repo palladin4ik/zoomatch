@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'users',
     'matching',
     'moderation',
+    'recommendations',
 ]
 
 MIDDLEWARE = [
