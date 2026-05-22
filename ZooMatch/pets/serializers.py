@@ -76,8 +76,9 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
     avatar = Base64FileField(required=False, allow_null=True, allow_blank=True)
     pedigree_documents = Base64FileField(required=False, allow_null=True,
                                          allow_blank=True)
-    
-    animal_type_custom = serializers.CharField(required=False, allow_blank=True)
+
+    animal_type_custom = serializers.CharField(required=False,
+                                               allow_blank=True)
     breed_custom = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
@@ -92,7 +93,7 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
     @extend_schema_field(TagSerializer(many=True))
     def get_tags_list(self, obj):
         return TagSerializer(obj.tags.all(), many=True).data
-    
+
     def validate(self, data):
         breed_custom = data.get('breed_custom')
         animal_type = data.get('animal_type')
@@ -128,9 +129,11 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
         pet = Pet.objects.create(**validated_data)
 
         if animal_type_custom or breed_custom:
-            ModerationRequest.objects.create(pet=pet,
-                                                animal_type=animal_type_custom,
-                                                breed=breed_custom)
+            ModerationRequest.objects.create(
+                pet=pet,
+                animal_type=animal_type_custom,
+                breed=breed_custom
+            )
 
         for tag_name in tags_data:
             tag, _ = Tag.objects.get_or_create(tag=tag_name)
