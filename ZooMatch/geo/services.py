@@ -1,8 +1,9 @@
 import requests
 
 from django.conf import settings
+from rest_framework import serializers
 
-from .utils import parse_location, haversine_distance
+from .utils import build_location, parse_location, haversine_distance
 from pets.models import Pet
 
 
@@ -110,3 +111,23 @@ def get_pets_by_distance_circles(latitude, longitude):
             circles['more_than_300'].append(pet)
 
     return circles
+
+
+def build_location_from_input(address=None, latitude=None, longitude=None):
+    if address:
+        geocoded = geocode(address)
+
+        if not geocoded:
+            raise serializers.ValidationError(
+                {'address': 'Адрес не найден'}
+            )
+
+        latitude = geocoded['latitude']
+        longitude = geocoded['longitude']
+
+        if not latitude or not longitude:
+            raise serializers.ValidationError(
+                {'location': 'Укажите адрес или координаты'}
+            )
+
+    return build_location(latitude, longitude)

@@ -6,6 +6,7 @@ from users.serializers import (UserSerializer, SimpleUserSerializer,
                                Base64FileField)
 
 from moderation.models import ModerationRequest
+from geo.services import build_location_from_input
 
 
 class AnimalTypeSerializer(serializers.ModelSerializer):
@@ -81,14 +82,18 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
                                                allow_blank=True)
     breed_custom = serializers.CharField(required=False, allow_blank=True)
 
+    address = serializers.CharField(write_only=True, required=False)
+    latitude = serializers.FloatField(write_only=True, required=False)
+    longitude = serializers.FloatField(write_only=True, required=False)
+
     class Meta:
         model = Pet
         fields = ('id', 'name', 'animal_type', 'breed', 'is_male',
-                  'age', 'avatar', 'location', 'has_pedigree',
-                  'pedigree_documents', 'awards', 'tags', 'tags_list',
-                  'description', 'is_active', 'animal_type_custom',
-                  'breed_custom')
-        read_only_fields = ('id',)
+                  'age', 'avatar', 'location', 'address', 'latitude',
+                  'longitude', 'has_pedigree', 'pedigree_documents',
+                  'awards', 'tags', 'tags_list', 'description',
+                  'is_active', 'animal_type_custom', 'breed_custom')
+        read_only_fields = ('id', 'location')
 
     @extend_schema_field(TagSerializer(many=True))
     def get_tags_list(self, obj):
@@ -126,6 +131,14 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
         if breed:
             validated_data['animal_type'] = breed.animal_type
 
+        address = validated_data.pop('address', None)
+        latitude = validated_data.pop('latitude', None)
+        longitude = validated_data.pop('longitude', None)
+
+        validated_data['location'] = build_location_from_input(
+            address, latitude, longitude
+        )
+
         pet = Pet.objects.create(**validated_data)
 
         if animal_type_custom or breed_custom:
@@ -144,11 +157,22 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         tags_data = validated_data.pop('tags', None)
 
+        address = validated_data.pop('address', None)
+        latitude = validated_data.pop('latitude', None)
+        longitude = validated_data.pop('longitude', None)
+
+        if (address or latitude is not None or longitude is not None):
+            validated_data['location'] = build_location_from_input(
+                address, latitude, longitude
+            )
+
         breed = validated_data.get('breed')
         if breed:
             validated_data['animal_type'] = breed.animal_type
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
+
         instance.save()
 
         if tags_data is not None:
