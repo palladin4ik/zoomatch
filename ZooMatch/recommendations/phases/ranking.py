@@ -28,6 +28,6 @@ def rank_candidates(active_pet, candidates):
         return {'results': [], 'suggest_expand': True}
 
     return {
-        'results': candidates[::TOP_N],
+        'results': candidates[:TOP_N],
         'suggest_expand': False,
     }

@@ -1,7 +1,7 @@
 from celery import shared_task
 
 from .pipeline import run_recommendation_pipeline
-from .models import RecommendationCache
+from .models import RecommendationCache, RecommendationParams
 
 from pets.models import Pet
 
@@ -18,13 +18,23 @@ def recalculate_recommendations_for_pet(pet_id):
     except Pet.DoesNotExist:
         return
 
-    params = {
-        'radius_km': None,
-        'requires_pedigree': False,
-        'min_age': None,
-        'max_age': None,
-        'max_months_since_mating': None,
-    }
+    try:
+        saved_params = pet.recommendation_params
+        params = {
+            'radius_km': saved_params.radius_km,
+            'requires_pedigree': saved_params.requires_pedigree,
+            'min_age': saved_params.min_age,
+            'max_age': saved_params.max_age,
+            'max_months_since_mating': saved_params.max_months_since_mating,
+        }
+    except RecommendationParams.DoesNotExist:
+        params = {
+            'radius_km': None,
+            'requires_pedigree': False,
+            'min_age': None,
+            'max_age': None,
+            'max_months_since_mating': None,
+        }
 
     result = run_recommendation_pipeline(pet, params)
 
@@ -38,7 +48,7 @@ def recalculate_recommendations_for_pet(pet_id):
 
 
 @shared_task
-def recalculate_all_recomendations():
+def recalculate_all_recommendations():
     pet_ids = list(
         Pet.objects
         .filter(is_active=True)

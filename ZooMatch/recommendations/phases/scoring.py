@@ -66,7 +66,7 @@ def compute_distance_score(candidate):
 
 def score_candidates(active_pet, candidates):
     u_id = active_pet.owner_id
-    view_category_id = ActionCategory.objects.filter(name='view').pk
+    view_category_id = ActionCategory.objects.get(name='view').pk
 
     for candidate in candidates:
         content = compute_content_score(active_pet, candidate)

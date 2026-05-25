@@ -45,4 +45,4 @@ def haversine_distance(lat1, lon1, lat2, lon2):
 
     angular_distance = 2 * asin(sqrt(haversine_formula))
 
-    return EARTH_RADIUS_KM * angular_distance
+    return round((EARTH_RADIUS_KM * angular_distance), 2)

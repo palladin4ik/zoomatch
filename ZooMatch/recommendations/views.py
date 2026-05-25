@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from .serializers import RecommendationParamsSerializer
 from .pipeline import run_recommendation_pipeline
-from .models import RecommendationCache
+from .models import RecommendationCache, RecommendationParams
 
 from pets.models import Pet
 from pets.serializers_readonly import PetShortSerializer
@@ -44,6 +44,19 @@ class RecommendationViewSet(viewsets.GenericViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        RecommendationParams.objects.update_or_create(
+            pet=active_pet,
+            defaults={
+                'radius_km': params.get('radius_km', None),
+                'requires_pedigree': params.get('requires_pedigree', False),
+                'min_age': params.get('min_age', None),
+                'max_age': params.get('max_age', None),
+                'max_months_since_mating': params.get(
+                    'max_months_since_mating', None
+                ),
+            }
+        )
+
         cache_expiry = timezone.now() - timedelta(hours=CACHE_TTL_HOURS)
         cache = (
             RecommendationCache.objects
@@ -76,5 +89,5 @@ class RecommendationViewSet(viewsets.GenericViewSet):
 
         return Response({
             'results': PetShortSerializer(result['results'], many=True).data,
-            'suggested_expand': result['suggest_expand']
+            'suggest_expand': result['suggest_expand']
         })
