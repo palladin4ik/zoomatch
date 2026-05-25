@@ -1,8 +1,8 @@
-from phases.generation import generate_candidates
-from phases.expansion import expand_candidates
-from phases.filtering import apply_soft_filters
-from phases.scoring import score_candidates
-from phases.ranking import rank_candidates
+from .phases.generation import generate_candidates
+from .phases.expansion import expand_candidates
+from .phases.filtering import apply_soft_filters
+from .phases.scoring import score_candidates
+from .phases.ranking import rank_candidates
 
 
 def run_recommendation_pipeline(active_pet, params):
