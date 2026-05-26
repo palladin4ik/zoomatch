@@ -165,7 +165,7 @@ class PetViewSet(viewsets.ModelViewSet):
         if self.action in ['update', 'partial_update', 'destroy']:
             qs = Pet.objects.filter(owner=user)
 
-        elif self.action == 'list':
+        elif self.action in ['list', 'view']:
             qs = Pet.objects.filter(is_active=True).exclude(owner=user)
 
             if animal_type:
