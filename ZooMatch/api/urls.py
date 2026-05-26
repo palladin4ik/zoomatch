@@ -16,6 +16,7 @@ from chats.views import MessageViewSet, ChatViewSet
 from matching.views import MatchViewSet
 from moderation.views import ModerationRequestViewSet
 from geo.views import GeoViewSet
+from recommendations.views import RecommendationViewSet
 
 
 router_v1 = DefaultRouter()
@@ -26,6 +27,7 @@ router_v1.register('matches', MatchViewSet, basename='matches')
 router_v1.register('messages', MessageViewSet, basename='messages')
 router_v1.register('chats', ChatViewSet, basename='chats')
 router_v1.register('geo', GeoViewSet, basename='geo')
+router_v1.register('recommend', RecommendationViewSet, basename='recommend')
 
 # Admin only
 router_v1.register('animal-type', AnimalTypeViewSet, basename='animal_type')

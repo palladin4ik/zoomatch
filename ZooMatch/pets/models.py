@@ -56,6 +56,9 @@ class Pet(models.Model):
     description = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=False, db_index=True)
 
+    last_mating_date = models.DateField(blank=True, null=True)
+    mating_count = models.PositiveSmallIntegerField(default=0)
+
     class Meta:
         indexes = [
             models.Index(fields=['animal_type', 'breed']),

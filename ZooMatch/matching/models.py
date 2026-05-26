@@ -1,5 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from pets.models import Pet
+
+
+User = get_user_model()
 
 
 class Match(models.Model):
@@ -66,6 +70,11 @@ class ActionCategory(models.Model):
 
 
 class Action(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='actions'
+    )
     pet = models.ForeignKey(
         Pet,
         on_delete=models.CASCADE,
@@ -75,5 +84,6 @@ class Action(models.Model):
         ActionCategory,
         on_delete=models.CASCADE
     )
+    value = models.PositiveSmallIntegerField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

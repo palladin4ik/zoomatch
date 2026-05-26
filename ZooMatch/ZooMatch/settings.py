@@ -4,6 +4,8 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
+from celery.schedules import crontab
+
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -35,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'djoser',
+    'django_celery_beat',
     'drf_spectacular',
     'channels',
     'corsheaders',
@@ -45,6 +48,7 @@ INSTALLED_APPS = [
     'matching',
     'moderation',
     'geo',
+    'recommendations',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +88,8 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             'hosts': [('127.0.0.1', 6379)],
+            'capacity': 1500,
+            'db': 0,
         },
     },
 }
@@ -194,6 +200,18 @@ CORS_ALLOW_ALL_ORIGINS = True
 # CORS_ALLOWED_ORIGINS = [
 #     'https://ZooMatch.com',
 # ]
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_TIMEZONE = 'Europe/Moscow'
+
+CELERY_BEAT_SCHEDULE = {
+    'recalculate-recommendations-nightly': {
+        'task': 'recommandations.tasks.recalculate_all_recommendations',
+        'schedule': crontab(hour=3, minute=0),
+    }
+}
 
 
 if DEBUG:
