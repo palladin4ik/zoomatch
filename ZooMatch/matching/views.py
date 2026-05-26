@@ -6,7 +6,7 @@ from drf_spectacular.utils import (extend_schema, extend_schema_view,
                                    OpenApiParameter, OpenApiTypes)
 
 from .serializers import MatchSerializer
-from .models import Match, Rejection
+from .models import Match, Rejection, Action, ActionCategory
 
 
 @extend_schema_view(
@@ -55,6 +55,11 @@ class MatchViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
         reverse_match = Match.objects.filter(pet_from=pet_to,
                                              pet_to=pet_from).first()
+
+        like_category = ActionCategory.objects.get(name='like')
+        Action.objects.create(user=pet_from.owner, pet=pet_to,
+                              category=like_category)
+
         if reverse_match:
             reverse_match.status = Match.Status.ACCEPTED
             reverse_match.save()
