@@ -5,7 +5,8 @@ from django.db.models import Q, OuterRef, Subquery, Count
 from django.contrib.auth import get_user_model
 
 from drf_spectacular.utils import (extend_schema, extend_schema_view,
-                                   OpenApiParameter, OpenApiTypes)
+                                   OpenApiParameter, OpenApiTypes,
+                                   OpenApiResponse)
 
 from .serializers import MessageSerializer, ChatSerializer
 from .models import Message
@@ -55,6 +56,7 @@ User = get_user_model()
 class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                      mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                      viewsets.GenericViewSet):
+    queryset = Message.objects.all()
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = MessagePagination
@@ -81,7 +83,7 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
             Q(sender=user_1) | Q(receiver=user_1)
         )
 
-    def destroy(self, request, *args, **kwargs):
+    def destroy(self, request, pk=None):
         user = self.request.user
         message = self.get_object()
 
@@ -96,7 +98,7 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def partial_update(self, request, *args, **kwargs):
+    def partial_update(self, request, pk=None):
         user = self.request.user
         message = self.get_object()
 
@@ -115,10 +117,11 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
             summary='Удалить сообщение для всех',
             description='Удаляет сообщение для всех, удалить может '
                         'только отправитель.',
-            request=None
+            request=None,
+            responses=None
     )
     @action(detail=True, methods=['post'])
-    def delete_for_all(self, request, *args, **kwargs):
+    def delete_for_all(self, request, pk=None):
         user = self.request.user
         message = self.get_object()
 
@@ -135,10 +138,23 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
             summary='Отметить сообщение прочитаным',
             description='Отмечает сообщение прочитаным, '
                         'отмечается только получателем',
-            request=None
+            request=None,
+            responses={
+                200: OpenApiResponse(
+                    response={
+                        'type': 'object',
+                        'properties': {
+                            'detail': {
+                                'type': 'string',
+                                'example': 'Сообщение прочитано'
+                            }
+                        }
+                    }
+                )
+            }
     )
     @action(detail=True, methods=['post'])
-    def read(self, request, *args, **kwargs):
+    def read(self, request, pk=None):
         user = self.request.user
         message = self.get_object()
 
@@ -149,7 +165,8 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
             message.is_read = True
             message.save()
 
-        return Response({"status": "message read"}, status=status.HTTP_200_OK)
+        return Response({'detail': 'Сообщение прочитано'},
+                        status=status.HTTP_200_OK)
 
 
 @extend_schema_view(

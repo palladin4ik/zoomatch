@@ -156,6 +156,7 @@ class BreedViewSet(viewsets.ModelViewSet):
     ),
 )
 class PetViewSet(viewsets.ModelViewSet):
+    queryset = Pet.objects.all()
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def get_queryset(self):
@@ -226,6 +227,36 @@ class PetViewSet(viewsets.ModelViewSet):
         serializer = PetSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    @extend_schema(
+            summary='Зафиксировать время просмотра анкеты',
+            description='Записывает время просмотра анкеты питомца '
+            'в секундах пользователем, отправившим запрос',
+            request={
+                'application/json': {
+                    'type': 'object',
+                    'properties': {
+                        'duration': {
+                            'type': 'number',
+                            'example': 300,
+                        },
+                    },
+                    'required': ['duration'],
+                }
+            },
+            responses={
+                200: OpenApiResponse(
+                    response={
+                        'type': 'object',
+                        'properties': {
+                            'detail': {
+                                'type': 'string',
+                                'example': 'Длительность просмотра сохранена'
+                            }
+                        }
+                    }
+                )
+            }
+    )
     @action(detail=True, methods=['post'])
     def view(self, request, pk=None):
         user = self.request.user
@@ -250,4 +281,7 @@ class PetViewSet(viewsets.ModelViewSet):
         Action.objects.create(user=user, pet=pet,
                               value=duration, category=view_category)
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(
+            {'detail': 'Длительность просмотра сохранена'},
+            status=status.HTTP_200_OK
+        )

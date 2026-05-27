@@ -1,9 +1,10 @@
-from rest_framework import mixins, viewsets, permissions
+from rest_framework import mixins, viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth import get_user_model
 
-from drf_spectacular.utils import extend_schema, extend_schema_view
+from drf_spectacular.utils import (extend_schema, extend_schema_view,
+                                   OpenApiResponse)
 
 from .serializers import (
     UserCreateSerializer, UserSerializer,
@@ -31,20 +32,26 @@ class RegistrationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 class ProfileViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_serializer_class(self):
+        if self.action == 'partial_update':
+            return UserUpdateSerializer
+
+        if self.action == 'change_password':
+            return ChangePasswordSerializer
+
+        return UserSerializer
+
     @extend_schema(
             summary='Профиль текущего пользователя',
-            responses=UserSerializer,
     )
-    def retrieve(self, request):
+    def retrieve(self, request, pk=None):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
     @extend_schema(
             summary='Изменение профиля текущего пользователя',
-            request=UserUpdateSerializer,
-            responses=UserUpdateSerializer,
     )
-    def partial_update(self, request):
+    def partial_update(self, request, pk=None):
         serializer = UserUpdateSerializer(request.user, data=request.data,
                                           partial=True)
         serializer.is_valid(raise_exception=True)
@@ -54,14 +61,25 @@ class ProfileViewSet(viewsets.ViewSet):
     @extend_schema(
             summary='Удаление текущего пользователя',
     )
-    def destroy(self, request):
+    def destroy(self, request, pk=None):
         request.user.delete()
-        return Response(status=204)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @extend_schema(
             summary='Смена пароля текущего пользователя',
-            request=ChangePasswordSerializer,
-            responses={'200': {'detail': 'Пароль успешно изменен'}}
+            responses={
+                200: OpenApiResponse(
+                    response={
+                        'type': 'object',
+                        'properties': {
+                            'detail': {
+                                'type': 'string',
+                                'example': 'Пароль успешно изменен',
+                            }
+                        }
+                    }
+                )
+            }
     )
     @action(detail=False, methods=['patch'], url_path='change-password')
     def change_password(self, request):

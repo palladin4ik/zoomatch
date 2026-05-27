@@ -34,7 +34,24 @@ from .models import Match, Rejection, Action, ActionCategory
         description='Создает метч с дефолтным статусом 0 (ожидание), если метч'
                     ' уже создан (pet_1 -> pet_2) и создается обратный '
                     '(pet_2 -> pet_1), первый (pet_1 -> pet_2) автоматически '
-                    'становится принятым (Accepted)(pet_2->pet_1 не создается)'
+                    'становится принятым (Accepted)(pet_2->pet_1 не '
+                    'создается)',
+        request={
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'pet_from': {
+                        'type': 'number',
+                        'example': 3,
+                    },
+                    'pet_to': {
+                        'type': 'number',
+                        'example': 6
+                    },
+                },
+                'required': ['pet_from', 'pet_to'],
+            }
+        },
     ),
     partial_update=extend_schema(
         summary='Изменить статус метча',
@@ -47,6 +64,7 @@ class MatchViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                    mixins.UpdateModelMixin, viewsets.GenericViewSet):
     serializer_class = MatchSerializer
     permission_classes = [permissions.IsAuthenticated]
+    queryset = Match.objects.all()
     http_method_names = ['get', 'post', 'patch']
 
     def perform_create(self, serializer):
@@ -88,7 +106,7 @@ class MatchViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
         return qs.select_related('pet_from', 'pet_to')
 
-    def partial_update(self, request, *args, **kwargs):
+    def partial_update(self, request, pk=None):
         match = self.get_object()
 
         if match.pet_to.owner != request.user:

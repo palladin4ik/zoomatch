@@ -2,6 +2,10 @@ from rest_framework import permissions, viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
+from drf_spectacular.utils import (extend_schema, OpenApiParameter,
+                                   OpenApiResponse, OpenApiTypes)
+
+from .serializers import PetsCirclesResponseSerializer
 from .services import geocode, reverse_geocode, get_pets_by_distance_circles
 from .utils import haversine_distance
 from pets.serializers_readonly import PetShortSerializer
@@ -10,6 +14,41 @@ from pets.serializers_readonly import PetShortSerializer
 class GeoViewSet(viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
+    @extend_schema(
+            summary='Геокодирование',
+            description='Возвращает координаты заданного адреса',
+            parameters=[
+                OpenApiParameter(
+                    name='address',
+                    required=True,
+                    type=OpenApiTypes.STR,
+                )
+            ],
+            responses={
+                200: OpenApiResponse(
+                    response={
+                        'type': 'object',
+                        'properties': {
+                            'latitude': {
+                                'type': 'number',
+                                'example': 55.7558,
+                            },
+                            'longitude': {
+                                'type': 'number',
+                                'example': 37.7558,
+                            },
+                        },
+                    },
+                    description='Координаты адреса',
+                ),
+                400: OpenApiResponse(
+                    description='Адрес не передан',
+                ),
+                404: OpenApiResponse(
+                    description='Адрес не найден',
+                ),
+            }
+    )
     @action(detail=False, methods=['get'], url_path='geocode')
     def geocode_view(self, request):
         address = request.query_params.get('address')
@@ -30,6 +69,45 @@ class GeoViewSet(viewsets.GenericViewSet):
 
         return Response(result, status=status.HTTP_200_OK)
 
+    @extend_schema(
+            summary='Обратное геокодирование',
+            description='Возвращает адрес по переданым координатам',
+            parameters=[
+                OpenApiParameter(
+                    name='latitude',
+                    description='Долгота',
+                    required=True,
+                    type=OpenApiTypes.FLOAT,
+                ),
+                OpenApiParameter(
+                    name='longitude',
+                    description='Широта',
+                    required=True,
+                    type=OpenApiTypes.FLOAT,
+                )
+            ],
+            responses={
+                200: OpenApiResponse(
+                    response={
+                        'type': 'object',
+                        'properties': {
+                            'address': {
+                                'type': 'string',
+                                'example': 'Россия, Калуга, Московская улица 5'
+                            },
+                        },
+                    },
+                    description='Адрес'
+                ),
+                400: OpenApiResponse(
+                    description='Долгота и широта обязательны и должны быть '
+                    'числами'
+                ),
+                404: OpenApiResponse(
+                    description='Адрес не найден'
+                )
+            }
+    )
     @action(detail=False, methods=['get'])
     def reverse(self, request):
         latitude = request.query_params.get('latitude')
@@ -60,6 +138,55 @@ class GeoViewSet(viewsets.GenericViewSet):
 
         return Response({'address': result}, status=status.HTTP_200_OK)
 
+    @extend_schema(
+            summary='Расчет дистанции между 2 точками',
+            description='Возвращает дистанцию в км между двумя точками по '
+            'формуле Хаверсина',
+            parameters=[
+                OpenApiParameter(
+                    name='lat1',
+                    description='Долгота 1 точки',
+                    required=True,
+                    type=OpenApiTypes.FLOAT,
+                ),
+                OpenApiParameter(
+                    name='lon1',
+                    description='Широта 1 точки',
+                    required=True,
+                    type=OpenApiTypes.FLOAT,
+                ),
+                OpenApiParameter(
+                    name='lat2',
+                    description='Долгота 2 точки',
+                    required=True,
+                    type=OpenApiTypes.FLOAT,
+                ),
+                OpenApiParameter(
+                    name='lon2',
+                    description='Широта 2 точки',
+                    required=True,
+                    type=OpenApiTypes.FLOAT,
+                ),
+            ],
+            responses={
+                200: OpenApiResponse(
+                    response={
+                        'type': 'object',
+                        'properties': {
+                            'distance_km': {
+                                'type': 'number',
+                                'example': '21.45',
+                            },
+                        },
+                    },
+                    description='Расстояние',
+                ),
+                400: OpenApiResponse(
+                    description='Все координаты обязательны и должны '
+                    'быть числами'
+                )
+            }
+    )
     @action(detail=False, methods=['get'])
     def distance(self, request):
         lat1 = request.query_params.get('lat1')
@@ -96,6 +223,31 @@ class GeoViewSet(viewsets.GenericViewSet):
         return Response({'distance_km': round(distance, 2)},
                         status=status.HTTP_200_OK)
 
+    @extend_schema(
+            summary='Получение ближайших питомцев по окружностям',
+            description='Возвращает список ближайших питомцев по окружностям '
+            'в < 50; < 150; < 300; 300+ км',
+            parameters=[
+                OpenApiParameter(
+                    name='latitude',
+                    description='Долгота',
+                    required=True,
+                    type=OpenApiTypes.FLOAT,
+                ),
+                OpenApiParameter(
+                    name='longitude',
+                    description='Широта',
+                    required=True,
+                    type=OpenApiTypes.FLOAT,
+                )
+            ],
+            responses={
+                200: OpenApiResponse(
+                    response=PetsCirclesResponseSerializer,
+                    description='Питомцы по окружностям'
+                )
+            }
+    )
     @action(detail=False, methods=['get'])
     def pets_circles(self, request):
         latitude = request.query_params.get('latitude')
