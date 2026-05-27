@@ -8,6 +8,8 @@ from users.serializers import SimpleUserSerializer
 
 from matching.models import Match
 
+from core.validators import validate_file_size, validate_media_type
+
 
 User = get_user_model()
 
@@ -47,6 +49,17 @@ class MessageSerializer(serializers.ModelSerializer):
             return data
         else:
             raise serializers.ValidationError("Для начала общения нужен Match")
+
+
+class MessageMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ['media']
+
+    def validate_media(self, value):
+        validate_file_size(value)
+        validate_media_type(value)
+        return value
 
 
 class ChatSerializer(serializers.Serializer):

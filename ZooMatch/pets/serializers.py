@@ -1,12 +1,14 @@
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 
-from .models import (AnimalType, Breed, Tag, Pet, PetInfo, Comment)
+from .models import AnimalType, Breed, Tag, Pet, PetInfo, Comment
 from users.serializers import (UserSerializer, SimpleUserSerializer,
                                Base64FileField)
 
 from moderation.models import ModerationRequest
 from geo.services import build_location_from_input
+from core.validators import (validate_file_size, validate_image_type,
+                             validate_pdf_type)
 
 
 class AnimalTypeSerializer(serializers.ModelSerializer):
@@ -182,6 +184,44 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
                 instance.tags.add(tag)
 
         return instance
+
+
+class PetAvatarSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Pet
+        fields = ['avatar']
+
+    def validate_avatar(self, value):
+        validate_file_size(value)
+        validate_image_type(value)
+
+        return value
+
+    def update(self, instance, validated_data):
+        if instance.avatar:
+            instance.avatar.delete(save=False)
+
+        return super().update(instance, validated_data)
+
+
+class PetDocumentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Pet
+        fields = ['pedigree_documents']
+
+    def validate_pedigree_documents(self, value):
+        validate_file_size(value)
+        validate_pdf_type(value)
+
+        return value
+
+    def update(self, instance, validated_data):
+        if instance.pedigree_documents:
+            instance.pedigree_documents.delete(save=False)
+
+        return super().update(instance, validated_data)
 
 
 class PetInfoSerializer(serializers.ModelSerializer):

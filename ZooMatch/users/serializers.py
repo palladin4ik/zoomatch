@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 from pets.serializers_readonly import PetShortSerializer
 from geo.services import build_location_from_input
+from core.validators import validate_file_size, validate_image_type
 
 
 User = get_user_model()
@@ -97,6 +98,25 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class UserAvatarSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['avatar']
+
+    def validate_avatar(self, value):
+        validate_image_type(value)
+        validate_file_size(value)
+
+        return value
+
+    def update(self, instance, validated_data):
+        if instance.avatar:
+            instance.avatar.delete(save=False)
+
+        return super().update(instance, validated_data)
 
 
 class ChangePasswordSerializer(serializers.Serializer):
