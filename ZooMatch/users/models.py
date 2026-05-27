@@ -3,6 +3,9 @@ from django.contrib.auth.models import (AbstractBaseUser,
 from django.db import models
 from django.utils import timezone
 
+from core.uploads import user_avatar_path
+from core.validators import validate_file_size, validate_image_type
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -31,7 +34,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     lastname = models.CharField(max_length=50)  # new
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)
-    avatar = models.TextField(blank=True, null=True)
+    avatar = models.ImageField(
+        upload_to=user_avatar_path,
+        blank=True, null=True,
+        validators=[validate_file_size, validate_image_type]
+    )
     location = models.CharField(max_length=100,
                                 blank=True, null=True)
     description = models.TextField(blank=True, null=True)  # было status
@@ -58,7 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['firstname']
 
     def __str__(self):
         return self.email
