@@ -192,6 +192,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+MAX_UPLOAD_SIZE_MB = 10
+ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+ALLOWED_MEDIA_TYPES = ALLOWED_IMAGE_TYPES + [
+    'video/mp4',
+    'video/quicktime',
+    'application/pdf',
+    'audio/mpeg',
+    'audio/ogg',
+    'audio/mp3',
+]
+
 
 # ТОЛЬКО DEBUG - РАЗРЕШАЕМ ВСЕ ИСТОЧНИКИ CORS
 CORS_ALLOW_ALL_ORIGINS = True
