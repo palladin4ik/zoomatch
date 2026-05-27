@@ -28,7 +28,7 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ('id', 'sender', 'receiver', 'text', 'media', 'is_read',
                   'receiver_id', 'created_at')
-        read_only_fields = ('id', 'is_read')
+        read_only_fields = ('id', 'media', 'is_read')
 
     def validate(self, data):
         request = self.context.get('request')

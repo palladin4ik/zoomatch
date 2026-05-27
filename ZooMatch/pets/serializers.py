@@ -2,8 +2,7 @@ from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 
 from .models import AnimalType, Breed, Tag, Pet, PetInfo, Comment
-from users.serializers import (UserSerializer, SimpleUserSerializer,
-                               Base64FileField)
+from users.serializers import UserSerializer, SimpleUserSerializer
 
 from moderation.models import ModerationRequest
 from geo.services import build_location_from_input
@@ -52,7 +51,7 @@ class PetSerializer(serializers.ModelSerializer):
     breed = SimpleBreedSerializer(read_only=True)
     tags = serializers.SerializerMethodField()
 
-    avatar = Base64FileField(read_only=True)
+    avatar = serializers.ImageField(read_only=True)
     pedigree_documents = serializers.CharField(read_only=True)
 
     class Meta:
@@ -76,10 +75,6 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
     )
     tags_list = serializers.SerializerMethodField(read_only=True)
 
-    avatar = Base64FileField(required=False, allow_null=True, allow_blank=True)
-    pedigree_documents = Base64FileField(required=False, allow_null=True,
-                                         allow_blank=True)
-
     animal_type_custom = serializers.CharField(required=False,
                                                allow_blank=True)
     breed_custom = serializers.CharField(required=False, allow_blank=True)
@@ -91,10 +86,10 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pet
         fields = ('id', 'name', 'animal_type', 'breed', 'is_male',
-                  'age', 'avatar', 'location', 'address', 'latitude',
-                  'longitude', 'has_pedigree', 'pedigree_documents',
-                  'awards', 'tags', 'tags_list', 'description',
-                  'is_active', 'animal_type_custom', 'breed_custom')
+                  'age', 'location', 'address', 'latitude',
+                  'longitude', 'has_pedigree', 'awards',
+                  'tags', 'tags_list', 'description', 'is_active',
+                  'animal_type_custom', 'breed_custom')
         read_only_fields = ('id', 'location')
 
     @extend_schema_field(TagSerializer(many=True))
@@ -243,7 +238,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id', 'content', 'media', 'likes', 'author',
+        fields = ('id', 'text', 'media', 'likes', 'author',
                   'pet_info_card_id', 'date_create')
         read_only_fields = ('id', 'likes', 'author', 'date_create')
 

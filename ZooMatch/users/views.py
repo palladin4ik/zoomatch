@@ -1,15 +1,16 @@
 from rest_framework import mixins, viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
 from django.contrib.auth import get_user_model
 
 from drf_spectacular.utils import (extend_schema, extend_schema_view,
                                    OpenApiResponse)
 
-from .serializers import (
-    UserCreateSerializer, UserSerializer,
-    UserUpdateSerializer, ChangePasswordSerializer
-)
+from .serializers import (UserCreateSerializer, UserSerializer,
+                          UserUpdateSerializer, ChangePasswordSerializer,
+                          UserAvatarSerializer)
 
 
 User = get_user_model()
@@ -105,3 +106,29 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all().prefetch_related('pets')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class UserAvatarView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser]
+
+    def patch(self, request):
+        serializer = UserAvatarSerializer(
+            instance=request.user,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
+
+    def delete(self, request):
+        user = request.user
+
+        if user.avatar:
+            user.avatar.delete(save=False)
+            user.avatar = None
+            user.save(update_fields=['avatar'])
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

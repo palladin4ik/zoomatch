@@ -1,6 +1,8 @@
-from rest_framework import mixins, permissions, viewsets, status
+from rest_framework import mixins, permissions, viewsets, status, exceptions
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
 from django.db.models import Q, OuterRef, Subquery, Count
 from django.contrib.auth import get_user_model
 
@@ -8,7 +10,8 @@ from drf_spectacular.utils import (extend_schema, extend_schema_view,
                                    OpenApiParameter, OpenApiTypes,
                                    OpenApiResponse)
 
-from .serializers import MessageSerializer, ChatSerializer
+from .serializers import (MessageSerializer, ChatSerializer,
+                          MessageMediaSerializer)
 from .models import Message
 from .pagination import MessagePagination
 
@@ -167,6 +170,33 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
         return Response({'detail': 'Сообщение прочитано'},
                         status=status.HTTP_200_OK)
+
+
+class MessageMediaView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, pk):
+        try:
+            message = Message.objects.get(pk=pk)
+        except Message.DoesNotExist:
+            raise exceptions.NotFound('Сообщение не найдено')
+
+        if message.sender != request.user:
+            raise exceptions.PermissionDenied('Нет доступа')
+
+        if message.media:
+            return Response(
+                {'detail': 'Медиа уже прикреплено'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = MessageMediaSerializer(message, data=request.data,
+                                            partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @extend_schema_view(

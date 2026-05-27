@@ -46,7 +46,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    avatar = Base64FileField(read_only=True)
+    avatar = serializers.ImageField(read_only=True)
     pets = PetShortSerializer(many=True, read_only=True)
 
     class Meta:
@@ -58,7 +58,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
-    avatar = Base64FileField(read_only=True)
+    avatar = serializers.ImageField(read_only=True)
 
     class Meta:
         model = User
@@ -69,15 +69,13 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
-    avatar = Base64FileField(required=False, allow_null=True)
-
     address = serializers.CharField(write_only=True, required=False)
     latitude = serializers.FloatField(write_only=True, required=False)
     longitude = serializers.FloatField(write_only=True, required=False)
 
     class Meta:
         model = User
-        fields = ('id', 'firstname', 'lastname', 'email', 'avatar', 'location',
+        fields = ('id', 'firstname', 'lastname', 'email', 'location',
                   'address', 'latitude', 'longitude', 'organization',
                   'phone_number', 'description')
         read_only_fields = ('id', 'location')

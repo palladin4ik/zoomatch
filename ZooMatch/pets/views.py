@@ -1,6 +1,8 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, exceptions
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
 from django.db.models import Q
 
 from drf_spectacular.utils import (extend_schema, extend_schema_view,
@@ -11,6 +13,7 @@ from .serializers import (
     AnimalTypeSerializer, BreedSerializer,
     PetSerializer, PetCreateUpdateSerializer,
     PetInfoSerializer, CommentSerializer,
+    PetAvatarSerializer, PetDocumentSerializer
 )
 from .models import AnimalType, Breed, Pet, PetInfo, Comment
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
@@ -285,3 +288,66 @@ class PetViewSet(viewsets.ModelViewSet):
             {'detail': 'Длительность просмотра сохранена'},
             status=status.HTTP_200_OK
         )
+
+
+class PetAvatarView(APIView):
+    permission_classes = [IsOwnerOrReadOnly]
+    parser_classes = [MultiPartParser]
+
+    def get_pet(self, request, pk):
+        try:
+            pet = Pet.objects.get(pk=pk)
+        except Pet.DoesNotExist:
+            raise exceptions.NotFound('Питомец не найден')
+
+        self.check_object_permissions(request, pet)
+
+        return pet
+
+    def patch(self, request, pk):
+        pet = self.get_pet(request, pk)
+
+        serializer = PetAvatarSerializer(pet, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        pet = self.get_pet(request, pk)
+
+        if pet.avatar:
+            pet.avatar.delete(save=False)
+            pet.avatar = None
+            pet.save(update_fields=['avatar'])
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PetDocumentView(APIView):
+    permission_classes = [IsOwnerOrReadOnly]
+    parser_classes = [MultiPartParser]
+
+    def get_pet(self, request, pk):
+        try:
+            pet = Pet.objects.get(pk=pk)
+        except Pet.DoesNotExist:
+            raise exceptions.NotFound('Питомец не найден')
+        self.check_object_permissions(request, pet)
+        return pet
+
+    def patch(self, request, pk):
+        pet = self.get_pet(request, pk)
+        serializer = PetDocumentSerializer(pet, data=request.data,
+                                           partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        pet = self.get_pet(request, pk)
+        if pet.pedigree_documents:
+            pet.pedigree_documents.delete(save=False)
+            pet.pedigree_documents = None
+            pet.save(update_fields=['pedigree_documents'])
+        return Response(status=status.HTTP_204_NO_CONTENT)
