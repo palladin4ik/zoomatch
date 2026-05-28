@@ -32,12 +32,9 @@ DB_PORT=
 
 # Django SECRET_KEY
 SECRET_KEY=
-<<<<<<< HEAD
-=======
 
 # Yandex Maps API
 YANDEX_MAPS_API_KEY=
->>>>>>> 5d46af5 (Update README.md)
 ```
 
 6. Выполните миграции
