@@ -182,6 +182,56 @@ class MessageMediaView(APIView):
     parser_classes = [MultiPartParser]
 
     @extend_schema(
+            summary='Получение медиа сообщения',
+            description='Возвращает медиа файл, проверяя является ли '
+            'пользователь, отправивший запрос получателем или отправителем',
+            responses={
+                200: OpenApiResponse(
+                    description='Файл',
+                    response={
+                        'type': 'string',
+                        'format': 'binary'
+                    }
+                ),
+            }
+    )
+    def get(self, request, pk):
+        try:
+            message = Message.objects.get(pk=pk)
+        except Message.DoesNotExist:
+            return Response(
+                {'detail': 'Сообщение не найдено'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if request.user not in (message.sender, message.receiver):
+            return Response(
+                {'detail': 'Нет доступа'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        if not message.media:
+            return Response(
+                {'detail': 'Медиа не прикреплено'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        file_path = os.path.join(settings.MEDIA_ROOT, message.media.name)
+        if not os.path.exists(file_path):
+            return Response(
+                {'detail': 'Файл не найден'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        content_type = get_content_type(message.media.name)
+
+        return FileResponse(
+            open(file_path, 'rb'),
+            content_type=content_type,
+            as_attachment=False
+        )
+
+    @extend_schema(
         summary='Прикрепить медиа к сообщению',
         request={
             'multipart/form-data': {
@@ -225,46 +275,6 @@ class MessageMediaView(APIView):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class MessageMediaAccessView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, pk):
-        try:
-            message = Message.objects.get(pk=pk)
-        except Message.DoesNotExist:
-            return Response(
-                {'detail': 'Сообщение не найдено'},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        if request.user not in (message.sender, message.receiver):
-            return Response(
-                {'detail': 'Нет доступа'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-
-        if not message.media:
-            return Response(
-                {'detail': 'Медиа не прикреплено'},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        file_path = os.path.join(settings.MEDIA_ROOT, message.media.name)
-        if not os.path.exists(file_path):
-            return Response(
-                {'detail': 'Файл не найден'},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        content_type = get_content_type(message.media.name)
-
-        return FileResponse(
-            open(file_path, 'rb'),
-            content_type=content_type,
-            as_attachment=False
-        )
 
 
 @extend_schema_view(

@@ -5,6 +5,10 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from drf_spectacular.utils import (extend_schema, extend_schema_view,
+                                   OpenApiParameter, OpenApiResponse,
+                                   OpenApiTypes)
+
 from .serializers import RecommendationParamsSerializer
 from .pipeline import run_recommendation_pipeline
 from .models import RecommendationCache, RecommendationParams
@@ -16,6 +20,91 @@ from pets.serializers_readonly import PetShortSerializer
 CACHE_TTL_HOURS = 24
 
 
+@extend_schema_view(
+    recommend=extend_schema(
+        summary='Получить рекомендации питомцев',
+        description=(
+            'Возвращает список питомцев подходящих для вязки с указанным '
+            'питомцем.\n\n'
+            'Система работает в гибридном режиме:\n'
+            '- Если кэш актуален (не старше 24 часов), то возвращается '
+            'кэшированный результат мгновенно\n'
+            '- Если кэша нет, запускается полный пайплайн рекомендаций '
+            'из 5 фаз\n\n'
+            'Параметры поиска сохраняются и используются для ночного '
+            'пересчёта рекомендаций\n\n'
+        ),
+        parameters=[
+            OpenApiParameter(
+                name='pet_id',
+                description='ID питомца для которого ищем пару. '
+                            'Питомец должен принадлежать текущему '
+                            'пользователю.',
+                required=True,
+                type=OpenApiTypes.INT,
+            ),
+            OpenApiParameter(
+                name='radius_km',
+                description='Радиус поиска в км. '
+                            'Допустимые значения: 50, 150, 300. '
+                            'Если не указан — поиск без ограничения '
+                            'по расстоянию.',
+                required=False,
+                type=OpenApiTypes.INT,
+            ),
+            OpenApiParameter(
+                name='requires_pedigree',
+                description='Фильтр по наличию родословной. '
+                            'По умолчанию false.',
+                required=False,
+                type=OpenApiTypes.BOOL,
+            ),
+            OpenApiParameter(
+                name='min_age',
+                description='Минимальный возраст партнёра в годах.',
+                required=False,
+                type=OpenApiTypes.INT,
+            ),
+            OpenApiParameter(
+                name='max_age',
+                description='Максимальный возраст партнёра в годах.',
+                required=False,
+                type=OpenApiTypes.INT,
+            ),
+            OpenApiParameter(
+                name='max_months_since_mating',
+                description='Максимальное количество месяцев с '
+                            'последней вязки партнёра.',
+                required=False,
+                type=OpenApiTypes.INT,
+            ),
+        ],
+        responses={
+            200: OpenApiResponse(
+                description='Список рекомендованных питомцев',
+                response={
+                    'type': 'object',
+                    'properties': {
+                        'results': {
+                            'type': 'array',
+                            'items': {
+                                'type': 'object'
+                            },
+                            'description': 'Список питомцев, '
+                                           'отсортированный по релевантности'
+                        },
+                        'suggest_expand': {
+                            'type': 'boolean',
+                            'description': 'True если результатов мало '
+                                           'и стоит расширить параметры '
+                                           'поиска'
+                        }
+                    }
+                }
+            ),
+        }
+    )
+)
 class RecommendationViewSet(viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
