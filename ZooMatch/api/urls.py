@@ -1,6 +1,3 @@
-from django.conf import settings
-from django.conf.urls.static import static
-
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
@@ -17,7 +14,8 @@ from users.views import (RegistrationViewSet, ProfileViewSet, UserViewSet,
                          UserAvatarView)
 from pets.views import (PetViewSet, AnimalTypeViewSet, BreedViewSet,
                         PetAvatarView, PetDocumentView)
-from chats.views import MessageViewSet, ChatViewSet, MessageMediaView
+from chats.views import (MessageViewSet, ChatViewSet, MessageMediaView,
+                         MessageMediaAccessView)
 from matching.views import MatchViewSet
 from moderation.views import ModerationRequestViewSet
 from geo.views import GeoViewSet
@@ -68,6 +66,8 @@ urlpatterns = [
          name='pet-document'),
 
     # Message media
+    path('v1/messages/<int:pk>/media/access/',
+         MessageMediaAccessView.as_view(), name='message-media-access'),
     path('v1/messages/<int:pk>/media/', MessageMediaView.as_view(),
          name='message-media'),
 
@@ -80,4 +80,4 @@ urlpatterns = [
          name='swagger'),
     path('docs/redoc/', SpectacularRedocView.as_view(url_name='schema'),
          name='redoc'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

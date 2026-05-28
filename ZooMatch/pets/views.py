@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, status, exceptions
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.views import APIView
@@ -298,12 +298,30 @@ class PetAvatarView(APIView):
         try:
             pet = Pet.objects.get(pk=pk)
         except Pet.DoesNotExist:
-            raise exceptions.NotFound('Питомец не найден')
+            return Response(
+                {'detail': 'Питомец не найден'},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
         self.check_object_permissions(request, pet)
 
         return pet
 
+    @extend_schema(
+        summary='Загрузить аватар питомца',
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'avatar': {
+                        'type': 'string',
+                        'format': 'binary'
+                    }
+                }
+            }
+        },
+        responses={200: PetAvatarSerializer}
+    )
     def patch(self, request, pk):
         pet = self.get_pet(request, pk)
 
@@ -313,6 +331,12 @@ class PetAvatarView(APIView):
 
         return Response(serializer.data)
 
+    @extend_schema(
+            summary='Удалить аватар питомца',
+            responses={
+                204: None
+            }
+    )
     def delete(self, request, pk):
         pet = self.get_pet(request, pk)
 
@@ -332,10 +356,29 @@ class PetDocumentView(APIView):
         try:
             pet = Pet.objects.get(pk=pk)
         except Pet.DoesNotExist:
-            raise exceptions.NotFound('Питомец не найден')
+            return Response(
+                {'detail': 'Питомец не найден'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
         self.check_object_permissions(request, pet)
         return pet
 
+    @extend_schema(
+        summary='Загрузить документы родословной',
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'pedigree_documents': {
+                        'type': 'string',
+                        'format': 'binary'
+                    }
+                }
+            }
+        },
+        responses={200: PetDocumentSerializer}
+    )
     def patch(self, request, pk):
         pet = self.get_pet(request, pk)
         serializer = PetDocumentSerializer(pet, data=request.data,
@@ -344,6 +387,12 @@ class PetDocumentView(APIView):
         serializer.save()
         return Response(serializer.data)
 
+    @extend_schema(
+            summary='Удалить документы питомца',
+            responses={
+                204: None
+            }
+    )
     def delete(self, request, pk):
         pet = self.get_pet(request, pk)
         if pet.pedigree_documents:

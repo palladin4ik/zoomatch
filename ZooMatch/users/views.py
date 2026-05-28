@@ -112,6 +112,24 @@ class UserAvatarView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [MultiPartParser]
 
+    @extend_schema(
+            summary='Загрузить аватар пользователя',
+            description='Доступные форматы: jpeg, png, webp',
+            request={
+                'multipart/form-data': {
+                    'type': 'object',
+                    'properties': {
+                        'avatar': {
+                            'type': 'string',
+                            'format': 'binary'
+                        }
+                    }
+                }
+            },
+            responses={
+                200: UserAvatarSerializer
+            }
+    )
     def patch(self, request):
         serializer = UserAvatarSerializer(
             instance=request.user,
@@ -123,6 +141,12 @@ class UserAvatarView(APIView):
 
         return Response(serializer.data)
 
+    @extend_schema(
+            summary='Удалить аватар пользователя',
+            responses={
+                204: None
+            }
+    )
     def delete(self, request):
         user = request.user
 
