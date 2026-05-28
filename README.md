@@ -32,6 +32,12 @@ DB_PORT=
 
 # Django SECRET_KEY
 SECRET_KEY=
+<<<<<<< HEAD
+=======
+
+# Yandex Maps API
+YANDEX_MAPS_API_KEY=
+>>>>>>> 5d46af5 (Update README.md)
 ```
 
 6. Выполните миграции
@@ -57,9 +63,14 @@ for u in User.objects.all():
 exit()
 ```
 
-8. Запустите сервер разработки
+8. Установите и запустите Redis в Docker
 ```bash
-python manage.py runserver
+docker run -d --name redis -p 6379:6379 redis
+```
+
+9. Запустите сервер разработки
+```bash
+daphne -p 8000 ZooMatch.asgi:application
 ```
 
 ## Документация
