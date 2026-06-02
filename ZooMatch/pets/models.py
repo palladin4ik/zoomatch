@@ -44,7 +44,7 @@ class Pet(models.Model):
         related_name='pets'
     )
     avatar = models.TextField(blank=True, null=True)
-    location = models.TextField()
+    location = models.CharField(max_length=100)
     has_pedigree = models.BooleanField(default=False)
     pedigree_documents = models.TextField(blank=True, null=True)
     awards = models.TextField(blank=True, null=True)
@@ -54,24 +54,17 @@ class Pet(models.Model):
         blank=True
         )
     description = models.TextField(blank=True, null=True)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False, db_index=True)
 
-
-class Match(models.Model):
-    pet_from = models.ForeignKey(
-        Pet,
-        on_delete=models.CASCADE,
-        related_name='matches_from'
-    )
-    pet_to = models.ForeignKey(
-        Pet,
-        on_delete=models.CASCADE,
-        related_name='matches_to'
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
+    last_mating_date = models.DateField(blank=True, null=True)
+    mating_count = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
-        unique_together = ('pet_from', 'pet_to')
+        indexes = [
+            models.Index(fields=['animal_type', 'breed']),
+            models.Index(fields=['animal_type', 'is_active']),
+            models.Index(fields=['location', 'animal_type']),
+        ]
 
 
 class PetInfo(models.Model):
@@ -84,15 +77,17 @@ class PetInfo(models.Model):
     likes = models.PositiveIntegerField()
 
 
+# Подумать
 class Comment(models.Model):
-    content = models.TextField()
+    text = models.TextField()  # new
+    media = models.TextField(blank=True, null=True)  # было content
     likes = models.PositiveIntegerField(default=0)
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='comments',
     )
-    pet_info_card = models.OneToOneField(
+    pet_info_card = models.ForeignKey(
         PetInfo,
         on_delete=models.CASCADE,
         related_name='comments',

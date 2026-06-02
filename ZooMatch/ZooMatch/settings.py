@@ -3,6 +3,8 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
+from celery.schedules import crontab
+
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -16,6 +18,8 @@ load_dotenv(dotenv_path=env_path)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
+
+YANDEX_MAPS_API_KEY = os.getenv('YANDEX_MAPS_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -34,14 +38,22 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'djoser',
+    'django_celery_beat',
     'drf_spectacular',
+    'channels',
+    'corsheaders',
     'api',
     'pets',
     'chats',
     'users',
+    'matching',
+    'moderation',
+    'geo',
+    'recommendations',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,6 +81,19 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ZooMatch.wsgi.application'
+
+ASGI_APPLICATION = 'ZooMatch.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+            'capacity': 1500,
+            'db': 0,
+        },
+    },
+}
 
 
 # Database
@@ -167,6 +192,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+# ТОЛЬКО DEBUG - РАЗРЕШАЕМ ВСЕ ИСТОЧНИКИ CORS
+CORS_ALLOW_ALL_ORIGINS = True
+
+# ДЛЯ ПРОДА - РАЗРЕШАЕМ КОНКРЕТНЫЕ URL
+# CORS_ALLOWED_ORIGINS = [
+#     'https://ZooMatch.com',
+# ]
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_TIMEZONE = 'Europe/Moscow'
+
+CELERY_BEAT_SCHEDULE = {
+    'recalculate-recommendations-nightly': {
+        'task': 'recommandations.tasks.recalculate_all_recommendations',
+        'schedule': crontab(hour=3, minute=0),
+    }
+}
 
 
 if DEBUG:

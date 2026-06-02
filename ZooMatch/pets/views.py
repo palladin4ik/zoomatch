@@ -1,21 +1,21 @@
-from rest_framework import viewsets, permissions, mixins, serializers
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
 
 from drf_spectacular.utils import (extend_schema, extend_schema_view,
                                    OpenApiParameter, OpenApiResponse,
                                    OpenApiTypes)
 
-from .serializer import (
+from .serializers import (
     AnimalTypeSerializer, BreedSerializer,
     PetSerializer, PetCreateUpdateSerializer,
     PetInfoSerializer, CommentSerializer,
-    MatchSerializer
 )
-from .models import AnimalType, Breed, Pet, PetInfo, Comment, Match
+from .models import AnimalType, Breed, Pet, PetInfo, Comment
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+
+from matching.models import Action, ActionCategory
 
 
 COMMON_PERMISSION_DESCRIPTION = '''
@@ -156,6 +156,7 @@ class BreedViewSet(viewsets.ModelViewSet):
     ),
 )
 class PetViewSet(viewsets.ModelViewSet):
+    queryset = Pet.objects.all()
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def get_queryset(self):
@@ -165,7 +166,7 @@ class PetViewSet(viewsets.ModelViewSet):
         if self.action in ['update', 'partial_update', 'destroy']:
             qs = Pet.objects.filter(owner=user)
 
-        elif self.action == 'list':
+        elif self.action in ['list', 'view']:
             qs = Pet.objects.filter(is_active=True).exclude(owner=user)
 
             if animal_type:
@@ -226,50 +227,61 @@ class PetViewSet(viewsets.ModelViewSet):
         serializer = PetSerializer(queryset, many=True)
         return Response(serializer.data)
 
-
-# todo: Оптимизировать лишние запросы к пользователям!!!
-@extend_schema_view(
-    create=extend_schema(
-        summary='Создать метч',
-        description='Создает метч между 2 питомцами\n\n',
-        request=MatchSerializer,
-        responses=MatchSerializer
-    ),
-    list_matches=extend_schema(
-        summary='Список метчей питомца',
-        description='Возвращает список всех метчей питомца по его `id`'
+    @extend_schema(
+            summary='Зафиксировать время просмотра анкеты',
+            description='Записывает время просмотра анкеты питомца '
+            'в секундах пользователем, отправившим запрос',
+            request={
+                'application/json': {
+                    'type': 'object',
+                    'properties': {
+                        'duration': {
+                            'type': 'number',
+                            'example': 300,
+                        },
+                    },
+                    'required': ['duration'],
+                }
+            },
+            responses={
+                200: OpenApiResponse(
+                    response={
+                        'type': 'object',
+                        'properties': {
+                            'detail': {
+                                'type': 'string',
+                                'example': 'Длительность просмотра сохранена'
+                            }
+                        }
+                    }
+                )
+            }
     )
-)
-class MatchViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    queryset = Match.objects.all().select_related('pet_from', 'pet_to')
-    serializer_class = MatchSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    @action(detail=True, methods=['post'])
+    def view(self, request, pk=None):
+        user = self.request.user
+        pet = self.get_object()
+        duration = request.data.get('duration')
 
-    def perform_create(self, serializer):
-        pet_from_id = self.request.data.get('pet_from')
-        pet_from = get_object_or_404(Pet.objects.select_related(
-            'owner'
-        ), id=pet_from_id)
-
-        if pet_from.owner != self.request.user:
-            raise serializers.ValidationError(
-                {"detail": "Метч от имени чужого питомца"}
+        if not duration:
+            return Response(
+                {'detail': 'Длительность в секундах обязательный параметр'},
+                status=status.HTTP_400_BAD_REQUEST
             )
 
-        serializer.save()
-
-    @action(detail=True, methods=['get'], url_path='list-matches')
-    def list_matches(self, request, pk=None):
-        pet = get_object_or_404(Pet, id=pk)
-
-        if pet.owner != request.user:
-            return Response({"detail": "Нет доступа"}, status=403)
-
-        liked_by_ids = Match.objects.filter(pet_to=pet).select_related(
-                'pet_from',
-                'pet_to',
-            ).values_list(
-                'pet_from_id', flat=True
+        try:
+            duration = int(duration)
+        except (ValueError, TypeError):
+            return Response(
+                {'detail': 'Длительность должна быть числом'},
+                status=status.HTTP_400_BAD_REQUEST
             )
 
-        return Response({"liked_by": list(liked_by_ids)})
+        view_category = ActionCategory.objects.get(name='view')
+        Action.objects.create(user=user, pet=pet,
+                              value=duration, category=view_category)
+
+        return Response(
+            {'detail': 'Длительность просмотра сохранена'},
+            status=status.HTTP_200_OK
+        )
