@@ -1,16 +1,24 @@
+import os
+
 from rest_framework import mixins, permissions, viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
 from django.db.models import Q, OuterRef, Subquery, Count
 from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.http import FileResponse
 
 from drf_spectacular.utils import (extend_schema, extend_schema_view,
                                    OpenApiParameter, OpenApiTypes,
                                    OpenApiResponse)
 
-from .serializers import MessageSerializer, ChatSerializer
+from .serializers import (MessageSerializer, ChatSerializer,
+                          MessageMediaSerializer)
 from .models import Message
 from .pagination import MessagePagination
+from .media_utils import get_content_type
 
 from matching.models import Match
 
@@ -167,6 +175,106 @@ class MessageViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
         return Response({'detail': 'Сообщение прочитано'},
                         status=status.HTTP_200_OK)
+
+
+class MessageMediaView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser]
+
+    @extend_schema(
+            summary='Получение медиа сообщения',
+            description='Возвращает медиа файл, проверяя является ли '
+            'пользователь, отправивший запрос получателем или отправителем',
+            responses={
+                200: OpenApiResponse(
+                    description='Файл',
+                    response={
+                        'type': 'string',
+                        'format': 'binary'
+                    }
+                ),
+            }
+    )
+    def get(self, request, pk):
+        try:
+            message = Message.objects.get(pk=pk)
+        except Message.DoesNotExist:
+            return Response(
+                {'detail': 'Сообщение не найдено'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if request.user not in (message.sender, message.receiver):
+            return Response(
+                {'detail': 'Нет доступа'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        if not message.media:
+            return Response(
+                {'detail': 'Медиа не прикреплено'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        file_path = os.path.join(settings.MEDIA_ROOT, message.media.name)
+        if not os.path.exists(file_path):
+            return Response(
+                {'detail': 'Файл не найден'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        content_type = get_content_type(message.media.name)
+
+        return FileResponse(
+            open(file_path, 'rb'),
+            content_type=content_type,
+            as_attachment=False
+        )
+
+    @extend_schema(
+        summary='Прикрепить медиа к сообщению',
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'media': {
+                        'type': 'string',
+                        'format': 'binary'
+                    }
+                }
+            }
+        },
+        responses={
+            201: MessageMediaSerializer
+        }
+    )
+    def post(self, request, pk):
+        try:
+            message = Message.objects.get(pk=pk)
+        except Message.DoesNotExist:
+            return Response(
+                {'detail': 'Сообщение не найдено'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if message.sender != request.user:
+            return Response(
+                {'detail': 'Нет доступа'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        if message.media:
+            return Response(
+                {'detail': 'Медиа уже прикреплено'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = MessageMediaSerializer(message, data=request.data,
+                                            partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @extend_schema_view(

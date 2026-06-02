@@ -140,3 +140,6 @@ dmypy.json
 
 # Gradle
 .gradle/
+
+# Media
+media/

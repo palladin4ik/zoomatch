@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 from pets.serializers_readonly import PetShortSerializer
 from geo.services import build_location_from_input
+from core.validators import validate_file_size, validate_image_type
 
 
 User = get_user_model()
@@ -45,7 +46,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    avatar = Base64FileField(read_only=True)
+    avatar = serializers.ImageField(read_only=True)
     pets = PetShortSerializer(many=True, read_only=True)
 
     class Meta:
@@ -57,7 +58,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
-    avatar = Base64FileField(read_only=True)
+    avatar = serializers.ImageField(read_only=True)
 
     class Meta:
         model = User
@@ -68,18 +69,13 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
-    avatar = Base64FileField(required=False, allow_null=True)
-    location = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    status = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    phone_number = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-
     address = serializers.CharField(write_only=True, required=False)
     latitude = serializers.FloatField(write_only=True, required=False)
     longitude = serializers.FloatField(write_only=True, required=False)
 
     class Meta:
         model = User
-        fields = ('id', 'firstname', 'lastname', 'email', 'avatar', 'location',
+        fields = ('id', 'firstname', 'lastname', 'email', 'location',
                   'address', 'latitude', 'longitude', 'organization',
                   'phone_number', 'description')
         read_only_fields = ('id', 'location')
@@ -100,6 +96,25 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class UserAvatarSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['avatar']
+
+    def validate_avatar(self, value):
+        validate_image_type(value)
+        validate_file_size(value)
+
+        return value
+
+    def update(self, instance, validated_data):
+        if instance.avatar:
+            instance.avatar.delete(save=False)
+
+        return super().update(instance, validated_data)
 
 
 class ChangePasswordSerializer(serializers.Serializer):

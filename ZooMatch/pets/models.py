@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from core.uploads import (pet_avatar_path, pet_document_path,
+                          comment_media_path)
+from core.validators import (validate_file_size, validate_image_type,
+                             validate_media_type, validate_pdf_type)
+
 
 User = get_user_model()
 
@@ -43,10 +48,18 @@ class Pet(models.Model):
         on_delete=models.CASCADE,
         related_name='pets'
     )
-    avatar = models.TextField(blank=True, null=True)
+    avatar = models.ImageField(
+        upload_to=pet_avatar_path,
+        blank=True, null=True,
+        validators=[validate_file_size, validate_image_type]
+    )
     location = models.CharField(max_length=100)
     has_pedigree = models.BooleanField(default=False)
-    pedigree_documents = models.TextField(blank=True, null=True)
+    pedigree_documents = models.FileField(
+        upload_to=pet_document_path,
+        blank=True, null=True,
+        validators=[validate_file_size, validate_pdf_type]
+    )
     awards = models.TextField(blank=True, null=True)
     tags = models.ManyToManyField(
         Tag,
@@ -80,7 +93,11 @@ class PetInfo(models.Model):
 # Подумать
 class Comment(models.Model):
     text = models.TextField()  # new
-    media = models.TextField(blank=True, null=True)  # было content
+    media = models.FileField(
+        upload_to=comment_media_path,
+        blank=True, null=True,
+        validators=[validate_file_size, validate_media_type]
+    )  # было content
     likes = models.PositiveIntegerField(default=0)
     author = models.ForeignKey(
         User,

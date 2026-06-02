@@ -10,9 +10,11 @@ from drf_spectacular.views import (
     SpectacularRedocView
 )
 
-from users.views import RegistrationViewSet, ProfileViewSet, UserViewSet
-from pets.views import PetViewSet, AnimalTypeViewSet, BreedViewSet
-from chats.views import MessageViewSet, ChatViewSet
+from users.views import (RegistrationViewSet, ProfileViewSet, UserViewSet,
+                         UserAvatarView)
+from pets.views import (PetViewSet, AnimalTypeViewSet, BreedViewSet,
+                        PetAvatarView, PetDocumentView)
+from chats.views import (MessageViewSet, ChatViewSet, MessageMediaView)
 from matching.views import MatchViewSet
 from moderation.views import ModerationRequestViewSet
 from geo.views import GeoViewSet
@@ -46,12 +48,30 @@ change_password = ProfileViewSet.as_view({
 })
 
 urlpatterns = [
+    # JWT
     path('v1/jwt/create/', TokenObtainPairView.as_view(), name='jwt_create'),
     path('v1/jwt/refresh/', TokenRefreshView.as_view(), name='jwt_refresh'),
     path('v1/jwt/verify/', TokenVerifyView.as_view(), name='jwt_verify'),
+
+    # Profile
     path('v1/me/change-password/', change_password, name='change_password'),
+    path('v1/me/avatar/', UserAvatarView.as_view(), name='user-avatar'),
     path('v1/me/', profile, name='profile'),
+
+    # Pets media
+    path('v1/pets/<int:pk>/avatar/', PetAvatarView.as_view(),
+         name='pet-avatar'),
+    path('v1/pets/<int:pk>/documents/', PetDocumentView.as_view(),
+         name='pet-document'),
+
+    # Message media
+    path('v1/messages/<int:pk>/media/', MessageMediaView.as_view(),
+         name='message-media'),
+
+    # Router
     path('v1/', include(router_v1.urls)),
+
+    # Documentation
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'),
          name='swagger'),

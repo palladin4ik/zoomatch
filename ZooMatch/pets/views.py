@@ -1,6 +1,8 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
 from django.db.models import Q
 
 from drf_spectacular.utils import (extend_schema, extend_schema_view,
@@ -11,6 +13,7 @@ from .serializers import (
     AnimalTypeSerializer, BreedSerializer,
     PetSerializer, PetCreateUpdateSerializer,
     PetInfoSerializer, CommentSerializer,
+    PetAvatarSerializer, PetDocumentSerializer
 )
 from .models import AnimalType, Breed, Pet, PetInfo, Comment
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
@@ -285,3 +288,115 @@ class PetViewSet(viewsets.ModelViewSet):
             {'detail': 'Длительность просмотра сохранена'},
             status=status.HTTP_200_OK
         )
+
+
+class PetAvatarView(APIView):
+    permission_classes = [IsOwnerOrReadOnly]
+    parser_classes = [MultiPartParser]
+
+    def get_pet(self, request, pk):
+        try:
+            pet = Pet.objects.get(pk=pk)
+        except Pet.DoesNotExist:
+            return Response(
+                {'detail': 'Питомец не найден'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        self.check_object_permissions(request, pet)
+
+        return pet
+
+    @extend_schema(
+        summary='Загрузить аватар питомца',
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'avatar': {
+                        'type': 'string',
+                        'format': 'binary'
+                    }
+                }
+            }
+        },
+        responses={200: PetAvatarSerializer}
+    )
+    def patch(self, request, pk):
+        pet = self.get_pet(request, pk)
+
+        serializer = PetAvatarSerializer(pet, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
+
+    @extend_schema(
+            summary='Удалить аватар питомца',
+            responses={
+                204: None
+            }
+    )
+    def delete(self, request, pk):
+        pet = self.get_pet(request, pk)
+
+        if pet.avatar:
+            pet.avatar.delete(save=False)
+            pet.avatar = None
+            pet.save(update_fields=['avatar'])
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PetDocumentView(APIView):
+    permission_classes = [IsOwnerOrReadOnly]
+    parser_classes = [MultiPartParser]
+
+    def get_pet(self, request, pk):
+        try:
+            pet = Pet.objects.get(pk=pk)
+        except Pet.DoesNotExist:
+            return Response(
+                {'detail': 'Питомец не найден'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        self.check_object_permissions(request, pet)
+        return pet
+
+    @extend_schema(
+        summary='Загрузить документы родословной',
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'pedigree_documents': {
+                        'type': 'string',
+                        'format': 'binary'
+                    }
+                }
+            }
+        },
+        responses={200: PetDocumentSerializer}
+    )
+    def patch(self, request, pk):
+        pet = self.get_pet(request, pk)
+        serializer = PetDocumentSerializer(pet, data=request.data,
+                                           partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    @extend_schema(
+            summary='Удалить документы питомца',
+            responses={
+                204: None
+            }
+    )
+    def delete(self, request, pk):
+        pet = self.get_pet(request, pk)
+        if pet.pedigree_documents:
+            pet.pedigree_documents.delete(save=False)
+            pet.pedigree_documents = None
+            pet.save(update_fields=['pedigree_documents'])
+        return Response(status=status.HTTP_204_NO_CONTENT)
