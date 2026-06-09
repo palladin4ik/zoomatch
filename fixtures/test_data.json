@@ -1,0 +1,517 @@
+[
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "firstname": "Алексей",
+      "lastname": "Иванов",
+      "email": "user1@test.com",
+      "password": "pbkdf2_sha256$600000$test$hashedpassword1==",
+      "location": "55.7558,37.6173",
+      "role": 1,
+      "is_active": true,
+      "is_staff": false,
+      "last_seen": "2024-01-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+      "firstname": "Мария",
+      "lastname": "Петрова",
+      "email": "user2@test.com",
+      "password": "pbkdf2_sha256$600000$test$hashedpassword2==",
+      "location": "55.8897,37.4297",
+      "role": 1,
+      "is_active": true,
+      "is_staff": false,
+      "last_seen": "2024-01-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+      "firstname": "Дмитрий",
+      "lastname": "Сидоров",
+      "email": "user3@test.com",
+      "password": "pbkdf2_sha256$600000$test$hashedpassword3==",
+      "location": "54.1961,37.6182",
+      "role": 1,
+      "is_active": true,
+      "is_staff": false,
+      "last_seen": "2024-01-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 4,
+    "fields": {
+      "firstname": "Елена",
+      "lastname": "Козлова",
+      "email": "user4@test.com",
+      "password": "pbkdf2_sha256$600000$test$hashedpassword4==",
+      "location": "56.2965,43.9361",
+      "role": 1,
+      "is_active": true,
+      "is_staff": false,
+      "last_seen": "2024-01-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 5,
+    "fields": {
+      "firstname": "Сергей",
+      "lastname": "Новиков",
+      "email": "user5@test.com",
+      "password": "pbkdf2_sha256$600000$test$hashedpassword5==",
+      "location": "55.7887,49.1221",
+      "role": 1,
+      "is_active": true,
+      "is_staff": false,
+      "last_seen": "2024-01-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 6,
+    "fields": {
+      "firstname": "Ольга",
+      "lastname": "Федорова",
+      "email": "user6@test.com",
+      "password": "pbkdf2_sha256$600000$test$hashedpassword6==",
+      "location": "56.8389,60.6057",
+      "role": 1,
+      "is_active": true,
+      "is_staff": false,
+      "last_seen": "2024-01-01T12:00:00Z"
+    }
+  },
+
+  {
+    "model": "pets.animaltype",
+    "pk": 1,
+    "fields": { "name": "Кошка" }
+  },
+  {
+    "model": "pets.animaltype",
+    "pk": 2,
+    "fields": { "name": "Собака" }
+  },
+
+  {
+    "model": "pets.breed",
+    "pk": 1,
+    "fields": { "name": "Британская короткошёрстная", "animal_type": 1 }
+  },
+  {
+    "model": "pets.breed",
+    "pk": 2,
+    "fields": { "name": "Мейн-кун", "animal_type": 1 }
+  },
+  {
+    "model": "pets.breed",
+    "pk": 3,
+    "fields": { "name": "Сиамская", "animal_type": 1 }
+  },
+  {
+    "model": "pets.breed",
+    "pk": 4,
+    "fields": { "name": "Персидская", "animal_type": 1 }
+  },
+  {
+    "model": "pets.breed",
+    "pk": 5,
+    "fields": { "name": "Лабрадор", "animal_type": 2 }
+  },
+  {
+    "model": "pets.breed",
+    "pk": 6,
+    "fields": { "name": "Немецкая овчарка", "animal_type": 2 }
+  },
+  {
+    "model": "pets.breed",
+    "pk": 7,
+    "fields": { "name": "Золотистый ретривер", "animal_type": 2 }
+  },
+  {
+    "model": "pets.breed",
+    "pk": 8,
+    "fields": { "name": "Хаски", "animal_type": 2 }
+  },
+
+  {
+    "model": "pets.pet",
+    "pk": 1,
+    "fields": {
+      "name": "Барсик",
+      "animal_type": 1,
+      "breed": 1,
+      "is_male": true,
+      "age": 3,
+      "owner": 1,
+      "location": "55.7558,37.6173",
+      "has_pedigree": true,
+      "is_active": true,
+      "last_mating_date": null,
+      "mating_count": 0,
+      "description": "Активный британец",
+      "avatar": null,
+      "pedigree_documents": null,
+      "awards": null
+    }
+  },
+  {
+    "model": "pets.pet",
+    "pk": 2,
+    "fields": {
+      "name": "Луна",
+      "animal_type": 1,
+      "breed": 1,
+      "is_male": false,
+      "age": 2,
+      "owner": 2,
+      "location": "55.8897,37.4297",
+      "has_pedigree": true,
+      "is_active": true,
+      "last_mating_date": null,
+      "mating_count": 0,
+      "description": "Спокойная британка",
+      "avatar": null,
+      "pedigree_documents": null,
+      "awards": null
+    }
+  },
+  {
+    "model": "pets.pet",
+    "pk": 3,
+    "fields": {
+      "name": "Симба",
+      "animal_type": 1,
+      "breed": 1,
+      "is_male": true,
+      "age": 4,
+      "owner": 3,
+      "location": "54.1961,37.6182",
+      "has_pedigree": false,
+      "is_active": true,
+      "last_mating_date": "2024-06-01",
+      "mating_count": 1,
+      "description": "Британец из Тулы",
+      "avatar": null,
+      "pedigree_documents": null,
+      "awards": null
+    }
+  },
+  {
+    "model": "pets.pet",
+    "pk": 4,
+    "fields": {
+      "name": "Снежка",
+      "animal_type": 1,
+      "breed": 1,
+      "is_male": false,
+      "age": 3,
+      "owner": 3,
+      "location": "54.1961,37.6182",
+      "has_pedigree": true,
+      "is_active": true,
+      "last_mating_date": "2023-01-01",
+      "mating_count": 2,
+      "description": "Британка из Тулы",
+      "avatar": null,
+      "pedigree_documents": null,
+      "awards": null
+    }
+  },
+  {
+    "model": "pets.pet",
+    "pk": 5,
+    "fields": {
+      "name": "Мурка",
+      "animal_type": 1,
+      "breed": 2,
+      "is_male": false,
+      "age": 2,
+      "owner": 4,
+      "location": "56.2965,43.9361",
+      "has_pedigree": false,
+      "is_active": true,
+      "last_mating_date": null,
+      "mating_count": 0,
+      "description": "Мейн-кун из Нижнего",
+      "avatar": null,
+      "pedigree_documents": null,
+      "awards": null
+    }
+  },
+  {
+    "model": "pets.pet",
+    "pk": 6,
+    "fields": {
+      "name": "Гром",
+      "animal_type": 2,
+      "breed": 5,
+      "is_male": true,
+      "age": 2,
+      "owner": 1,
+      "location": "55.7558,37.6173",
+      "has_pedigree": true,
+      "is_active": true,
+      "last_mating_date": null,
+      "mating_count": 0,
+      "description": "Лабрадор из Москвы",
+      "avatar": null,
+      "pedigree_documents": null,
+      "awards": null
+    }
+  },
+  {
+    "model": "pets.pet",
+    "pk": 7,
+    "fields": {
+      "name": "Белла",
+      "animal_type": 2,
+      "breed": 5,
+      "is_male": false,
+      "age": 3,
+      "owner": 2,
+      "location": "55.8897,37.4297",
+      "has_pedigree": true,
+      "is_active": true,
+      "last_mating_date": null,
+      "mating_count": 0,
+      "description": "Лабрадор из Химок",
+      "avatar": null,
+      "pedigree_documents": null,
+      "awards": null
+    }
+  },
+  {
+    "model": "pets.pet",
+    "pk": 8,
+    "fields": {
+      "name": "Рекс",
+      "animal_type": 2,
+      "breed": 6,
+      "is_male": true,
+      "age": 4,
+      "owner": 4,
+      "location": "56.2965,43.9361",
+      "has_pedigree": true,
+      "is_active": true,
+      "last_mating_date": null,
+      "mating_count": 0,
+      "description": "Овчарка из Нижнего",
+      "avatar": null,
+      "pedigree_documents": null,
+      "awards": null
+    }
+  },
+  {
+    "model": "pets.pet",
+    "pk": 9,
+    "fields": {
+      "name": "Найда",
+      "animal_type": 2,
+      "breed": 5,
+      "is_male": false,
+      "age": 2,
+      "owner": 5,
+      "location": "55.7887,49.1221",
+      "has_pedigree": false,
+      "is_active": true,
+      "last_mating_date": null,
+      "mating_count": 0,
+      "description": "Лабрадор из Казани",
+      "avatar": null,
+      "pedigree_documents": null,
+      "awards": null
+    }
+  },
+  {
+    "model": "pets.pet",
+    "pk": 10,
+    "fields": {
+      "name": "Акела",
+      "animal_type": 2,
+      "breed": 7,
+      "is_male": true,
+      "age": 3,
+      "owner": 6,
+      "location": "56.8389,60.6057",
+      "has_pedigree": true,
+      "is_active": true,
+      "last_mating_date": null,
+      "mating_count": 0,
+      "description": "Ретривер из Екатеринбурга",
+      "avatar": null,
+      "pedigree_documents": null,
+      "awards": null
+    }
+  },
+
+  {
+    "model": "matching.actioncategory",
+    "pk": 1,
+    "fields": { "name": "view" }
+  },
+  {
+    "model": "matching.actioncategory",
+    "pk": 2,
+    "fields": { "name": "like" }
+  },
+  {
+    "model": "matching.actioncategory",
+    "pk": 3,
+    "fields": { "name": "dislike" }
+  },
+  {
+    "model": "matching.actioncategory",
+    "pk": 4,
+    "fields": { "name": "message" }
+  },
+
+  {
+    "model": "matching.action",
+    "pk": 1,
+    "fields": {
+      "user": 2,
+      "pet": 1,
+      "category": 2,
+      "value": null,
+      "created_at": "2024-01-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "matching.action",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "pet": 1,
+      "category": 1,
+      "value": 120,
+      "created_at": "2024-01-02T10:01:00Z"
+    }
+  },
+  {
+    "model": "matching.action",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "pet": 1,
+      "category": 2,
+      "value": null,
+      "created_at": "2024-01-03T11:00:00Z"
+    }
+  },
+  {
+    "model": "matching.action",
+    "pk": 4,
+    "fields": {
+      "user": 3,
+      "pet": 1,
+      "category": 1,
+      "value": 240,
+      "created_at": "2024-01-03T11:01:00Z"
+    }
+  },
+  {
+    "model": "matching.action",
+    "pk": 5,
+    "fields": {
+      "user": 1,
+      "pet": 2,
+      "category": 1,
+      "value": 180,
+      "created_at": "2024-01-04T09:00:00Z"
+    }
+  },
+  {
+    "model": "matching.action",
+    "pk": 6,
+    "fields": {
+      "user": 4,
+      "pet": 1,
+      "category": 2,
+      "value": null,
+      "created_at": "2024-01-05T14:00:00Z"
+    }
+  },
+  {
+    "model": "matching.action",
+    "pk": 7,
+    "fields": {
+      "user": 5,
+      "pet": 6,
+      "category": 2,
+      "value": null,
+      "created_at": "2024-01-06T15:00:00Z"
+    }
+  },
+  {
+    "model": "matching.action",
+    "pk": 8,
+    "fields": {
+      "user": 2,
+      "pet": 6,
+      "category": 2,
+      "value": null,
+      "created_at": "2024-01-06T16:00:00Z"
+    }
+  },
+
+  {
+    "model": "matching.match",
+    "pk": 1,
+    "fields": {
+      "pet_from": 1,
+      "pet_to": 2,
+      "status": 1,
+      "created_at": "2024-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "matching.match",
+    "pk": 2,
+    "fields": {
+      "pet_from": 6,
+      "pet_to": 7,
+      "status": 0,
+      "created_at": "2024-01-06T11:00:00Z"
+    }
+  },
+  {
+    "model": "matching.match",
+    "pk": 3,
+    "fields": {
+      "pet_from": 1,
+      "pet_to": 4,
+      "status": 2,
+      "created_at": "2024-01-07T12:00:00Z"
+    }
+  },
+
+  {
+    "model": "matching.rejection",
+    "pk": 1,
+    "fields": {
+      "pet_from": 4,
+      "pet_to": 1,
+      "count": 2,
+      "last_rejected_at": "2024-01-08T10:00:00Z"
+    }
+  },
+  {
+    "model": "matching.rejection",
+    "pk": 2,
+    "fields": {
+      "pet_from": 7,
+      "pet_to": 6,
+      "count": 1,
+      "last_rejected_at": "2024-01-08T11:00:00Z"
+    }
+  }
+]

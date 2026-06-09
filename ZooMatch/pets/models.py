@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from core.uploads import (pet_avatar_path, pet_document_path,
+                          comment_media_path)
+from core.validators import (validate_file_size, validate_image_type,
+                             validate_media_type, validate_pdf_type)
+
 
 User = get_user_model()
 
@@ -43,13 +48,36 @@ class Pet(models.Model):
         on_delete=models.CASCADE,
         related_name='pets'
     )
-    avatar = models.FilePathField(blank=True, null=True)
-    location = models.TextField()
+    avatar = models.ImageField(
+        upload_to=pet_avatar_path,
+        blank=True, null=True,
+        validators=[validate_file_size, validate_image_type]
+    )
+    location = models.CharField(max_length=100)
     has_pedigree = models.BooleanField(default=False)
-    pedigree_documents = models.FilePathField()
+    pedigree_documents = models.FileField(
+        upload_to=pet_document_path,
+        blank=True, null=True,
+        validators=[validate_file_size, validate_pdf_type]
+    )
     awards = models.TextField(blank=True, null=True)
+    tags = models.ManyToManyField(
+        Tag,
+        related_name='pets',
+        blank=True
+        )
     description = models.TextField(blank=True, null=True)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False, db_index=True)
+
+    last_mating_date = models.DateField(blank=True, null=True)
+    mating_count = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['animal_type', 'breed']),
+            models.Index(fields=['animal_type', 'is_active']),
+            models.Index(fields=['location', 'animal_type']),
+        ]
 
 
 class PetInfo(models.Model):
@@ -62,15 +90,21 @@ class PetInfo(models.Model):
     likes = models.PositiveIntegerField()
 
 
+# Подумать
 class Comment(models.Model):
-    content = models.TextField()
+    text = models.TextField()  # new
+    media = models.FileField(
+        upload_to=comment_media_path,
+        blank=True, null=True,
+        validators=[validate_file_size, validate_media_type]
+    )  # было content
     likes = models.PositiveIntegerField(default=0)
-    user = models.ForeignKey(
+    author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='comments',
     )
-    pet_info_card = models.OneToOneField(
+    pet_info_card = models.ForeignKey(
         PetInfo,
         on_delete=models.CASCADE,
         related_name='comments',

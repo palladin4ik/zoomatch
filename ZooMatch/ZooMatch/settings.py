@@ -1,6 +1,13 @@
-from pathlib import Path
-from decouple import config
+import os
+from datetime import timedelta
 
+from pathlib import Path
+from dotenv import load_dotenv
+
+from celery.schedules import crontab
+
+
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,7 +16,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+YANDEX_MAPS_API_KEY = os.getenv('YANDEX_MAPS_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -27,13 +36,23 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'djoser',
+    'django_celery_beat',
+    'drf_spectacular',
+    'channels',
+    'corsheaders',
     'api',
     'pets',
     'chats',
     'users',
+    'matching',
+    'moderation',
+    'geo',
+    'recommendations',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,6 +81,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ZooMatch.wsgi.application'
 
+ASGI_APPLICATION = 'ZooMatch.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+            'capacity': 1500,
+            'db': 0,
+        },
+    },
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -69,11 +101,11 @@ WSGI_APPLICATION = 'ZooMatch.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5433'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST', default='localhost'),
+        'PORT': os.getenv('DB_PORT', default='5433'),
     }
 }
 
@@ -104,6 +136,35 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.'
+                                'LimitOffsetPagination',
+
+    'PAGE_SIZE': 10,
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'ZooMatch API',
+    'DESCRIPTION': 'API для приложения ZooMatch',
+    'VERSION': '0.0.1',
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -120,8 +181,59 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+MAX_UPLOAD_SIZE_MB = 10
+ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+ALLOWED_MEDIA_TYPES = ALLOWED_IMAGE_TYPES + [
+    'video/mp4',
+    'video/quicktime',
+    'application/pdf',
+    'audio/mpeg',
+    'audio/ogg',
+    'audio/mp3',
+]
+
+
+# ТОЛЬКО DEBUG - РАЗРЕШАЕМ ВСЕ ИСТОЧНИКИ CORS
+CORS_ALLOW_ALL_ORIGINS = True
+
+# ДЛЯ ПРОДА - РАЗРЕШАЕМ КОНКРЕТНЫЕ URL
+# CORS_ALLOWED_ORIGINS = [
+#     'https://ZooMatch.com',
+# ]
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_TIMEZONE = 'Europe/Moscow'
+
+CELERY_BEAT_SCHEDULE = {
+    'recalculate-recommendations-nightly': {
+        'task': 'recommandations.tasks.recalculate_all_recommendations',
+        'schedule': crontab(hour=3, minute=0),
+    }
+}
+
+
+if DEBUG:
+    INSTALLED_APPS += [
+        'debug_toolbar',
+    ]
+
+    MIDDLEWARE = [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    ] + MIDDLEWARE
+
+    INTERNAL_IPS = [
+        '127.0.0.1',
+    ]
