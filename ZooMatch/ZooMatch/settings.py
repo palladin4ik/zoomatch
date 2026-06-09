@@ -18,12 +18,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
+if not SECRET_KEY:
+    raise ValueError('SECRET_KEY is not set')
+
 YANDEX_MAPS_API_KEY = os.getenv('YANDEX_MAPS_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS',
+    'localhost,127.0.0.1'
+).split(',')
 
 
 # Application definition
@@ -62,6 +68,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SECURE_PROXY_SSL_HEADER = (
+    'HTTP_X_FORWARDED_PROTO',
+    'https'
+)
+
 ROOT_URLCONF = 'ZooMatch.urls'
 
 TEMPLATES = [
@@ -83,13 +94,13 @@ WSGI_APPLICATION = 'ZooMatch.wsgi.application'
 
 ASGI_APPLICATION = 'ZooMatch.asgi.application'
 
+REDIS_URL = os.getenv('REDIS_HOST', 'redis://localhost:6379/0')
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
+            'hosts': [REDIS_URL],
             'capacity': 1500,
-            'db': 0,
         },
     },
 }
@@ -105,7 +116,7 @@ DATABASES = {
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST', default='localhost'),
-        'PORT': os.getenv('DB_PORT', default='5433'),
+        'PORT': os.getenv('DB_PORT', default='5432'),
     }
 }
 
@@ -159,11 +170,12 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'ZooMatch API',
-    'DESCRIPTION': 'API для приложения ZooMatch',
-    'VERSION': '0.0.1',
-}
+        'TITLE': 'ZooMatch API',
+        'DESCRIPTION': 'API для приложения ZooMatch',
+        'VERSION': '0.0.1',
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -189,7 +201,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 MAX_UPLOAD_SIZE_MB = 10
@@ -204,24 +216,39 @@ ALLOWED_MEDIA_TYPES = ALLOWED_IMAGE_TYPES + [
 ]
 
 
-# ТОЛЬКО DEBUG - РАЗРЕШАЕМ ВСЕ ИСТОЧНИКИ CORS
-CORS_ALLOW_ALL_ORIGINS = True
+CELERY_BROKER_URL = os.getenv(
+    'CELERY_BROKER_URL',
+    'redis://localhost:6379/1'
+)
 
-# ДЛЯ ПРОДА - РАЗРЕШАЕМ КОНКРЕТНЫЕ URL
-# CORS_ALLOWED_ORIGINS = [
-#     'https://ZooMatch.com',
-# ]
-
-
-CELERY_BROKER_URL = 'redis://localhost:6379/1'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_RESULT_BACKEND = os.getenv(
+    'CELERY_RESULT_BACKEND',
+    'redis://localhost:6379/1'
+)
 CELERY_TIMEZONE = 'Europe/Moscow'
 
 CELERY_BEAT_SCHEDULE = {
     'recalculate-recommendations-nightly': {
-        'task': 'recommandations.tasks.recalculate_all_recommendations',
+        'task': 'recommendations.tasks.recalculate_all_recommendations',
         'schedule': crontab(hour=3, minute=0),
     }
+}
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+        },
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'INFO',
+    },
 }
 
 
@@ -237,3 +264,16 @@ if DEBUG:
     INTERNAL_IPS = [
         '127.0.0.1',
     ]
+
+    CORS_ALLOW_ALL_ORIGINS = True
+
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+else:
+    CORS_ALLOWED_ORIGINS = os.getenv(
+        'CORS_ALLOWED_ORIGINS',
+        ''
+    ).split(',')
+
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
