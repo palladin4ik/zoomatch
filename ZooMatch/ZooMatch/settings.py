@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'ZooMatch.wsgi.application'
 
 ASGI_APPLICATION = 'ZooMatch.asgi.application'
 
-REDIS_URL = os.getenv('REDIS_HOST', 'redis://localhost:6379/0')
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -112,9 +112,9 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('DB_HOST', default='localhost'),
         'PORT': os.getenv('DB_PORT', default='5432'),
     }
