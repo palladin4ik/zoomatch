@@ -7,10 +7,20 @@ services:
       - .env.docker
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d zoomatch_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
     restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   backend:
     build:
@@ -20,10 +30,15 @@ services:
     env_file:
       - .env.docker
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "8000:8000"
+    volumes:
+      - media_files:/app/backend/media
+      - log_files:/app/backend/logs
   
   celery:
     build:
@@ -33,19 +48,29 @@ services:
     env_file:
       - .env.docker
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - media_files:/app/backend/media
+      - log_files:/app/backend/logs
   
   celery-beat:
     build:
       context: .
       dockerfile: Dockerfile
     command: celery -A ZooMatch beat -l info
+      --scheduler django_celery_beat.schedulers:DatabaseScheduler
     env_file:
       - .env.docker
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
 volumes:
   postgres_data:
+  media_files:
+  log_files:
