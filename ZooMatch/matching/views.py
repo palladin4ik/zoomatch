@@ -98,6 +98,7 @@ class MatchViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
     serializer_class = MatchSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = Match.objects.all()
+    pagination_class = None
     http_method_names = ['get', 'post', 'patch']
 
     def perform_create(self, serializer):
