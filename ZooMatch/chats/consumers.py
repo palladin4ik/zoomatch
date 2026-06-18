@@ -84,7 +84,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'sender_id': self.user.id,
                 'created_at': str(message.created_at),
                 'has_media': True,
-                'media_url': message.media.url if message.media else None, # ДОБАВИТЬ ЭТУ СТРОКУ
+                'media_url': message.media.url if message.media else None
             }
         )
 
@@ -120,7 +120,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'sender_id': event['sender_id'],
             'created_at': event['created_at'],
             'has_media': event.get('has_media', False),
-            'media_url': event.get('media_url', None), # ДОБАВИТЬ ЭТУ СТРОКУ
+            'media_url': event.get('media_url', None),
         }))
 
     async def message_read(self, event):
@@ -167,15 +167,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         from django.db.models import Q
         import logging
         logger = logging.getLogger(__name__)
-        
+
         other_id = int(self.other_user_id)
         logger.info(f"check_match: user={self.user.id}, other={other_id}")
-        
+
         exists = Match.objects.filter(
             Q(pet_from__owner=self.user, pet_to__owner_id=other_id) |
             Q(pet_from__owner_id=other_id, pet_to__owner=self.user),
             status=Match.Status.ACCEPTED
         ).exists()
-        
+
         logger.info(f"check_match result: {exists}")
         return exists

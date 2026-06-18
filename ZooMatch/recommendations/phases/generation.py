@@ -50,21 +50,21 @@ def generate_candidates(active_pet, radius_km=None):
         if not is_biologically_ready(pet):
             continue
 
-        if active_location and radius_km in RADIUS_CHOICES:
+        if active_location:
             pet_location = parse_location(pet.location)
 
-            if not pet_location:
-                continue
+            if pet_location:
+                distance = haversine_distance(
+                    active_location[0], active_location[1],
+                    pet_location[0], pet_location[1]
+                )
 
-            distance = haversine_distance(
-                active_location[0], active_location[1],
-                pet_location[0], pet_location[1]
-            )
+                if radius_km in RADIUS_CHOICES and distance > radius_km:
+                    continue
 
-            if distance > radius_km:
-                continue
-
-            pet.distance_km = distance
+                pet.distance_km = distance
+            else:
+                pet.distance_km = None
         else:
             pet.distance_km = None
 

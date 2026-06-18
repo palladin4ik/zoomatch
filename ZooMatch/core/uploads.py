@@ -31,6 +31,9 @@ def comment_media_path(instance, filename):
 
 
 def message_media_path(instance, filename):
-    # Разбивка по match_id для удобства приватного доступа в будущем
-    match_id = getattr(instance, 'match_id', 'unknown')
-    return build_path(f'chats/{match_id}', filename)
+    sender_id = getattr(instance, 'sender_id', None)
+    receiver_id = getattr(instance, 'receiver_id', None)
+    if sender_id and receiver_id:
+        pair = sorted([sender_id, receiver_id])
+        return build_path(f'chats/{pair[0]}_{pair[1]}', filename)
+    return build_path('chats/misc', filename)

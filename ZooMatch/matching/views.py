@@ -7,6 +7,39 @@ from drf_spectacular.utils import (extend_schema, extend_schema_view,
 
 from .serializers import MatchSerializer
 from .models import Match, Rejection, Action, ActionCategory
+from chats.models import Message
+
+
+def send_match_welcome_messages(match):
+    pet_from = match.pet_from
+    pet_to = match.pet_to
+
+    owner_from = pet_from.owner
+    owner_to = pet_to.owner
+
+    existing = Message.objects.filter(
+        Q(sender=owner_from, receiver=owner_to) |
+        Q(sender=owner_to, receiver=owner_from)
+    ).exists()
+
+    if existing:
+        return
+
+    text_from = f'Мэтч! {pet_from.name} и {pet_to.name} понравились друг '
+    ' другу 🐾 Начните общение!'
+    text_to = f'Мэтч! {pet_to.name} и {pet_from.name} понравились друг другу '
+    '🐾 Начните общение!'
+
+    Message.objects.create(
+        sender=owner_from,
+        receiver=owner_to,
+        text=text_from,
+    )
+    Message.objects.create(
+        sender=owner_to,
+        receiver=owner_from,
+        text=text_to,
+    )
 
 
 @extend_schema_view(
@@ -82,6 +115,8 @@ class MatchViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
             reverse_match.status = Match.Status.ACCEPTED
             reverse_match.save()
 
+            send_match_welcome_messages(reverse_match)
+
             return
 
         serializer.save()
@@ -113,6 +148,13 @@ class MatchViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         new_status = request.data.get('status')
+
+        if match.status == new_status:
+            return Response(
+                {'detail': 'Статус уже установлен'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         if new_status == Match.Status.REJECTED:
             pet_from = match.pet_from
             pet_to = match.pet_to
@@ -130,5 +172,8 @@ class MatchViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                                          partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        if new_status == Match.Status.ACCEPTED:
+            send_match_welcome_messages(match)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

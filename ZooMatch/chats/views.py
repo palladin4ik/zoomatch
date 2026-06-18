@@ -274,6 +274,10 @@ class MessageMediaView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
+        if message.text == '[Файл]':
+            message.text = None
+            message.save(update_fields=['text'])
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -300,7 +304,9 @@ class ChatViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         unread_qs = Message.objects.filter(
             sender=OuterRef('pk'),
             receiver=user,
-            is_read=False
+            is_read=False,
+            deleted_by_receiver=False,
+            deleted_by_sender=False
         ).values('sender').annotate(c=Count('id')).values('c')
 
         interlocutors = User.objects.filter(
