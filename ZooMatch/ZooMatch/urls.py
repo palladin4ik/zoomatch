@@ -13,7 +13,9 @@ urlpatterns = [
   + static('media/pets/', document_root=os.path.join(settings.MEDIA_ROOT,
                                                      'pets')) \
   + static('media/comments/', document_root=os.path.join(settings.MEDIA_ROOT,
-                                                         'comments'))
+                                                         'comments')) \
+  + static('media/chats/', document_root=os.path.join(settings.MEDIA_ROOT,
+                                                      'chats'))
 
 if settings.DEBUG:
     import debug_toolbar

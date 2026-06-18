@@ -23,6 +23,9 @@ class MatchSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_at')
 
     def validate(self, data):
+        if 'pet_from' not in data or 'pet_to' not in data:
+            return data
+
         request = self.context.get('request')
         pet_from = data['pet_from']
         pet_to = data['pet_to']

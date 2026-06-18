@@ -2,7 +2,7 @@ from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 
 from .models import AnimalType, Breed, Tag, Pet, PetInfo, Comment
-from users.serializers import UserSerializer, SimpleUserSerializer
+from users.serializers import UserSerializer
 
 from moderation.models import ModerationRequest
 from geo.services import build_location_from_input
@@ -46,7 +46,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class PetSerializer(serializers.ModelSerializer):
-    owner = SimpleUserSerializer(read_only=True)
+    owner = UserSerializer(read_only=True)
     animal_type = AnimalTypeSerializer(read_only=True)
     breed = SimpleBreedSerializer(read_only=True)
     tags = serializers.SerializerMethodField()

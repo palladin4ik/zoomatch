@@ -1,3 +1,6 @@
+#мои игноры
+tmp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -142,3 +145,10 @@ dmypy.json
 
 # Media
 media/
+
+# Tests
+.vscode/
+zoomatch_tests/
+
+# Android App
+ZooMatch_front/

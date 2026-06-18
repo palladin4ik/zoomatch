@@ -36,10 +36,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, code):
-        await self.channel_layer.group_discard(
-            self.room_name,
-            self.channel_name
-        )
+        if hasattr(self, 'room_name'):
+            await self.channel_layer.group_discard(
+                self.room_name,
+                self.channel_name
+            )
 
     async def receive(self, text_data=None, bytes_data=None):
         data = json.loads(text_data)
@@ -83,6 +84,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'sender_id': self.user.id,
                 'created_at': str(message.created_at),
                 'has_media': True,
+                'media_url': message.media.url if message.media else None
             }
         )
 
@@ -118,6 +120,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'sender_id': event['sender_id'],
             'created_at': event['created_at'],
             'has_media': event.get('has_media', False),
+            'media_url': event.get('media_url', None),
         }))
 
     async def message_read(self, event):
@@ -140,7 +143,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def save_message(self, text):
         return Message.objects.create(
             sender=self.user,
-            receiver_id=self.other_user_id,
+            receiver_id=int(self.other_user_id),
             text=text,
         )
 
@@ -162,9 +165,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def check_match(self):
         from matching.models import Match
         from django.db.models import Q
+        import logging
+        logger = logging.getLogger(__name__)
 
-        return Match.objects.filter(
-            Q(pet_from__owner=self.user, pet_to__owner_id=self.other_user_id) |
-            Q(pet_from__owner_id=self.other_user_id, pet_to__owner=self.user),
+        other_id = int(self.other_user_id)
+        logger.info(f"check_match: user={self.user.id}, other={other_id}")
+
+        exists = Match.objects.filter(
+            Q(pet_from__owner=self.user, pet_to__owner_id=other_id) |
+            Q(pet_from__owner_id=other_id, pet_to__owner=self.user),
             status=Match.Status.ACCEPTED
         ).exists()
+
+        logger.info(f"check_match result: {exists}")
+        return exists

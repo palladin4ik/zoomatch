@@ -15,6 +15,7 @@ from .models import RecommendationCache, RecommendationParams
 
 from pets.models import Pet
 from pets.serializers_readonly import PetShortSerializer
+from geo.utils import parse_location, haversine_distance
 
 
 CACHE_TTL_HOURS = 24
@@ -160,6 +161,18 @@ class RecommendationViewSet(viewsets.GenericViewSet):
 
             pets_map = {pet.id: pet for pet in pets}
             ordered_pets = [pets_map[pid] for pid in cache.candidate_ids]
+
+            active_location = parse_location(active_pet.location)
+            if active_location:
+                for pet in ordered_pets:
+                    pet_location = parse_location(pet.location)
+                    if pet_location:
+                        pet.distance_km = haversine_distance(
+                            active_location[0], active_location[1],
+                            pet_location[0], pet_location[1]
+                        )
+                    else:
+                        pet.distance_km = None
 
             return Response({
                 'results': PetShortSerializer(ordered_pets, many=True).data,
