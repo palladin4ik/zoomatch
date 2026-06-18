@@ -24,24 +24,26 @@ class EditProfileViewModel(
   val user = repository.userFlow
     .map {
       UserEditUI(
-        it!!.avatar.orEmpty(),
-        it.name,
-        it.location.orEmpty(),
-        it.status.orEmpty(),
-        it.email,
-        it.phone_number.orEmpty()
+        avatar = it?.avatar,
+        firstname = it?.firstname.orEmpty(),
+        lastname = it?.lastname.orEmpty(),
+        email = it?.email.orEmpty(),
+        description = it?.status.orEmpty(),
+        phone_number = it?.phone_number.orEmpty(),
+        organization = it?.organization
       )
     }
     .stateIn(
       scope = viewModelScope,
       started = SharingStarted.WhileSubscribed(5000),
       initialValue = UserEditUI(
-        "",
-        "Загрузка...",
-        "",
-        "",
-        "",
-        ""
+        avatar = null,
+        firstname = "",
+        lastname = "",
+        email = "",
+        description = "",
+        phone_number = "",
+        organization = null
       )
     )
   private val _avatarBase64 = MutableStateFlow<String?>(null)
@@ -53,22 +55,18 @@ class EditProfileViewModel(
   private val _formState = MutableStateFlow(EditProfileFormState())
   val formState: StateFlow<EditProfileFormState> = _formState
 
-  fun validate(name: String, email: String, phone: String) {
-    _formState.value = EditProfileFormState(
-      nameError = null,
-      emailError = null,
-      phoneError = null,
-      isDataValid = false
-    )
-    val nameError = if (name.isBlank()) R.string.invalid_name else null
+  fun validate(firstname: String, lastname: String, email: String, phone: String) {
+    val firstnameError = if (firstname.isBlank()) R.string.invalid_name else null
+    val lastnameError = if (lastname.isBlank()) R.string.invalid_name else null
     val emailError = if (email.isNotBlank() && !Patterns.EMAIL_ADDRESS.matcher(email).matches())
       R.string.invalid_email else null
     val phoneError = if (phone.isNotBlank() && phone.length < 12) R.string.invalid_phone else null
 
-    val isValid = nameError == null && emailError == null && phoneError == null
+    val isValid = firstnameError == null && lastnameError == null && emailError == null && phoneError == null
 
     _formState.value = EditProfileFormState(
-      nameError = nameError,
+      firstnameError = firstnameError,
+      lastnameError = lastnameError,
       emailError = emailError,
       phoneError = phoneError,
       isDataValid = isValid
@@ -78,16 +76,15 @@ class EditProfileViewModel(
   private val _updateResult = Channel<Result<String>>(Channel.CONFLATED)
   val updateResult = _updateResult.receiveAsFlow()
   fun update(
-    avatar: String?,
-    name: String,
-    location: String,
-    status: String,
+    firstname: String,
+    lastname: String,
+    description: String,
     email: String,
     phoneNumber: String
   ) {
     viewModelScope.launch {
       val result = repository.updateProfile(
-        avatar, name, location, status, email, phoneNumber
+        firstname, lastname, description, email, phoneNumber
       )
       _updateResult.send(result)
     }

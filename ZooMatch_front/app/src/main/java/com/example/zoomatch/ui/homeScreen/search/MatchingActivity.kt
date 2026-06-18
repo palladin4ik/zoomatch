@@ -9,11 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.bumptech.glide.Glide
 import com.example.zoomatch.R
-import com.example.zoomatch.data.homeScreen.profile.ImageUtils
-import com.example.zoomatch.data.homeScreen.search.PetLongResponse
+import com.example.zoomatch.data.homeScreen.search.PetShortRecommendation
 import com.example.zoomatch.databinding.ActivityMatchingBinding
 import com.example.zoomatch.databinding.CardPetBinding
+import com.example.zoomatch.ui.applySystemBarsPadding
 import com.example.zoomatch.ui.homeScreen.HomeViewModelFactory
 import kotlinx.coroutines.launch
 
@@ -27,37 +28,79 @@ class MatchingActivity : AppCompatActivity() {
 
   private lateinit var cardStack: MutableList<View>
   private var currentIndex = 0
+  private var lastDisplayedPetIds: List<Int> = emptyList()
+
+  private var petFromId: Int = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
     _binding = ActivityMatchingBinding.inflate(layoutInflater)
     setContentView(binding.root)
+    binding.root.applySystemBarsPadding()
 
     cardStack = mutableListOf()
 
-    val petFrom = intent.getIntExtra("PET_ID", 0)
-    val animalTypeId = intent.getIntExtra("ANIMAL_TYPE_ID", 0)
-    viewModel.loadPets(animalTypeId)
+    petFromId = intent.getIntExtra("PET_ID", 0)
 
-    binding.dislikeButton.setOnClickListener { swipeCard(false, petFrom) }
-    binding.likeButton.setOnClickListener { swipeCard(true, petFrom) }
+    binding.filterButton.setOnClickListener {
+      showFilterDialog()
+    }
+
+    binding.dislikeButton.setOnClickListener { swipeCard(false) }
+    binding.likeButton.setOnClickListener { swipeCard(true) }
+
+    binding.infoButton.setOnClickListener {
+      val currentPet = viewModel.pets.value.getOrNull(currentIndex) ?: return@setOnClickListener
+      val intent = android.content.Intent(this, OwnerProfileActivity::class.java)
+      intent.putExtra("PET_ID", currentPet.id)
+      startActivity(intent)
+    }
 
     lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
-        viewModel.shuffledPets.collect { pets ->
-          if (pets.isNotEmpty()) {
-            displayCards(pets)
+        launch {
+          viewModel.pets.collect { pets ->
+            if (pets.isNotEmpty()) {
+              displayCards(pets)
+            }
+          }
+        }
+        launch {
+          viewModel.isLoading.collect { loading ->
+            binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+          }
+        }
+        launch {
+          viewModel.error.collect { error ->
+            error?.let {
+              Toast.makeText(this@MatchingActivity, it, Toast.LENGTH_LONG).show()
+            }
           }
         }
       }
     }
+
+    showFilterDialog()
   }
 
-  private fun displayCards(pets: List<PetLongResponse>) {
+  private fun showFilterDialog() {
+    val dialog = FilterDialogFragment.newInstance()
+    dialog.setOnFilterApplied { params ->
+      lastDisplayedPetIds = emptyList()
+      viewModel.applyFilter(params, petFromId)
+    }
+    dialog.show(supportFragmentManager, "filter")
+  }
+
+  private fun displayCards(pets: List<PetShortRecommendation>) {
+    val newIds = pets.map { it.id }
+    if (newIds == lastDisplayedPetIds) return
+
     binding.cardContainer.removeAllViews()
     cardStack.clear()
     currentIndex = 0
+    lastDisplayedPetIds = newIds
 
     val preloadCount = minOf(pets.size, 3)
     for (i in 0 until preloadCount) {
@@ -73,26 +116,75 @@ class MatchingActivity : AppCompatActivity() {
     }
   }
 
-  private fun createPetCard(pet: PetLongResponse): View {
+  private fun createPetCard(pet: PetShortRecommendation): View {
     val cardBinding = CardPetBinding.inflate(layoutInflater)
 
-    cardBinding.petName.text = pet.name
-    cardBinding.petInfo.text = "${pet.breed.name}, ${pet.age} ${pluralYears(pet.age)}"
-    cardBinding.petLocation.text = pet.location ?: "Не указано"
+    val typeName = pet.animal_type?.name ?: pet.animalTypeCustom ?: ""
+    val breedName = pet.breed?.name ?: pet.breedCustom ?: ""
+    val genderIcon = if (pet.isMale) "\u2642" else "\u2640"
+    cardBinding.petName.text = "${pet.name}, ${pet.age} ${pluralYears(pet.age)} $genderIcon"
 
-    ImageUtils.base64ToBitmap(pet.avatar)?.let { bitmap ->
-      cardBinding.petPhoto.setImageBitmap(bitmap)
-    } ?: cardBinding.petPhoto.setImageResource(R.drawable.test_avatar)
+    val typeBreed = listOf(typeName, breedName).filter { it.isNotBlank() }
+      .joinToString(", ")
+    if (typeBreed.isNotBlank()) {
+      cardBinding.petLocation.text = typeBreed
+      cardBinding.petLocation.visibility = View.VISIBLE
+    } else {
+      cardBinding.petLocation.visibility = View.GONE
+    }
+
+    val distance = pet.distanceKm
+    if (distance != null) {
+      cardBinding.petDistance.text = "${distance.toInt()} км от вас"
+      cardBinding.petDistance.visibility = View.VISIBLE
+    } else {
+      cardBinding.petDistance.visibility = View.GONE
+    }
+
+    val avatarUrl = pet.avatar
+    if (!avatarUrl.isNullOrBlank()) {
+      val fullUrl = if (avatarUrl.startsWith("http")) avatarUrl
+      else "https://zoomatch.ru$avatarUrl"
+      Glide.with(this@MatchingActivity)
+        .load(fullUrl)
+        .placeholder(R.drawable.test_avatar)
+        .error(R.drawable.test_avatar)
+        .centerCrop()
+        .into(cardBinding.petPhoto)
+    } else {
+      cardBinding.petPhoto.setImageResource(R.drawable.test_avatar)
+    }
+
+    val owner = pet.owner
+    if (owner != null) {
+      val ownerFullName = listOfNotNull(owner.firstname, owner.lastname)
+        .joinToString(" ").ifBlank { null }
+      cardBinding.ownerName.text = ownerFullName ?: "Владелец"
+
+      val ownerAvatarUrl = owner.avatar
+      if (!ownerAvatarUrl.isNullOrBlank()) {
+        val fullOwnerUrl = if (ownerAvatarUrl.startsWith("http")) ownerAvatarUrl
+        else "https://zoomatch.ru$ownerAvatarUrl"
+        Glide.with(this@MatchingActivity)
+          .load(fullOwnerUrl)
+          .placeholder(R.drawable.test_avatar)
+          .error(R.drawable.test_avatar)
+          .centerCrop()
+          .into(cardBinding.ownerAvatar)
+      }
+    } else {
+      cardBinding.ownerName.text = "Владелец"
+    }
 
     return cardBinding.root
   }
 
-  private fun swipeCard(isLike: Boolean, petFrom: Int) {
+  private fun swipeCard(isLike: Boolean) {
     if (cardStack.isEmpty()) return
 
-    val petTo = viewModel.shuffledPets.value[currentIndex].id
+    val petTo = viewModel.pets.value.getOrNull(currentIndex)?.id ?: return
     if (isLike) {
-      viewModel.createMatch(petFrom, petTo)
+      viewModel.createMatch(petFromId, petTo)
     }
 
     val topCard = cardStack[0]

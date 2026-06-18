@@ -25,13 +25,17 @@ data class LoginRequest(
 
 data class LoginResponse(
   val id: Int,
-  val name: String,
+  val firstname: String,
+  val lastname: String,
   val email: String,
   val avatar: String?,
-  val location: String,
-  val status: String?,
+  val location: String?,
+  val description: String?,
   val phone_number: String?,
   val role: Int,
+  val organization: String?,
+  val last_seen: String?,
+  val is_active: Boolean,
   val pets: List<PetShortResponse>
 )
 
@@ -42,8 +46,16 @@ data class PetShortResponse(
   val age: Int,
   val avatar: String?,
   val is_active: Boolean,
-  val breed: Int,
-  val animal_type: Int
+  val breed: IdNameResponse?,
+  val animal_type: IdNameResponse?,
+  val animal_type_custom: String?,
+  val breed_custom: String?,
+  val moderation_status: String?
+)
+
+data class IdNameResponse(
+  val id: Int,
+  val name: String
 )
 
 data class AnimalTypeResponse(

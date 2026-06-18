@@ -10,11 +10,11 @@ import androidx.room.RoomDatabase
     UserEntity::class,
     AnimalTypeEntity::class,
     BreedEntity::class,
-//    TagEntity::class,
     PetEntity::class,
-//    PetTagCrossRef::class
+    MessageEntity::class,
+    ChatEntity::class
   ],
-  version = 1,
+  version = 4, // Добавлены animal_type_custom, breed_custom, moderation_status в PetEntity
   exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -22,6 +22,8 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun petDao(): PetDao
   abstract fun animalTypeDao(): AnimalTypeDao
   abstract fun breedDao(): BreedDao
+  abstract fun messageDao(): MessageDao
+  abstract fun chatDao(): ChatDao
 
   companion object {
     @Volatile

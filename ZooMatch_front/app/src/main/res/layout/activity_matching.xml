@@ -1,46 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
-
-  <LinearLayout
-    android:id="@+id/buttonsLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    android:layout_marginBottom="32dp"
-    android:gravity="center"
-    android:orientation="horizontal"
-    android:paddingHorizontal="48dp">
-
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/dislikeButton"
-      style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-      android:layout_width="64dp"
-      android:layout_height="64dp"
-      android:layout_marginEnd="32dp"
-      app:icon="@android:drawable/ic_delete"
-      app:iconSize="32dp" />
-
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/likeButton"
-      style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-      android:layout_width="64dp"
-      android:layout_height="64dp"
-      android:layout_marginStart="32dp"
-      app:icon="@android:drawable/ic_input_add"
-      app:iconSize="32dp" />
-  </LinearLayout>
-
-  <FrameLayout
-    android:id="@+id/cardContainer"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="40dp"
-    android:layout_marginBottom="120dp"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    android:background="@color/purple_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="100dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/filterButton"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:icon="@android:drawable/ic_menu_sort_by_size"
+            app:iconSize="20dp"
+            app:iconTint="@color/purple_primary"
+            app:strokeColor="@color/purple_primary"
+            app:cornerRadius="24dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:id="@+id/cardContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="48dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dislikeButton"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="24dp"
+            app:icon="@android:drawable/ic_delete"
+            app:iconSize="28dp"
+            app:iconTint="@color/red_delete"
+            app:strokeColor="@color/red_delete"
+            app:cornerRadius="32dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/infoButton"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="24dp"
+            app:icon="@drawable/ic_person"
+            app:iconSize="28dp"
+            app:iconTint="@color/purple_primary"
+            app:strokeColor="@color/purple_primary"
+            app:cornerRadius="32dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/likeButton"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            app:backgroundTint="@color/purple_primary"
+            app:icon="@drawable/ic_heart_purple"
+            app:iconSize="32dp"
+            app:iconTint="@color/white"
+            app:cornerRadius="36dp" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

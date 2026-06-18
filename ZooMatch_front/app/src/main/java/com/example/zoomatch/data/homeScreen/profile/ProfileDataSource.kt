@@ -7,23 +7,23 @@ class ProfileDataSource {
 
   suspend fun updateProfile(
     token: String?,
-    avatar: String?,
-    name: String,
-    location: String,
-    status: String,
+    firstname: String,
+    lastname: String,
+    description: String?,
     email: String,
-    phoneNumber: String
+    phoneNumber: String?
   ): Result<UserEditResponse> {
     return try {
       val response = zooMatchApi.updateProfile(
         "Bearer $token",
         UserEditUI(
-          avatar,
-          name,
-          location,
-          status,
-          email,
-          phoneNumber
+          avatar = null,
+          firstname = firstname,
+          lastname = lastname,
+          email = email,
+          description = description,
+          phone_number = phoneNumber,
+          organization = null
         )
       )
       if (response.isSuccessful && response.body() != null) {

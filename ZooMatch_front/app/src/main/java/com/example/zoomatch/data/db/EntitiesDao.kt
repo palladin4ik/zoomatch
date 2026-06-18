@@ -9,12 +9,15 @@ import androidx.room.PrimaryKey
 data class UserEntity(
   @PrimaryKey val id: Int,
   val name: String,
+  val firstname: String = "",
+  val lastname: String = "",
   val email: String,
   val avatar: String?,
   val location: String?,
   val status: String?,
   val phone_number: String?,
-  val role: Int = 0
+  val role: Int = 0,
+  val organization: String? = null
 )
 
 @Entity(tableName = "animal_type")
@@ -72,37 +75,43 @@ data class PetEntity(
   val pedigree_documents: String?,
   val awards: String?,
   val description: String?,
-  val is_active: Boolean = false
+  val is_active: Boolean = false,
+  val animal_type_custom: String? = null,
+  val breed_custom: String? = null,
+  val moderation_status: String? = null
 )
 
-//@Entity(tableName = "tag")
-//data class TagEntity(
-//  @PrimaryKey val id: Int,
-//  val tag: String
-//) {
-//  constructor() : this(0, "")
-//}
+@Entity(
+  tableName = "messages",
+  indices = [
+    Index(value = ["chatId"]),
+    Index(value = ["senderId"]),
+    Index(value = ["receiverId"]),
+    Index(value = ["createdAt"])
+  ]
+)
+data class MessageEntity(
+  @PrimaryKey(autoGenerate = true) val localId: Long = 0,
+  val id: Int? = null,
+  val chatId: String,
+  val senderId: Int,
+  val receiverId: Int,
+  val text: String? = null,
+  val mediaUrl: String? = null,
+  val mediaType: String? = null,
+  val isDelivered: Boolean = false,
+  val isRead: Boolean = false,
+  val isPending: Boolean = false,
+  val createdAt: Long = System.currentTimeMillis()
+)
 
-//@Entity(
-//  tableName = "pet_tag",
-//  primaryKeys = ["pet_id", "tag_id"],
-//  foreignKeys = [
-//    ForeignKey(
-//      entity = PetEntity::class,
-//      parentColumns = ["id"],
-//      childColumns = ["pet_id"],
-//      onDelete = ForeignKey.CASCADE
-//    ),
-//    ForeignKey(
-//      entity = TagEntity::class,
-//      parentColumns = ["id"],
-//      childColumns = ["tag_id"],
-//      onDelete = ForeignKey.CASCADE
-//    )
-//  ],
-//  indices = [Index("pet_id"), Index("tag_id")]
-//)
-//data class PetTagCrossRef(
-//  val pet_id: Int,
-//  val tag_id: Int
-//)
+@Entity(tableName = "chats")
+data class ChatEntity(
+  @PrimaryKey val chatId: String,
+  val interlocutorId: Int,
+  val name: String,
+  val avatar: String?,
+  val lastMessage: String?,
+  val lastMessageTime: Long?,
+  val unreadCount: Int = 0
+)

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.zoomatch.data.homeScreen.pets.PetUI
 import com.example.zoomatch.data.homeScreen.pets.PetsRepository
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -16,32 +17,57 @@ class SearchViewModel(
   private val repository: PetsRepository
 ) : ViewModel() {
 
+  private val _animalTypeFilter = MutableStateFlow<String?>(null)
+  private val _searchQuery = MutableStateFlow("")
+
   val activePets = combine(
     repository.petsFlow,
-    repository.breedsFlow
-  ) { petList, breedList ->
-    petList.filter { it.is_active }
-      .map { pet ->
-        val breedName = pet.breed_id?.let { id ->
-          breedList.find { it.id == id }?.name ?: "—"
-        } ?: "—"
-        PetUI(
-          id = pet.id.toString(),
-          name = pet.name,
-          breed = breedName,
-          age = pet.age,
-          status = "В активном поиске",
-          avatar = pet.avatar
-        )
-      }
+    repository.breedsFlow,
+    repository.animalTypesFlow,
+    _animalTypeFilter,
+    _searchQuery
+  ) { petList, breedList, animalTypes, typeFilter, query ->
+    val typeNameMap = animalTypes.associate { it.id to it.name }
+
+    petList.filter { pet ->
+      val matchesType = typeFilter == null ||
+        pet.animal_type_id?.let { typeNameMap[it] == typeFilter } == true
+      val matchesQuery = query.isBlank() ||
+        pet.name.contains(query, ignoreCase = true)
+      pet.is_active && matchesType && matchesQuery
+    }.map { pet ->
+      val breedName = pet.breed_id?.let { id ->
+        breedList.find { it.id == id }?.name ?: "—"
+      } ?: "—"
+      PetUI(
+        id = pet.id.toString(),
+        name = pet.name,
+        breed = breedName,
+        age = pet.age,
+        status = "В активном поиске",
+        avatar = pet.avatar,
+        isMale = pet.is_male,
+        isActive = pet.is_active
+      )
+    }
   }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
   private val _openMatching = Channel<Pair<Int, Int>>(Channel.CONFLATED)
   val openMatching = _openMatching.receiveAsFlow()
 
+  fun setAnimalTypeFilter(typeName: String?) {
+    _animalTypeFilter.value = typeName
+  }
+
+  fun setSearchQuery(query: String) {
+    _searchQuery.value = query
+  }
+
   fun onPetClick(petId: Int) = viewModelScope.launch {
     val pet = activePets.value.find { it.id.toInt() == petId }
-    val typeId = pet?.let { repository.petsFlow.first().find { p -> p.id == petId }?.animal_type_id ?: 0 } ?: 0
+    val typeId = pet?.let {
+      repository.petsFlow.first().find { p -> p.id == petId }?.animal_type_id ?: 0
+    } ?: 0
     _openMatching.send(Pair(petId, typeId))
   }
 }

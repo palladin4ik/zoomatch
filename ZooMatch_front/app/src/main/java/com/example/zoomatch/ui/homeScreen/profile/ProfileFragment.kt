@@ -1,24 +1,25 @@
 package com.example.zoomatch.ui.homeScreen.profile
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.zoomatch.R
 import com.example.zoomatch.data.homeScreen.profile.ImageUtils
 import com.example.zoomatch.databinding.HomeFragmentProfileBinding
 import com.example.zoomatch.ui.homeScreen.HomeViewModelFactory
-import com.example.zoomatch.ui.homeScreen.profile.fragments.ReviewsFragment
-import com.example.zoomatch.ui.homeScreen.profile.fragments.StatisticFragment
-import com.google.android.material.tabs.TabLayoutMediator
+import com.example.zoomatch.ui.homeScreen.settings.SettingsActivity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProfileFragment : Fragment() {
   private var _binding: HomeFragmentProfileBinding? = null
@@ -26,6 +27,22 @@ class ProfileFragment : Fragment() {
   private val viewModel: ProfileViewModel by viewModels {
     HomeViewModelFactory(requireActivity().application)
   }
+
+  private val pickImageLauncher =
+    registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+      uri?.let {
+        lifecycleScope.launch(Dispatchers.IO) {
+          val bitmap = requireContext().contentResolver.openInputStream(it)?.use { stream ->
+            BitmapFactory.decodeStream(stream)
+          } ?: return@launch
+          val base64 = ImageUtils.bitmapToBase64(bitmap)
+          withContext(Dispatchers.Main) {
+            binding.userAvatar.setImageBitmap(bitmap)
+            viewModel.uploadAvatar(base64)
+          }
+        }
+      }
+    }
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -37,10 +54,17 @@ class ProfileFragment : Fragment() {
   }
 
   private fun setupUI() {
-    binding.editProfileButton.setOnClickListener {
-      viewModel.onEditProfileClick()
+    binding.editAvatarButton.setOnClickListener {
+      pickImageLauncher.launch("image/*")
     }
-    binding.userAvatar.setImageResource(R.drawable.test_avatar) // временное решение
+
+    binding.editNameButton.setOnClickListener {
+      startActivity(Intent(requireContext(), EditProfileActivity::class.java))
+    }
+
+    binding.settingsIcon.setOnClickListener {
+      startActivity(Intent(requireContext(), SettingsActivity::class.java))
+    }
   }
 
   private fun observeData() {
@@ -48,12 +72,20 @@ class ProfileFragment : Fragment() {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
         launch {
           viewModel.user.collect { user ->
-            binding.userName.text = user.name
-            binding.userGeo.text = user.geo
-            binding.userBio.text = user.status
+            val displayName = listOfNotNull(
+              user.firstname.ifBlank { null },
+              user.lastname.ifBlank { null }
+            ).joinToString(" ").ifBlank { "Имя не указано" }
+            binding.userName.text = displayName
+            binding.userBio.text = user.description
             ImageUtils.base64ToBitmap(user.avatar)?.let { bitmap ->
               binding.userAvatar.setImageBitmap(bitmap)
             } ?: binding.userAvatar.setImageResource(R.drawable.test_avatar)
+          }
+        }
+        launch {
+          viewModel.petCount.collect { count ->
+            binding.petsCount.text = count.toString()
           }
         }
         launch {
@@ -65,37 +97,8 @@ class ProfileFragment : Fragment() {
     }
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-
-    val pager = binding.profileFragments
-    val tabs = binding.profileSummary
-
-    pager.adapter = ProfilePagerAdapter(this)
-
-    TabLayoutMediator(tabs, pager) { tab, position ->
-      tab.text = when (position) {
-        0 -> "Статистика"
-        1 -> "Отзывы"
-        else -> ""
-      }
-    }.attach()
-  }
-
   override fun onDestroyView() {
     super.onDestroyView()
     _binding = null
-  }
-}
-
-class ProfilePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-  override fun getItemCount() = 2
-
-  override fun createFragment(position: Int): Fragment {
-    return when (position) {
-      0 -> StatisticFragment()
-      1 -> ReviewsFragment()
-      else -> StatisticFragment()
-    }
   }
 }

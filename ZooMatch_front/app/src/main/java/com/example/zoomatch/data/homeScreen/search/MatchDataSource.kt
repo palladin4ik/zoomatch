@@ -44,4 +44,28 @@ class MatchDataSource {
     }
   }
 
+  suspend fun getRecommendations(
+    token: String?,
+    petId: Int,
+    params: SearchFilterParams = SearchFilterParams()
+  ): Result<List<PetShortRecommendation>> {
+    return try {
+      val response = Network.zooMatchApi.getRecommendations(
+        auth = "Bearer $token",
+        petId = petId,
+        radiusKm = params.radiusKm,
+        requiresPedigree = params.requiresPedigree.takeIf { it },
+        minAge = params.minAge,
+        maxAge = params.maxAge,
+        maxMonthsSinceMating = params.maxMonthsSinceMating
+      )
+      if (response.isSuccessful && response.body() != null) {
+        Result.Success(response.body()!!.results)
+      } else {
+        Result.Error(response.message() ?: "Ошибка загрузки рекомендаций")
+      }
+    } catch (e: Exception) {
+      Result.Error(e.message ?: "Network error")
+    }
+  }
 }

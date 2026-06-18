@@ -27,25 +27,18 @@ class LoginRepository(
       val breedsResult = dataSource.getBreeds(result.data.access)
       if (breedsResult !is Result.Success) return breedsResult as Result.Error
 
-      val existingPetsMap = userDao.getAllPets().associateBy { it.id }
-
-      val mergedPets = incomingPets.map { serverPet ->
-        existingPetsMap[serverPet.id]?.copy(
-          name = serverPet.name,
-          is_male = serverPet.is_male,
-          age = serverPet.age,
-          avatar = serverPet.avatar ?: existingPetsMap[serverPet.id]?.avatar,
-          is_active = serverPet.is_active
-        ) ?: serverPet
-      }
-
       val types = typesResult.data.map { AnimalTypeEntity(it.id, it.name) }
       val breeds = breedsResult.data.map { BreedEntity(it.id, it.name, it.animal_type.id) }
+
+      userDao.clear()
+      userDao.clearPets()
+      userDao.clearAnimalTypes()
+      userDao.clearBreeds()
 
       userDao.insertAllAnimalTypes(types)
       userDao.insertAllBreeds(breeds)
       userDao.insert(user)
-      userDao.insertAllPets(mergedPets)
+      userDao.insertAllPets(incomingPets)
 
       return Result.Success(user.name)
     }

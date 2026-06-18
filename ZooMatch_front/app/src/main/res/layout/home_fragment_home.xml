@@ -1,362 +1,470 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:fillViewport="true">
-
-  <androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".ui.homeScreen.home.HomeFragment">
-
-    <TextView
-      android:id="@+id/recommendationsText"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="40dp"
-      android:layout_marginTop="20dp"
-      android:text="@string/recommendations"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/recommendationsRecyclerView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="40dp"
-      android:layout_marginTop="20dp"
-      android:layout_marginEnd="40dp"
-      android:orientation="horizontal"
-      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/recommendationsText"
-      tools:listitem="@layout/item_recommendation" />
-
-    <TextView
-      android:id="@+id/activityText"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="40dp"
-      android:layout_marginTop="40dp"
-      android:text="@string/your_activity"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/recommendationsRecyclerView" />
-
-    <com.google.android.material.button.MaterialButtonToggleGroup
-      android:id="@+id/activityFilterGroup"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="40dp"
-      android:layout_marginTop="20dp"
-      android:layout_marginEnd="40dp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/activityText"
-      app:singleSelection="true">
-
-      <com.google.android.material.button.MaterialButton
-        android:id="@+id/tabDay"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/day" />
-
-      <com.google.android.material.button.MaterialButton
-        android:id="@+id/tabWeek"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/week" />
-
-      <com.google.android.material.button.MaterialButton
-        android:id="@+id/tabMonth"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/month" />
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/purple_background">
 
     <LinearLayout
-      android:id="@+id/activitySummaryLayout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="40dp"
-      android:layout_marginTop="16dp"
-      android:layout_marginEnd="40dp"
-      android:layout_marginBottom="20dp"
-      android:orientation="vertical"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/activityFilterGroup">
-
-      <LinearLayout
-        android:id="@+id/activitySummaryRow1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="4dp">
 
-        <com.google.android.material.card.MaterialCardView
-          android:id="@+id/matingsCard"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginEnd="4dp"
-          android:layout_marginBottom="4dp"
-          android:layout_weight="1">
-
-          <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/matingsCardContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-              android:id="@+id/ic_matings"
-                app:tint="?attr/colorOnSurfaceVariant"
-              android:layout_width="36dp"
-              android:layout_height="36dp"
-              android:layout_marginStart="8dp"
-              android:layout_marginTop="8dp"
-              android:src="@drawable/handshake_svgrepo_com"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-              android:id="@+id/matingsText"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="8dp"
-              android:text="@string/your_matings"
-              android:textSize="12sp"
-              app:layout_constraintBottom_toBottomOf="@+id/ic_matings"
-              app:layout_constraintStart_toEndOf="@+id/ic_matings"
-              app:layout_constraintTop_toTopOf="@+id/ic_matings" />
-
-            <TextView
-              android:id="@+id/matingsCount"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="16dp"
-              android:layout_marginBottom="8dp"
-              android:text=" ~ "
-              android:textSize="34sp"
-              app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintEnd_toEndOf="@+id/ic_matings"
-              app:layout_constraintStart_toStartOf="@+id/ic_matings"
-              app:layout_constraintTop_toBottomOf="@+id/ic_matings" />
-
-          </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-          android:id="@+id/ratingCard"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="4dp"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="4dp"
-          android:layout_weight="1">
-
-          <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/ratingCardContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-              android:id="@+id/ic_rating"
-                app:tint="?attr/colorOnSurfaceVariant"
-              android:layout_width="36dp"
-              android:layout_height="36dp"
-              android:layout_marginStart="8dp"
-              android:layout_marginTop="8dp"
-              android:src="@drawable/rating_svgrepo_com"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-              android:id="@+id/ratingText"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="8dp"
-              android:text="@string/your_rating"
-              android:textSize="12sp"
-              app:layout_constraintBottom_toBottomOf="@+id/ic_rating"
-              app:layout_constraintStart_toEndOf="@+id/ic_rating"
-              app:layout_constraintTop_toTopOf="@+id/ic_rating" />
-
-            <TextView
-              android:id="@+id/ratingCount"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="16dp"
-              android:layout_marginBottom="8dp"
-              android:text=" ~ "
-              android:textSize="34sp"
-              app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintEnd_toEndOf="@+id/ic_rating"
-              app:layout_constraintStart_toStartOf="@+id/ic_rating"
-              app:layout_constraintTop_toBottomOf="@+id/ic_rating" />
-
-          </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-      </LinearLayout>
-
-      <LinearLayout
-        android:id="@+id/activitySummaryRow2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.google.android.material.card.MaterialCardView
-          android:id="@+id/newDialogsCard"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginEnd="4dp"
-          android:layout_marginBottom="4dp"
-          android:layout_weight="1">
-
-          <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/newDialogCardContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-              android:id="@+id/ic_newDialog"
-                app:tint="?attr/colorOnSurfaceVariant"
-              android:layout_width="36dp"
-              android:layout_height="36dp"
-              android:layout_marginStart="8dp"
-              android:layout_marginTop="8dp"
-              android:src="@drawable/dialog_svgrepo_com"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-              android:id="@+id/newDialogText"
-              android:layout_width="98dp"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="8dp"
-              android:layout_marginEnd="8dp"
-              android:text="@string/your_new_dialogs"
-              android:textSize="12sp"
-              app:layout_constraintBottom_toBottomOf="@+id/ic_newDialog"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintStart_toEndOf="@+id/ic_newDialog"
-              app:layout_constraintTop_toTopOf="@+id/ic_newDialog" />
-
-            <TextView
-              android:id="@+id/newDialogCount"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="16dp"
-              android:layout_marginBottom="8dp"
-              android:text=" ~ "
-              android:textSize="34sp"
-              app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintEnd_toEndOf="@+id/ic_newDialog"
-              app:layout_constraintStart_toStartOf="@+id/ic_newDialog"
-              app:layout_constraintTop_toBottomOf="@+id/ic_newDialog" />
-
-          </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-          android:id="@+id/viewsCard"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="4dp"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="4dp"
-          android:layout_weight="1">
-
-          <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/viewsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-              android:id="@+id/ic_views"
-                app:tint="?attr/colorOnSurfaceVariant"
-              android:layout_width="36dp"
-              android:layout_height="36dp"
-              android:layout_marginStart="8dp"
-              android:layout_marginTop="8dp"
-              android:src="@drawable/view_svgrepo_com"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-              android:id="@+id/viewsText"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="8dp"
-              android:text="@string/your_views"
-              android:textSize="12sp"
-              app:layout_constraintBottom_toBottomOf="@+id/ic_views"
-              app:layout_constraintStart_toEndOf="@+id/ic_views"
-              app:layout_constraintTop_toTopOf="@+id/ic_views" />
-
-            <TextView
-              android:id="@+id/viewsCount"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="16dp"
-              android:layout_marginBottom="8dp"
-              android:text=" ~ "
-              android:textSize="34sp"
-              app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintEnd_toEndOf="@+id/ic_views"
-              app:layout_constraintStart_toStartOf="@+id/ic_views"
-              app:layout_constraintTop_toBottomOf="@+id/ic_views" />
-
-          </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-      </LinearLayout>
-
-      <com.google.android.material.card.MaterialCardView
-        android:id="@+id/matchDynamicCard"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="144dp">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-          android:id="@+id/matchDynamicContainer"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-
-          <TextView
-            android:id="@+id/matchDynamicText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/your_match_dynamic"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-          <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barChart"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_paw_print_light"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/matchDynamicText" />
+            app:tint="@color/purple_primary" />
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/app_name"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/purple_primary" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-      </com.google.android.material.card.MaterialCardView>
+        <ImageView
+            android:id="@+id/settingsIcon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/settings_svgrepo_com"
+            android:contentDescription="Settings"
+            app:tint="@color/purple_primary" />
     </LinearLayout>
-  </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:id="@+id/greetingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp"
+                tools:text="Привет, Сара!" />
+
+            <TextView
+                android:id="@+id/summaryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/gray"
+                android:lineSpacingMultiplier="1.3"
+                android:layout_marginTop="4dp"
+                android:text="Добро пожаловать в ZooMatch!" />
+
+            <!-- Row 1: Совпадения + Рейтинг -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_heart_purple"
+                            android:layout_marginBottom="8dp"
+                            app:tint="@color/purple_primary" />
+
+                        <TextView
+                            android:id="@+id/matchesCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:text="0" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/matches"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/rating_svgrepo_com"
+                            android:layout_marginBottom="8dp"
+                            app:tint="@color/purple_primary" />
+
+                        <TextView
+                            android:id="@+id/ratingCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:text="—" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/rating_label"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Row 2: Новые чаты + Просмотры -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_chat_bubble"
+                            android:layout_marginBottom="8dp"
+                            app:tint="@color/purple_primary" />
+
+                        <TextView
+                            android:id="@+id/newChatsCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:text="0" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/new_chats"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_visibility"
+                            android:layout_marginBottom="8dp"
+                            app:tint="@color/purple_primary" />
+
+                        <TextView
+                            android:id="@+id/viewsCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:text="0" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/views"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Рекомендация -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recommended_actions"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/bg_purple_card">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_paw_print_light" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/recPetName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                tools:text="Добавьте питомца" />
+
+                            <TextView
+                                android:id="@+id/recPetStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Начало"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/purple_primary"
+                                android:background="@drawable/bg_purple_card"
+                                android:paddingHorizontal="8dp"
+                                android:paddingVertical="2dp"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/recPetDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:textColor="@color/gray"
+                        android:lineSpacingMultiplier="1.3"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        tools:text="Добавьте первого питомца" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/boostProfileButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="Добавить питомца"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        app:backgroundTint="@color/purple_primary"
+                        app:cornerRadius="12dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Фильтр: День / Неделя / Месяц -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/your_activity"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/activityFilterGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:cornerRadius="10dp"
+                    app:checkedButton="@id/tabDay">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/tabDay"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/day"
+                        android:textSize="12sp"
+                        android:minWidth="0dp"
+                        android:paddingHorizontal="16dp"
+                        app:strokeColor="@color/btn_stroke_selector" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/tabWeek"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/week"
+                        android:textSize="12sp"
+                        android:minWidth="0dp"
+                        android:paddingHorizontal="16dp"
+                        app:strokeColor="@color/btn_stroke_selector" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/tabMonth"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/month"
+                        android:textSize="12sp"
+                        android:minWidth="0dp"
+                        android:paddingHorizontal="16dp"
+                        app:strokeColor="@color/btn_stroke_selector" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+            </LinearLayout>
+
+            <!-- График -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/match_dynamics"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/dynamicGrowthText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/green_active"
+                            android:textStyle="bold"
+                            tools:text="+12% к прошлой неделе" />
+                    </LinearLayout>
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/barChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

@@ -1,17 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:padding="16dp">
+  android:orientation="vertical"
+  android:background="@color/purple_background">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="4dp">
+
+    <TextView
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="Поиск"
+      android:textColor="@color/purple_primary"
+      android:textSize="28sp"
+      android:textStyle="bold" />
+
+    <ImageView
+      android:id="@+id/settingsIcon"
+      android:layout_width="28dp"
+      android:layout_height="28dp"
+      android:src="@drawable/settings_svgrepo_com"
+      android:contentDescription="Settings"
+      app:tint="@color/purple_primary" />
+  </LinearLayout>
 
   <com.google.android.material.tabs.TabLayout
     android:id="@+id/tabLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_constraintTop_toTopOf="parent"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/bg_white_card"
+    app:tabIndicatorColor="@color/purple_primary"
+    app:tabSelectedTextColor="@color/purple_primary"
+    app:tabTextColor="@color/gray"
     app:tabGravity="fill"
-    app:tabMode="fixed">
+    app:tabMode="fixed"
+    app:tabIndicatorFullWidth="false"
+    app:tabIndicatorHeight="3dp"
+    app:tabRippleColor="@android:color/transparent">
 
     <com.google.android.material.tabs.TabItem
       android:layout_width="wrap_content"
@@ -24,45 +60,69 @@
       android:text="Ваши заявки" />
   </com.google.android.material.tabs.TabLayout>
 
-
-  <com.google.android.material.button.MaterialButtonToggleGroup
-    android:id="@+id/tabGroup"
+  <com.google.android.material.card.MaterialCardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    app:checkedButton="@id/viewListButton"
-    app:layout_constraintTop_toBottomOf="@id/tabLayout"
-    app:singleSelection="true">
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginTop="12dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="@color/white">
 
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/viewListButton"
-      style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-      android:layout_width="0dp"
+    <LinearLayout
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_weight="1"
-      app:icon="@drawable/list_svgrepo_com"
-      app:iconGravity="textStart"
-      app:iconTint="?attr/colorOnSurfaceVariant" />
+      android:orientation="horizontal"
+      android:gravity="center_vertical"
+      android:paddingHorizontal="12dp"
+      android:paddingVertical="4dp">
 
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/viewGroupButton"
-      style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-      android:layout_width="0dp"
+      <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        android:src="@android:drawable/ic_menu_search"
+        app:tint="@color/gray" />
+
+      <EditText
+        android:id="@+id/searchInput"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:hint="Поиск по имени питомца"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/gray"
+        android:singleLine="true"
+        android:imeOptions="actionSearch"
+        android:inputType="text" />
+    </LinearLayout>
+  </com.google.android.material.card.MaterialCardView>
+
+  <!-- Фильтры по типу животного (динамические) -->
+  <HorizontalScrollView
+    android:id="@+id/filterScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginHorizontal="20dp"
+    android:scrollbars="none"
+    android:visibility="gone">
+
+    <com.google.android.material.chip.ChipGroup
+      android:id="@+id/filterChipGroup"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_weight="1"
-      app:icon="@drawable/grid_svgrepo_com"
-      app:iconGravity="textStart"
-      app:iconTint="?attr/colorOnSurfaceVariant" />
-  </com.google.android.material.button.MaterialButtonToggleGroup>
+      app:singleSelection="true" />
+  </HorizontalScrollView>
 
   <androidx.viewpager2.widget.ViewPager2
     android:id="@+id/viewPager"
-    android:layout_width="0dp"
+    android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_marginTop="16dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/tabGroup" />
+    android:layout_weight="1"
+    android:layout_marginTop="8dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

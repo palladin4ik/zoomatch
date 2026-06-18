@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-  <!--TODO: replace icons-->
-
-  <item
-    android:id="@+id/navigation_search"
-    android:icon="@drawable/search_svgrepo_com"
-    android:title="@string/title_search" />
-
-  <item
-    android:id="@+id/navigation_pets"
-    android:icon="@drawable/pets_svgrepo_com"
-    android:title="@string/title_pets" />
 
   <item
     android:id="@+id/navigation_home"
@@ -18,13 +7,23 @@
     android:title="@string/title_home" />
 
   <item
+    android:id="@+id/navigation_search"
+    android:icon="@drawable/search_svgrepo_com"
+    android:title="@string/title_search" />
+
+  <item
+    android:id="@+id/navigation_chats"
+    android:icon="@drawable/dialog_svgrepo_com"
+    android:title="@string/tab_chats" />
+
+  <item
+    android:id="@+id/navigation_pets"
+    android:icon="@drawable/pets_svgrepo_com"
+    android:title="@string/title_pets" />
+
+  <item
     android:id="@+id/navigation_profile"
     android:icon="@drawable/profile_svgrepo_com"
     android:title="@string/title_profile" />
-
-  <item
-    android:id="@+id/navigation_settings"
-    android:icon="@drawable/settings_svgrepo_com"
-    android:title="@string/title_settings" />
 
 </menu>

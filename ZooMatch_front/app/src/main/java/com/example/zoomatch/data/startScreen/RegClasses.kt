@@ -5,7 +5,8 @@ import com.example.zoomatch.data.UserDisplay
 data class RegFormState(
   val emailError: Int? = null,
   val passwordError: Int? = null,
-  val usernameError: Int? = null,
+  val firstnameError: Int? = null,
+  val lastnameError: Int? = null,
   val isDataValid: Boolean = false
 )
 
@@ -19,12 +20,15 @@ data class RegUserView(
 ) : UserDisplay
 
 data class RegUser(
+  val firstname: String,
+  val lastname: String,
   val email: String,
-  val password: String,
-  val name: String
+  val password: String
 )
 
 data class RegUserResponse(
-  val email: String,
-  val name: String
+  val id: Int,
+  val firstname: String,
+  val lastname: String,
+  val email: String
 )

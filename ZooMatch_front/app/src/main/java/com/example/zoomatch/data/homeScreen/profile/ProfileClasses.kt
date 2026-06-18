@@ -7,32 +7,43 @@ import java.io.ByteArrayOutputStream
 
 data class UserUI(
   val avatar: String,
-  var name: String,
+  var firstname: String,
+  var lastname: String,
   val geo: String?,
-  val status: String?,
+  val description: String?,
+  val email: String,
+  val phone_number: String?,
+  val organization: String?
 )
 
 data class UserEditUI(
-  val avatar: String? = null,
-  var name: String,
-  val location: String?,
-  val status: String?,
+  val avatar: String?,
+  var firstname: String,
+  var lastname: String,
   val email: String,
-  val phone_number: String?
+  val description: String?,
+  val phone_number: String?,
+  val organization: String?
 )
 
 data class UserEditResponse(
   val id: Int,
-  val avatar: String?,
-  var name: String,
-  val location: String,
-  val status: String,
+  val firstname: String,
+  val lastname: String,
   val email: String,
-  val phone_number: String
+  val avatar: String?,
+  val location: String?,
+  val description: String?,
+  val phone_number: String?,
+  val role: Int,
+  val organization: String?,
+  val last_seen: String?,
+  val is_active: Boolean
 )
 
 data class EditProfileFormState(
-  val nameError: Int? = null,
+  val firstnameError: Int? = null,
+  val lastnameError: Int? = null,
   val emailError: Int? = null,
   val phoneError: Int? = null,
   val isDataValid: Boolean = false

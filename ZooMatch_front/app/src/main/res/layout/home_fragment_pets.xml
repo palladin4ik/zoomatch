@@ -1,89 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="24dp"
-    android:paddingBottom="24dp"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp">
+    android:orientation="vertical"
+    android:background="@color/purple_background">
 
-  <com.google.android.material.textfield.TextInputLayout
-    android:id="@+id/searchLayout"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:hint="@string/find_by_name"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toStartOf="@+id/viewChangeButton"
-    app:layout_constraintTop_toTopOf="parent"
-    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
 
-    <com.google.android.material.textfield.TextInputEditText
-      android:id="@+id/searchEditText"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Мои питомцы"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/purple_primary" />
 
-  </com.google.android.material.textfield.TextInputLayout>
+        <ImageView
+            android:id="@+id/settingsIcon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/settings_svgrepo_com"
+            android:contentDescription="Settings"
+            app:tint="@color/purple_primary" />
+    </LinearLayout>
 
-  <com.google.android.material.button.MaterialButton
-    android:id="@+id/viewChangeButton"
-    style="@style/Widget.Material3.Button.IconButton"
-    android:layout_width="48dp"
-    android:layout_height="48dp"
-    android:contentDescription="viewChange"
-    app:icon="@drawable/grid_svgrepo_com"
-    app:layout_constraintBottom_toBottomOf="@id/searchLayout"
-    app:layout_constraintStart_toEndOf="@id/searchLayout"
-    app:layout_constraintTop_toTopOf="@id/searchLayout" />
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/white">
 
-  <com.google.android.material.button.MaterialButton
-      android:id="@+id/filterButton"
-      style="@style/Widget.Material3.Button.IconButton"
-      android:layout_width="48dp"
-      android:layout_height="48dp"
-      android:layout_marginEnd="0dp"
-      android:contentDescription="@string/filter"
-      app:icon="@drawable/filter_svgrepo_com"
-      app:layout_constraintStart_toEndOf="@id/viewChangeButton"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toTopOf="@id/viewChangeButton"
-      app:layout_constraintBottom_toBottomOf="@id/viewChangeButton" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp">
 
-  <TextView
-    android:id="@+id/emptyPetsText"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Пока вы не добавили ни одного питомца"
-    android:visibility="visible"
-    app:layout_constraintBottom_toBottomOf="@+id/petsRecyclerView"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/searchLayout" />
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/search_svgrepo_com"
+                app:tint="@color/gray" />
 
-  <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/petsRecyclerView"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:layout_marginBottom="16dp"
-    android:clipToPadding="false"
-    android:paddingHorizontal="0dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/searchLayout"
-    tools:listitem="@layout/item_pet" />
+            <EditText
+                android:id="@+id/searchEditText"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="Поиск по имени"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                android:singleLine="true"
+                android:imeOptions="actionSearch"
+                android:inputType="text" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-  <com.google.android.material.button.MaterialButton
-    android:id="@+id/addPetButton"
-    style="@style/Widget.Material3.FloatingActionButton.Large.Primary"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="8dp"
-    android:text="Добавить питомца"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="center_vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/viewToggleGroup"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:cornerRadius="10dp"
+            app:checkedButton="@id/gridButton"
+            app:chipSpacingHorizontal="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/gridButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Сетка"
+                android:textSize="12sp"
+                app:icon="@drawable/grid_svgrepo_com"
+                app:iconSize="16dp"
+                app:iconTint="@color/purple_primary"
+                app:strokeColor="@color/btn_stroke_selector" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/listButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Список"
+                android:textSize="12sp"
+                app:icon="@drawable/list_svgrepo_com"
+                app:iconSize="16dp"
+                app:strokeColor="@color/btn_stroke_selector" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/filterScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="20dp"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/filterChipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleSelection="true" />
+    </HorizontalScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/petsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="80dp"
+            tools:listitem="@layout/item_pet" />
+
+        <LinearLayout
+            android:id="@+id/emptyState"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_paw_print_light"
+                android:layout_marginBottom="16dp"
+                app:tint="@color/purple_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Пока нет питомцев"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Добавьте первого питомца, чтобы начать поиск идеальной пары!"
+                android:textSize="14sp"
+                android:textColor="@color/gray"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:paddingHorizontal="40dp" />
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addPetFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_add"
+            android:contentDescription="Добавить питомца"
+            app:backgroundTint="@color/purple_primary"
+            app:tint="@color/white" />
+    </FrameLayout>
+
+</LinearLayout>

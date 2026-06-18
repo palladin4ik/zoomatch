@@ -34,7 +34,7 @@ class HomeViewModelFactory(app: Application) : ViewModelProvider.Factory {
     return when {
       modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
         val repo = ProfileRepository(ProfileDataSource(), tokenManager, db.userDao())
-        ProfileViewModel(repo) as T
+        ProfileViewModel(repo, db.userDao()) as T
       }
 
       modelClass.isAssignableFrom(SettingsViewModel::class.java) -> {
@@ -73,7 +73,7 @@ class HomeViewModelFactory(app: Application) : ViewModelProvider.Factory {
           db.breedDao(),
           db.userDao()
         )
-        EditPetViewModel(repo) as T
+        EditPetViewModel(repo, db.animalTypeDao(), db.breedDao()) as T
       }
 
       modelClass.isAssignableFrom(SearchViewModel::class.java) -> {
@@ -90,7 +90,7 @@ class HomeViewModelFactory(app: Application) : ViewModelProvider.Factory {
       }
 
       modelClass.isAssignableFrom(RequestViewModel::class.java) -> {
-        val repo = RequestRepository(RequestDataSource(), tokenManager, db.userDao())
+        val repo = RequestRepository(RequestDataSource(), tokenManager)
         RequestViewModel(repo) as T
       }
 

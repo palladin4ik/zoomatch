@@ -17,4 +17,12 @@ class MatchRepository(
     val token = tokenManager.getAccessToken()
     return dataSource.createMatch(token, petFrom, petTo)
   }
+
+  suspend fun getRecommendations(
+    petId: Int,
+    params: SearchFilterParams = SearchFilterParams()
+  ): Result<List<PetShortRecommendation>> {
+    val token = tokenManager.getAccessToken()
+    return dataSource.getRecommendations(token, petId, params)
+  }
 }

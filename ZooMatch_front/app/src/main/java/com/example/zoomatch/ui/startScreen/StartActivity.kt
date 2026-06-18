@@ -58,7 +58,8 @@ class StartActivity : AppCompatActivity() {
       binding.login.isEnabled = s.isDataValid
       binding.email.error = s.emailError?.let { getString(it) }
       binding.password.error = s.passwordError?.let { getString(it) }
-      binding.username.error = s.usernameError?.let { getString(it) }
+      binding.firstnameField.error = s.firstnameError?.let { getString(it) }
+      binding.lastnameField.error = s.lastnameError?.let { getString(it) }
     }
     regViewModel.regResult.observe(this) { result ->
       val r = result ?: return@observe
@@ -79,74 +80,72 @@ class StartActivity : AppCompatActivity() {
     binding.tabGroup.check(R.id.tabLogin)
   }
 
-  //same as setupUI
   private fun initListeners() {
     val email = binding.email
     val password = binding.password
-    val username = binding.username
+    val firstname = binding.firstnameField
+    val lastname = binding.lastnameField
     val login = binding.login
 
     val handler = Handler(Looper.getMainLooper())
     val debounceDelay = 500L
 
+    fun validateRegistration() {
+      val emailText = email.text.toString()
+      val passText = password.text.toString()
+      val fnText = firstname.text.toString()
+      val lnText = lastname.text.toString()
+      if (currentMode == 0) loginViewModel.loginDataChanged(emailText, passText)
+      else regViewModel.regDataChanged(emailText, passText, fnText, lnText)
+    }
+
     email.afterTextChanged {
       handler.removeCallbacksAndMessages(null)
-      handler.postDelayed({
-        val emailText = email.text.toString()
-        val passText = password.text.toString()
-        val userText = username.text.toString()
-        if (currentMode == 0) loginViewModel.loginDataChanged(emailText, passText)
-        else regViewModel.regDataChanged(emailText, passText, userText)
-      }, debounceDelay)
+      handler.postDelayed({ validateRegistration() }, debounceDelay)
     }
 
     password.apply {
       afterTextChanged {
         handler.removeCallbacksAndMessages(null)
-        handler.postDelayed({
-          val emailText = email.text.toString()
-          val passText = password.text.toString()
-          val userText = username.text.toString()
-          if (currentMode == 0) loginViewModel.loginDataChanged(emailText, passText)
-          else regViewModel.regDataChanged(emailText, passText, userText)
-        }, debounceDelay)
+        handler.postDelayed({ validateRegistration() }, debounceDelay)
       }
 
       setOnEditorActionListener { _, actionId, _ ->
         when (actionId) {
           EditorInfo.IME_ACTION_DONE -> {
-            val emailText = email.text.toString()
-            val passText = password.text.toString()
-            // val userText = username.text.toString()
-            if (currentMode == 0) loginViewModel.login(emailText, passText)
-            // else regViewModel.register(...)
+            if (currentMode == 0) {
+              loginViewModel.login(email.text.toString(), password.text.toString())
+            }
           }
         }
         false
       }
     }
 
-    username.afterTextChanged {
+    firstname.afterTextChanged {
       if (currentMode == 1) {
         handler.removeCallbacksAndMessages(null)
-        handler.postDelayed({
-          val emailText = email.text.toString()
-          val passText = password.text.toString()
-          val userText = username.text.toString()
-          regViewModel.regDataChanged(emailText, passText, userText)
-        }, debounceDelay)
+        handler.postDelayed({ validateRegistration() }, debounceDelay)
+      }
+    }
+
+    lastname.afterTextChanged {
+      if (currentMode == 1) {
+        handler.removeCallbacksAndMessages(null)
+        handler.postDelayed({ validateRegistration() }, debounceDelay)
       }
     }
 
     login.setOnClickListener {
-      val email = email.text.toString()
-      val password = password.text.toString()
-      val name = username.text.toString()
+      val emailText = email.text.toString()
+      val passwordText = password.text.toString()
 
       if (currentMode == 0) {
-        loginViewModel.login(email, password)
+        loginViewModel.login(emailText, passwordText)
       } else {
-        regViewModel.register(email, password, name)
+        val fn = firstname.text.toString()
+        val ln = lastname.text.toString()
+        regViewModel.register(emailText, passwordText, fn, ln)
       }
     }
   }
@@ -154,7 +153,11 @@ class StartActivity : AppCompatActivity() {
   private fun toggleForm(param: Int) {
     if (param == currentMode) return
     currentMode = param
-    binding.username.visibility = if (param == 0) View.GONE else View.VISIBLE
+    val isRegister = param == 1
+    binding.firstnameField.visibility = if (isRegister) View.VISIBLE else View.GONE
+    binding.lastnameField.visibility = if (isRegister) View.VISIBLE else View.GONE
+    // Keep parent LinearLayout visible/hidden
+    binding.firstnameField.parent?.let { (it as View).visibility = if (isRegister) View.VISIBLE else View.GONE }
     binding.login.text =
       if (param == 0) binding.tabLogin.text.toString() else binding.tabRegister.text.toString()
     binding.tabLogin.isSelected = param == 0
@@ -162,11 +165,13 @@ class StartActivity : AppCompatActivity() {
 
     binding.email.text?.clear()
     binding.password.text?.clear()
-    binding.username.text?.clear()
+    binding.firstnameField.text?.clear()
+    binding.lastnameField.text?.clear()
 
     binding.email.error = null
     binding.password.error = null
-    binding.username.error = null
+    binding.firstnameField.error = null
+    binding.lastnameField.error = null
   }
 
   private fun updateUiWithUser(model: UserDisplay) {
@@ -190,7 +195,6 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     }
 
     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
   })
 }

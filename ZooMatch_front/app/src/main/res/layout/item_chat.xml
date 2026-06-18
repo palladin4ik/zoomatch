@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginHorizontal="4dp"
+  android:layout_marginVertical="3dp"
+  app:cardCornerRadius="16dp"
+  app:cardElevation="1dp"
+  app:strokeWidth="0dp"
+  app:cardBackgroundColor="@color/white">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="12dp">
+
+    <ImageView
+      android:id="@+id/iv_avatar"
+      android:layout_width="52dp"
+      android:layout_height="52dp"
+      android:scaleType="centerCrop"
+      android:src="@drawable/test_avatar" />
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical"
+      android:layout_marginStart="12dp">
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/tv_name"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:textSize="16sp"
+          android:textStyle="bold"
+          android:textColor="@color/black"
+          android:maxLines="1"
+          android:ellipsize="end"
+          tools:text="Анна Смирнова" />
+
+        <TextView
+          android:id="@+id/tv_time"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="11sp"
+          android:textColor="@color/gray"
+          tools:text="14:30" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="3dp">
+
+        <TextView
+          android:id="@+id/tv_last_message"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:textSize="14sp"
+          android:textColor="@color/gray"
+          android:maxLines="1"
+          android:ellipsize="end"
+          tools:text="Привет! Мэтч между Бароном и Марго 🐾" />
+
+        <TextView
+          android:id="@+id/tv_unread_count"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:background="@drawable/bg_purple_badge"
+          android:textColor="@android:color/white"
+          android:textSize="11sp"
+          android:textStyle="bold"
+          android:paddingHorizontal="7dp"
+          android:paddingVertical="2dp"
+          android:gravity="center"
+          android:visibility="gone"
+          tools:text="2" />
+      </LinearLayout>
+    </LinearLayout>
+  </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

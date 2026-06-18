@@ -1,6 +1,7 @@
 package com.example.zoomatch.ui.homeScreen.settings
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,6 +19,7 @@ import com.example.zoomatch.data.Result
 import com.example.zoomatch.databinding.HomeFragmentSettingsBinding
 import com.example.zoomatch.ui.LayoutWip
 import com.example.zoomatch.ui.homeScreen.HomeViewModelFactory
+import com.example.zoomatch.ui.homeScreen.profile.EditProfileActivity
 import com.example.zoomatch.ui.homeScreen.settings.utils.EditPassActivity
 import com.example.zoomatch.ui.startScreen.StartActivity
 import kotlinx.coroutines.launch
@@ -42,18 +45,62 @@ class SettingsFragment : Fragment() {
   }
 
   private fun setupUI() {
+    binding.backArrow.setOnClickListener {
+      parentFragmentManager.popBackStack()
+    }
+
     binding.switchPush.setOnClickListener {
       Toast.makeText(requireActivity(), "Work in progress", Toast.LENGTH_SHORT).show()
     }
-    binding.switchEmail.setOnClickListener {
-      Toast.makeText(requireActivity(), "Work in progress", Toast.LENGTH_SHORT).show()
+
+    binding.editProfileLayout.setOnClickListener {
+      startActivity(Intent(requireContext(), EditProfileActivity::class.java))
     }
+
     binding.logOutLayout.setOnClickListener { viewModel.logoutClick() }
     binding.privacyPolicyLayout.setOnClickListener { openWip() }
     binding.termsOfUseLayout.setOnClickListener { openWip() }
-    binding.approveProfileLayout.setOnClickListener { openWip() }
     binding.editPasswordLayout.setOnClickListener { editPass() }
     binding.deleteAccountLayout.setOnClickListener { confirmDelete() }
+
+    setupThemeSelector()
+  }
+
+  private fun setupThemeSelector() {
+    val prefs = requireContext().getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+    val currentMode = prefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    updateThemeLabel(currentMode)
+
+    binding.themeLayout.setOnClickListener {
+      val modes = intArrayOf(
+        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+        AppCompatDelegate.MODE_NIGHT_NO,
+        AppCompatDelegate.MODE_NIGHT_YES
+      )
+      val labels = arrayOf("Системная", "Светлая", "Тёмная")
+      val checkedIndex = modes.indexOf(currentMode).coerceAtLeast(0)
+
+      AlertDialog.Builder(requireContext())
+        .setTitle("Тема оформления")
+        .setSingleChoiceItems(labels, checkedIndex) { dialog, which ->
+          val selectedMode = modes[which]
+          prefs.edit().putInt("theme_mode", selectedMode).apply()
+          AppCompatDelegate.setDefaultNightMode(selectedMode)
+          updateThemeLabel(selectedMode)
+          dialog.dismiss()
+        }
+        .setNegativeButton("Отмена") { dialog, _ -> dialog.dismiss() }
+        .show()
+    }
+  }
+
+  private fun updateThemeLabel(mode: Int) {
+    val label = when (mode) {
+      AppCompatDelegate.MODE_NIGHT_NO -> "Светлая"
+      AppCompatDelegate.MODE_NIGHT_YES -> "Тёмная"
+      else -> "Системная"
+    }
+    binding.themeValue.text = label
   }
 
   private fun observeData() {

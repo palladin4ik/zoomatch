@@ -2,6 +2,8 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   id("com.google.devtools.ksp")
+  id("dagger.hilt.android.plugin")
+  id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -36,7 +38,6 @@ android {
   }
 }
 
-
 dependencies {
 
   implementation(libs.androidx.core.ktx)
@@ -60,10 +61,23 @@ dependencies {
   implementation(libs.androidx.datastore.preferences)
   implementation(libs.cronet.embedded)
   implementation(libs.androidx.legacy.support.v4)
+
+  // Hilt
+  implementation("com.google.dagger:hilt-android:2.51.1")
+  ksp("com.google.dagger:hilt-compiler:2.51.1")
+
+  // Hilt + ViewModel
+  implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
+  ksp("androidx.hilt:hilt-compiler:1.2.0")
+
+  // Yandex MapKit
+  implementation("com.yandex.android:maps.mobile:4.38.1-lite")
+
   val room_version = "2.7.2"
   implementation("androidx.room:room-runtime:${room_version}")
   ksp("androidx.room:room-compiler:$room_version")
   implementation("androidx.room:room-ktx:${room_version}")
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)

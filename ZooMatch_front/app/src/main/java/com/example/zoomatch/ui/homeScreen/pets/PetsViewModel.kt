@@ -33,16 +33,26 @@ class PetsViewModel(
       it.name.contains(query, ignoreCase = true) &&
           (typeId == null || it.animal_type_id == typeId)
     }.map { pet ->
-      val breedName = pet.breed_id?.let { id ->
-        breedList.find { it.id == id }?.name ?: "Порода $id"
-      } ?: "—"
+      val breedName = when {
+        !pet.breed_custom.isNullOrBlank() -> pet.breed_custom
+        pet.breed_id != null -> breedList.find { it.id == pet.breed_id }?.name ?: "Порода ${pet.breed_id}"
+        else -> "—"
+      }
+      val displayStatus = when (pet.moderation_status) {
+        "pending" -> "На модерации"
+        "rejected" -> "Отклонено"
+        else -> if (pet.is_active) "В активном поиске" else "Не ищет пару"
+      }
       PetUI(
         id = pet.id.toString(),
         name = pet.name,
         breed = breedName,
         age = pet.age,
-        status = if (pet.is_active) "В активном поиске" else "Не ищет пару",
-        avatar = pet.avatar
+        status = displayStatus,
+        avatar = pet.avatar,
+        isMale = pet.is_male,
+        isActive = pet.is_active,
+        moderationStatus = pet.moderation_status
       )
     }
   }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())

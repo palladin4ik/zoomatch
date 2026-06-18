@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.zoomatch.data.Result
 import com.example.zoomatch.databinding.ActivityEditPassBinding
+import com.example.zoomatch.ui.applySystemBarsPadding
 import com.example.zoomatch.ui.homeScreen.HomeViewModelFactory
 import com.example.zoomatch.ui.startScreen.afterTextChanged
 import kotlinx.coroutines.launch
@@ -36,6 +37,7 @@ class EditPassActivity : AppCompatActivity() {
     observeData()
 
     setContentView(binding.root)
+    binding.root.applySystemBarsPadding()
   }
 
   private fun setupUI() {

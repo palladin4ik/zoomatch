@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
 
 class PetsRepository(
   private val dataSource: PetsDataSource,
@@ -28,24 +29,26 @@ class PetsRepository(
   suspend fun createPet(
     name: String,
     animal_type: Int?,
+    animal_type_custom: String?,
     breed: Int?,
+    breed_custom: String?,
     is_male: Boolean,
     age: Int,
-    avatar: String?,
-    location: String?,
+    address: String?,
+    latitude: Double?,
+    longitude: Double?,
     has_pedigree: Boolean,
-    pedigree_documents: String?,
     awards: String?,
     tags: List<Int>,
     description: String?,
     is_active: Boolean
-  ): Result<String> {
+  ): Result<Int> {
     return when (
       val result = dataSource.createPet(
         tokenManager.getAccessToken(),
-        name, animal_type, breed, is_male, age,
-        avatar, location, has_pedigree,
-        pedigree_documents, awards, tags.map { it.toString() },
+        name, animal_type, animal_type_custom, breed, breed_custom,
+        is_male, age, address, latitude, longitude, has_pedigree,
+        awards, tags.map { it.toString() },
         description, is_active
       )
     ) {
@@ -58,17 +61,19 @@ class PetsRepository(
           is_male = result.data.is_male,
           age = result.data.age,
           owner_id = userDao.getCurrentUserFlow().first()?.id ?: 0,
-          avatar = result.data.avatar,
+          avatar = null,
           location = result.data.location,
           has_pedigree = result.data.has_pedigree,
-          pedigree_documents = result.data.pedigree_documents,
+          pedigree_documents = null,
           awards = result.data.awards,
           description = result.data.description,
-          is_active = result.data.is_active
+          is_active = result.data.is_active,
+          animal_type_custom = animal_type_custom,
+          breed_custom = breed_custom,
+          moderation_status = if (animal_type_custom != null || breed_custom != null) "pending" else null
         )
         petDao.insert(pet)
-//        petDao.upsertPetWithTags(pet, tags)
-        Result.Success("Питомец добавлен")
+        Result.Success(result.data.id)
       }
 
       is Result.Error -> result
@@ -79,13 +84,15 @@ class PetsRepository(
     id: Int,
     name: String?,
     animal_type: Int?,
+    animal_type_custom: String?,
     breed: Int?,
+    breed_custom: String?,
     is_male: Boolean?,
     age: Int?,
-    avatar: String?,
-    location: String?,
+    address: String?,
+    latitude: Double?,
+    longitude: Double?,
     has_pedigree: Boolean?,
-    pedigree_documents: String?,
     awards: String?,
     tags: List<Int>?,
     description: String?,
@@ -95,9 +102,9 @@ class PetsRepository(
       val result = dataSource.updatePet(
         tokenManager.getAccessToken(),
         id,
-        name, animal_type, breed, is_male, age,
-        avatar, location, has_pedigree,
-        pedigree_documents, awards, tags?.map { it.toString() },
+        name, animal_type, animal_type_custom, breed, breed_custom,
+        is_male, age, address, latitude, longitude, has_pedigree,
+        awards, tags?.map { it.toString() },
         description, is_active
       )
     ) {
@@ -112,13 +119,14 @@ class PetsRepository(
             breed_id = breed ?: current.breed_id,
             is_male = is_male ?: current.is_male,
             age = age ?: current.age,
-            avatar = avatar ?: current.avatar,
-            location = location ?: current.location,
+            location = address ?: current.location,
             has_pedigree = has_pedigree ?: current.has_pedigree,
-            pedigree_documents = pedigree_documents ?: current.pedigree_documents,
             awards = awards ?: current.awards,
             description = description ?: current.description,
-            is_active = is_active ?: current.is_active
+            is_active = is_active ?: current.is_active,
+            animal_type_custom = animal_type_custom ?: current.animal_type_custom,
+            breed_custom = breed_custom ?: current.breed_custom,
+            moderation_status = current.moderation_status
           )
           Log.d("UPDATE", "Before: ${petDao.getPetById(id)}")
           petDao.insert(updated)
@@ -140,5 +148,35 @@ class PetsRepository(
 
       is Result.Error -> result
     }
+  }
+
+  suspend fun uploadPedigreeDocuments(petId: Int, documents: MultipartBody.Part): Result<String> {
+    return when (val result = dataSource.uploadPedigreeDocuments(tokenManager.getAccessToken(), petId, documents)) {
+      is Result.Success -> {
+        val docsUrl = result.data
+        if (docsUrl.startsWith("/")) {
+          petDao.updatePedigreeDocuments(petId, docsUrl)
+        }
+        result
+      }
+      is Result.Error -> result
+    }
+  }
+
+  suspend fun uploadPetAvatar(petId: Int, avatar: MultipartBody.Part): Result<String> {
+    return when (val result = dataSource.uploadPetAvatar(tokenManager.getAccessToken(), petId, avatar)) {
+      is Result.Success -> {
+        val avatarUrl = result.data
+        if (avatarUrl.startsWith("/")) {
+          petDao.updateAvatar(petId, avatarUrl)
+        }
+        result
+      }
+      is Result.Error -> result
+    }
+  }
+
+  suspend fun deletePedigreeDocuments(petId: Int): Result<String> {
+    return dataSource.deletePedigreeDocuments(tokenManager.getAccessToken(), petId)
   }
 }

@@ -2,31 +2,26 @@ package com.example.zoomatch.data.homeScreen.search
 
 import com.example.zoomatch.data.Result
 import com.example.zoomatch.data.db.TokenManager
-import com.example.zoomatch.data.db.UserDao
 
 class RequestRepository(
   private val dataSource: RequestDataSource,
-  private val tokenManager: TokenManager,
-  private val userDao: UserDao
+  private val tokenManager: TokenManager
 ) {
-  suspend fun loadMatchedPets(): Result<List<PetLongResponse>> {
+  suspend fun loadReceivedMatches(): Result<List<MatchResponse>> {
     val token = tokenManager.getAccessToken() ?: return Result.Error("no token")
-    val petIds = userDao.getCurrentUserPetIds()
-    val result = mutableListOf<PetLongResponse>()
-    for (fromId in petIds) {
-      when (val matches = dataSource.getMatches(fromId, token)) {
-        is Result.Success -> {
-          for (m in matches.data.liked_by) {
-            when (val pet = dataSource.getPet(m, token)) {
-              is Result.Success -> result += pet.data
-              else -> {}
-            }
-          }
-        }
+    return dataSource.getReceivedMatches(token)
+  }
 
-        else -> {}
-      }
-    }
-    return Result.Success(result)
+  suspend fun loadSentMatches(): Result<List<MatchResponse>> {
+    val token = tokenManager.getAccessToken() ?: return Result.Error("no token")
+    return dataSource.getSentMatches(token)
+  }
+
+  suspend fun updateMatchStatus(
+    matchId: Int,
+    newStatus: Int
+  ): Result<MatchResponse> {
+    val token = tokenManager.getAccessToken() ?: return Result.Error("no token")
+    return dataSource.updateMatchStatus(token, matchId, newStatus)
   }
 }

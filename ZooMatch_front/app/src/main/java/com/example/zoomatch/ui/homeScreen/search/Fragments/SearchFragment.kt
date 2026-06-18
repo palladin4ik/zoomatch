@@ -68,10 +68,12 @@ class SearchFragment : Fragment() {
     }
   }
 
-  fun updateLayoutManager(spanCount: Int) {
-    if (::layoutManager.isInitialized) {
-      layoutManager.spanCount = spanCount
-    }
+  fun filterByType(typeName: String?) {
+    viewModel.setAnimalTypeFilter(typeName)
+  }
+
+  fun filterByName(query: String) {
+    viewModel.setSearchQuery(query)
   }
 
   override fun onDestroyView() {

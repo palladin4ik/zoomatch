@@ -1,159 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/main"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context=".ui.homeScreen.profile.EditProfileActivity">
+  android:orientation="vertical"
+  android:background="@color/purple_background">
 
   <LinearLayout
-    android:id="@+id/editForm"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="40dp"
-    android:layout_marginTop="40dp"
-    android:orientation="vertical"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp">
 
-    <com.google.android.material.card.MaterialCardView
-      android:id="@+id/profileImageCard"
-      android:layout_width="wrap_content"
+    <ImageView
+      android:id="@+id/backButton"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:src="@drawable/ic_arrow_back"
+      android:background="@drawable/bg_purple_card"
+      android:padding="8dp"
+      android:contentDescription="Back"
+      app:tint="@color/purple_primary" />
+
+    <TextView
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginTop="8dp">
+      android:layout_weight="1"
+      android:text="Редактирование профиля"
+      android:textSize="18sp"
+      android:textStyle="bold"
+      android:textColor="@color/black"
+      android:layout_marginStart="12dp" />
+  </LinearLayout>
 
-      <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/profileImageContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-          android:id="@+id/profileImage"
-          android:layout_width="160dp"
-          android:layout_height="200dp"
-          android:scaleType="centerCrop"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          app:srcCompat="@drawable/test_avatar" />
-
-        <com.google.android.material.button.MaterialButton
-
-          android:id="@+id/uploadImageButton"
-          style="@style/Widget.Material3.Button.IconButton"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:gravity="bottom|end"
-          app:icon="@drawable/test_avatar"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent" />
-
-      </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.textfield.TextInputLayout
-      android:id="@+id/nameLayout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      app:hintEnabled="true">
-
-      <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/nameField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/name" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-      android:id="@+id/locationLayout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      app:hintEnabled="true">
-
-      <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/locationField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/location" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-      android:id="@+id/descriptionLayout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      app:counterEnabled="true"
-      app:counterMaxLength="250"
-      app:hintEnabled="true">
-
-      <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/descriptionField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/description"
-        android:singleLine="false" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-      android:id="@+id/emailLayout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      app:hintEnabled="true">
-
-      <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/emailField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/email" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-      android:id="@+id/phoneNumberLayout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      app:hintEnabled="true">
-
-      <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/phoneNumberField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/phone_number" />
-    </com.google.android.material.textfield.TextInputLayout>
+  <androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:fillViewport="true">
 
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      android:orientation="horizontal">
+      android:orientation="vertical"
+      android:paddingHorizontal="24dp"
+      android:paddingBottom="24dp">
 
-      <com.google.android.material.button.MaterialButton
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/firstnameLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/cancel" />
+        android:layout_marginTop="16dp"
+        android:hint="@string/firstname"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp">
 
-      <Space
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="4" />
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/firstnameField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
+      </com.google.android.material.textfield.TextInputLayout>
 
-      <com.google.android.material.button.MaterialButton
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lastnameLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/save" />
+        android:layout_marginTop="12dp"
+        android:hint="@string/lastname"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/lastnameField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/descriptionLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="@string/description"
+        app:counterEnabled="true"
+        app:counterMaxLength="250"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/descriptionField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:inputType="textMultiLine"
+          android:minLines="3"
+          android:gravity="top" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/emailLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="@string/email"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/emailField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:inputType="textEmailAddress" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/phoneNumberLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="@string/phone_number"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/phoneNumberField"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:inputType="phone" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+          android:id="@+id/backButtonBottom"
+          style="@style/Widget.Material3.Button.OutlinedButton"
+          android:layout_width="0dp"
+          android:layout_height="48dp"
+          android:layout_weight="1"
+          android:layout_marginEnd="8dp"
+          android:text="@string/cancel"
+          app:strokeColor="@color/purple_primary"
+          android:textColor="@color/purple_primary" />
+
+        <com.google.android.material.button.MaterialButton
+          android:id="@+id/saveButton"
+          android:layout_width="0dp"
+          android:layout_height="48dp"
+          android:layout_weight="1"
+          android:layout_marginStart="8dp"
+          android:text="@string/save"
+          app:backgroundTint="@color/purple_primary"
+          app:cornerRadius="12dp" />
+      </LinearLayout>
+
     </LinearLayout>
-
-  </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.core.widget.NestedScrollView>
+</LinearLayout>
