@@ -24,7 +24,14 @@ YANDEX_MAPS_API_KEY = os.getenv('YANDEX_MAPS_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.154']
+ALLOWED_HOSTS = [
+    'zoomatch.ru',
+    'www.zoomatch.ru',
+    'zoomatch.online',
+    'www.zoomatch.online',
+    'localhost',
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -50,6 +57,7 @@ INSTALLED_APPS = [
     'moderation',
     'geo',
     'recommendations',
+    'daphne',
 ]
 
 MIDDLEWARE = [
@@ -90,7 +98,6 @@ CHANNEL_LAYERS = {
         'CONFIG': {
             'hosts': [('127.0.0.1', 6379)],
             'capacity': 1500,
-            'db': 0,
         },
     },
 }
@@ -202,6 +209,15 @@ ALLOWED_MEDIA_TYPES = ALLOWED_IMAGE_TYPES + [
     'audio/mpeg',
     'audio/ogg',
     'audio/mp3',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/msword',
+    'application/vnd.ms-excel',
+    'application/vnd.ms-powerpoint',
+    'application/zip',
+    'application/x-rar-compressed',
+    'text/plain',
 ]
 
 
