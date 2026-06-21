@@ -60,7 +60,7 @@ class PetSerializer(serializers.ModelSerializer):
                   'age', 'owner', 'avatar', 'location', 'has_pedigree',
                   'pedigree_documents', 'awards', 'tags', 'description',
                   'is_active', 'moderation_status')
-        read_only_fields = ('id',)
+        read_only_fields = ('id', 'moderation_status')
 
     @extend_schema_field(TagSerializer(many=True))
     def get_tags(self, obj):
