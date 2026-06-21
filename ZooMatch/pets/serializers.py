@@ -80,8 +80,10 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
     breed_custom = serializers.CharField(required=False, allow_blank=True)
 
     address = serializers.CharField(write_only=True, required=False)
-    latitude = serializers.FloatField(write_only=True, required=False)
-    longitude = serializers.FloatField(write_only=True, required=False)
+    latitude = serializers.FloatField(write_only=True, required=False,
+                                      allow_null=True)
+    longitude = serializers.FloatField(write_only=True, required=False,
+                                       allow_null=True)
 
     class Meta:
         model = Pet
