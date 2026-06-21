@@ -17,6 +17,32 @@ export const useSearchStore = defineStore('search', {
     },
   }),
 
+  getters: {
+    filteredRecommendations: (state) => {
+      let result = state.recommendations
+
+      if (state.filters.radius_km != null) {
+        result = result.filter(p =>
+          p.distance_km != null && p.distance_km <= state.filters.radius_km
+        )
+      }
+
+      if (state.filters.requires_pedigree) {
+        result = result.filter(p => p.has_pedigree === true)
+      }
+
+      if (state.filters.min_age != null) {
+        result = result.filter(p => p.age >= state.filters.min_age)
+      }
+
+      if (state.filters.max_age != null) {
+        result = result.filter(p => p.age <= state.filters.max_age)
+      }
+
+      return result
+    },
+  },
+
   actions: {
     async fetchRecommendations(petId) {
       this.loading = true
@@ -26,7 +52,6 @@ export const useSearchStore = defineStore('search', {
       try {
         const params = {
           pet_id: petId,
-          ...this.filters,
         }
         Object.keys(params).forEach(key => {
           if (params[key] === null || params[key] === '') delete params[key]

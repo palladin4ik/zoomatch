@@ -93,7 +93,7 @@
           <UiButton variant="secondary" @click="loadRecommendations">Повторить</UiButton>
         </div>
 
-        <div v-else-if="searchStore.recommendations.length === 0" class="search-view__empty">
+        <div v-else-if="searchStore.filteredRecommendations.length === 0" class="search-view__empty">
           <UiEmptyState
             title="Рекомендаций пока нет"
             description="Попробуйте изменить фильтры или загляните позже"
@@ -132,7 +132,7 @@
               <UiIcon name="close" />
             </button>
             <span class="search-view__rec-counter">
-              {{ searchStore.currentIndex + 1 }} / {{ searchStore.recommendations.length }}
+              {{ searchStore.currentIndex + 1 }} / {{ searchStore.filteredRecommendations.length }}
             </span>
             <button
               class="search-view__nav-btn search-view__nav-btn--like"
@@ -206,7 +206,7 @@ const selectedPetName = computed(() => {
 })
 
 const currentRecommendation = computed(() =>
-  searchStore.recommendations[searchStore.currentIndex] || null
+  searchStore.filteredRecommendations[searchStore.currentIndex] || null
 )
 
 function getPetAvatar(pet) {
@@ -239,13 +239,13 @@ async function handleLikeCurrent() {
   } catch {
     toast('Не удалось отправить запрос', 'error')
   }
-  if (searchStore.currentIndex < searchStore.recommendations.length) {
+  if (searchStore.currentIndex < searchStore.filteredRecommendations.length) {
     searchStore.currentIndex++
   }
 }
 
 function handleSkip() {
-  if (searchStore.currentIndex < searchStore.recommendations.length) {
+  if (searchStore.currentIndex < searchStore.filteredRecommendations.length) {
     searchStore.currentIndex++
   }
 }

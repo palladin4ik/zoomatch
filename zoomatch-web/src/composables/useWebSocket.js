@@ -19,8 +19,8 @@ export function useWebSocket(interlocutorIdGetter, tokenGetter) {
       ws.value.close()
     }
 
-    const baseUrl = import.meta.env.VITE_WS_URL
-    const url = `${baseUrl}/ws/chats/${interlocutorId}/?token=${token}`
+    const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
+    const url = `${protocol}//${location.host}/ws/chats/${interlocutorId}/?token=${token}`
 
     ws.value = new WebSocket(url)
 
