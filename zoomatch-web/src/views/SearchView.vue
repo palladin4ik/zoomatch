@@ -181,7 +181,7 @@ const petSearchQuery = ref('')
 const selectedTypeFilter = ref(null)
 
 const filteredPets = computed(() => {
-  let pets = petsStore.myPets.filter(p => p.is_active !== false)
+  let pets = petsStore.myPets.filter(p => p.is_active && p.moderation_status === 'approved')
   if (petSearchQuery.value) {
     const q = petSearchQuery.value.toLowerCase()
     pets = pets.filter(p => p.name.toLowerCase().includes(q))
@@ -457,23 +457,23 @@ onMounted(() => {
 }
 
 .search-view__back-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   background: none;
-  border: 1.5px solid var(--border-color);
-  padding: 8px 14px;
-  border-radius: var(--radius-md);
+  border: none;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   cursor: pointer;
-  transition: all var(--transition-fast);
-  color: var(--text-primary);
+  transition: background 0.15s;
+  color: var(--text-secondary);
   flex-shrink: 0;
 }
 
 .search-view__back-btn:hover {
-  border-color: var(--purple-primary);
-  color: var(--purple-primary);
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 .search-view__rec-title {

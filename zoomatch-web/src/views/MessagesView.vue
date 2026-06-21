@@ -1,7 +1,7 @@
 <template>
   <div class="messages-view">
     <div class="messages-view__header">
-      <router-link to="/chats" class="messages-view__back">&larr;</router-link>
+      <router-link to="/chats" class="messages-view__back"><UiIcon name="arrowLeft" /> Назад</router-link>
       <UiAvatar :src="interlocutorAvatar" :name="interlocutorName" size="sm" />
       <div class="messages-view__interlocutor">
         <h2 class="messages-view__name">{{ interlocutorName }}</h2>
@@ -59,6 +59,7 @@ import UiAvatar from '../components/ui/UiAvatar.vue'
 import UiLoader from '../components/ui/UiLoader.vue'
 import UiModal from '../components/ui/UiModal.vue'
 import UiButton from '../components/ui/UiButton.vue'
+import UiIcon from '../components/ui/UiIcon.vue'
 import MessageBubble from '../components/chats/MessageBubble.vue'
 import MessageInput from '../components/chats/MessageInput.vue'
 
@@ -320,9 +321,23 @@ onMounted(async () => {
 }
 
 .messages-view__back {
-  font-size: 22px;
-  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
   text-decoration: none;
+}
+
+.messages-view__back:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 .messages-view__interlocutor {

@@ -52,7 +52,7 @@ class PetSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
 
     avatar = serializers.ImageField(read_only=True)
-    pedigree_documents = serializers.CharField(read_only=True)
+    pedigree_documents = serializers.FileField(read_only=True)
 
     class Meta:
         model = Pet

@@ -1,7 +1,7 @@
 <template>
   <div class="user-profile">
     <div class="user-profile__header">
-      <button class="user-profile__back" @click="goBack">&larr;</button>
+      <button class="user-profile__back" @click="goBack"><UiIcon name="arrowLeft" /> Назад</button>
       <h1 class="user-profile__title">Профиль владельца</h1>
     </div>
 
@@ -38,6 +38,7 @@ import { getUser } from '../api/index.js'
 import { useSearchStore } from '../stores/search.js'
 import UiAvatar from '../components/ui/UiAvatar.vue'
 import UiLoader from '../components/ui/UiLoader.vue'
+import UiIcon from '../components/ui/UiIcon.vue'
 import PetCard from '../components/pets/PetCard.vue'
 
 const route = useRoute()
@@ -95,9 +96,22 @@ function goBack() {
 }
 
 .user-profile__back {
-  font-size: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+}
+
+.user-profile__back:hover {
+  background: var(--bg-hover);
   color: var(--text-primary);
-  text-decoration: none;
 }
 
 .user-profile__title {

@@ -1,7 +1,9 @@
 <template>
   <div class="pet-detail">
     <div class="pet-detail__header">
-      <button class="pet-detail__back" @click="goBack">&larr;</button>
+      <button class="pet-detail__back" @click="goBack">
+        <UiIcon name="arrowLeft" /> Назад
+      </button>
       <h1 class="pet-detail__title">Питомец</h1>
       <router-link v-if="pet && isOwner" :to="`/pets/${pet.id}/edit`" class="pet-detail__edit"><UiIcon name="edit" /></router-link>
     </div>
@@ -177,9 +179,22 @@ onMounted(loadData)
 }
 
 .pet-detail__back {
-  font-size: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+  color: var(--text-secondary);
+}
+
+.pet-detail__back:hover {
+  background: var(--bg-hover);
   color: var(--text-primary);
-  text-decoration: none;
 }
 
 .pet-detail__title {

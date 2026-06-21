@@ -337,36 +337,36 @@ const growthPercent = computed(() => {
 })
 
 const totalPetsCount = computed(() => petsStore.myPets.length)
-const activePetsCount = computed(() => petsStore.myPets.filter(p => p.is_active).length)
+const approvedPetsCount = computed(() => petsStore.myPets.filter(p => p.moderation_status === 'approved').length)
 
 const recommendationTitle = computed(() => {
   if (totalPetsCount.value === 0) return 'Добавьте питомца'
-  if (activePetsCount.value === 0) return 'Питомцы на модерации'
+  if (approvedPetsCount.value === 0) return 'Питомцы на модерации'
   return 'Найдите пару'
 })
 const recommendationBadge = computed(() => {
   if (totalPetsCount.value === 0) return 'Начало'
-  if (activePetsCount.value === 0) return 'Ожидание'
+  if (approvedPetsCount.value === 0) return 'Ожидание'
   return 'Поиск'
 })
 const recommendationBadgeClass = computed(() => {
   if (totalPetsCount.value === 0) return 'home__recommendation-badge--start'
-  if (activePetsCount.value === 0) return 'home__recommendation-badge--wait'
+  if (approvedPetsCount.value === 0) return 'home__recommendation-badge--wait'
   return 'home__recommendation-badge--search'
 })
 const recommendationDescription = computed(() => {
   if (totalPetsCount.value === 0) return 'Добавьте своего первого питомца, чтобы начать поиск идеальной пары.'
-  if (activePetsCount.value === 0) {
+  if (approvedPetsCount.value === 0) {
     const count = totalPetsCount.value
     return `Ваш${count === 1 ? '' : 'и'} ${count} ${petDeclension(count)} проходят модерацию. После одобрения вы сможете начать поиск.`
   }
-  const count = activePetsCount.value
+  const count = approvedPetsCount.value
   return `У вас ${count} ${petDeclension(count)}. Начните поиск идеальной пары!`
 })
 const recommendationLink = computed(() => totalPetsCount.value === 0 ? '/pets/new' : '/search')
 const recommendationButtonText = computed(() => {
   if (totalPetsCount.value === 0) return 'Добавить питомца'
-  if (activePetsCount.value === 0) return 'Ожидание модерации'
+  if (approvedPetsCount.value === 0) return 'Ожидание модерации'
   return 'Начать поиск'
 })
 
@@ -381,7 +381,7 @@ const petDeclension = (count) => {
 }
 
 const displayPets = computed(() => {
-  const activePets = petsStore.myPets.filter(p => p.is_active)
+  const activePets = petsStore.myPets.filter(p => p.is_active && p.moderation_status === 'approved')
   const shuffled = [...activePets].sort(() => Math.random() - 0.5)
   return shuffled.slice(0, 3)
 })
