@@ -20,3 +20,7 @@ jobs:
             git pull origin main
             docker compose up --build -d
             docker compose exec -T backend python manage.py migrate
+            cd /srv/zoomatch/zoomatch-web
+            git pull origin main
+            npm ci
+            npm run build
