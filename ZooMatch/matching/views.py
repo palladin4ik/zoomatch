@@ -156,6 +156,12 @@ class MatchViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        if match.status == new_status:
+            return Response(
+                {'detail': 'Статус уже установлен'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         if new_status == Match.Status.REJECTED:
             pet_from = match.pet_from
             pet_to = match.pet_to
