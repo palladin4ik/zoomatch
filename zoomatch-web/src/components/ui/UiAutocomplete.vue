@@ -11,9 +11,10 @@
         class="ui-autocomplete__field"
         autocomplete="off"
         @input="onInput"
-        @focus="open = true"
+        @focus="onFocus"
+        @blur="onBlur"
       />
-      <span v-if="modelValue" class="ui-autocomplete__clear" @click="clearSelection">&times;</span>
+      <span v-if="modelValue || inputValue" class="ui-autocomplete__clear" @mousedown.prevent="clearSelection">&times;</span>
     </div>
     <Transition name="dropdown">
       <div v-if="open && !disabled" class="ui-autocomplete__dropdown">
@@ -26,19 +27,26 @@
           {{ option.label }}
         </div>
         <div
-          v-if="customLabel"
-          class="ui-autocomplete__option ui-autocomplete__option--custom"
+          v-if="showCustomOption"
+          :class="['ui-autocomplete__option ui-autocomplete__option--custom', { 'ui-autocomplete__option--custom-active': !modelValue && inputValue }]"
           @mousedown.prevent="selectCustom"
         >
-          «{{ inputValue || customLabel }}» — свой вариант (модерация)
+          <span class="ui-autocomplete__custom-icon">+</span>
+          <span>
+            <span class="ui-autocomplete__custom-text">«{{ inputValue }}»</span>
+            <span class="ui-autocomplete__custom-hint"> — свой вариант (модерация)</span>
+          </span>
         </div>
-        <div v-if="filteredOptions.length === 0 && !customLabel" class="ui-autocomplete__empty">
+        <div v-if="filteredOptions.length === 0 && !showCustomOption" class="ui-autocomplete__empty">
           Нет вариантов
         </div>
       </div>
     </Transition>
     <p v-if="error" class="ui-autocomplete__error">{{ error }}</p>
     <p v-else-if="helper" class="ui-autocomplete__helper">{{ helper }}</p>
+    <p v-else-if="showInputHint" class="ui-autocomplete__input-hint">
+      Выберите из списка или нажмите «Свой вариант»
+    </p>
   </div>
 </template>
 
@@ -61,6 +69,7 @@ const emit = defineEmits(['update:modelValue', 'update:inputValue', 'custom'])
 const inputRef = ref(null)
 const open = ref(false)
 const inputValue = ref('')
+const blurTimeout = ref(null)
 
 const customLabel = computed(() => {
   if (!props.customOptionLabel) return ''
@@ -71,6 +80,20 @@ const filteredOptions = computed(() => {
   if (!inputValue.value) return props.options
   const q = inputValue.value.toLowerCase()
   return props.options.filter(o => o.label.toLowerCase().includes(q))
+})
+
+const showCustomOption = computed(() => {
+  if (!customLabel.value) return false
+  if (!inputValue.value) return false
+  const exact = props.options.find(o => o.label.toLowerCase() === inputValue.value.toLowerCase())
+  return !exact
+})
+
+const showInputHint = computed(() => {
+  if (!inputValue.value) return false
+  if (props.modelValue) return false
+  if (open.value) return false
+  return showCustomOption.value
 })
 
 watch(() => props.modelValue, (val) => {
@@ -101,6 +124,24 @@ function onInput(e) {
   emit('update:inputValue', inputValue.value)
 }
 
+function onFocus() {
+  if (blurTimeout.value) {
+    clearTimeout(blurTimeout.value)
+    blurTimeout.value = null
+  }
+  open.value = true
+}
+
+function onBlur() {
+  blurTimeout.value = setTimeout(() => {
+    open.value = false
+    if (inputValue.value && !props.modelValue) {
+      selectCustom()
+    }
+    blurTimeout.value = null
+  }, 150)
+}
+
 function selectOption(value, label) {
   emit('update:modelValue', value)
   inputValue.value = label
@@ -108,6 +149,7 @@ function selectOption(value, label) {
 }
 
 function selectCustom() {
+  if (!inputValue.value) return
   emit('update:modelValue', null)
   emit('custom', inputValue.value)
   open.value = false
@@ -222,14 +264,46 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 }
 
 .ui-autocomplete__option--custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: var(--text-muted);
-  font-style: italic;
   border-top: 1px solid var(--border-color);
+  padding: 10px 12px;
+  transition: all var(--transition-fast);
+}
+
+.ui-autocomplete__option--custom-active {
+  background: var(--purple-bg);
+  color: var(--purple-primary);
 }
 
 .ui-autocomplete__option--custom:hover {
   background: var(--purple-bg);
   color: var(--purple-primary);
+}
+
+.ui-autocomplete__custom-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--purple-primary);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.ui-autocomplete__custom-text {
+  font-weight: 500;
+}
+
+.ui-autocomplete__custom-hint {
+  font-size: 13px;
+  opacity: 0.7;
 }
 
 .ui-autocomplete__empty {
@@ -247,6 +321,11 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 .ui-autocomplete__helper {
   font-size: 12px;
   color: var(--text-muted);
+}
+
+.ui-autocomplete__input-hint {
+  font-size: 12px;
+  color: var(--purple-primary);
 }
 
 .dropdown-enter-active,
