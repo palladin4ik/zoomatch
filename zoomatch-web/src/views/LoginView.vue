@@ -1,25 +1,43 @@
 <template>
-  <div class="login-container">
-    <div class="login-box">
-      <h1>ZooMatch Admin</h1>
-      
-      <div v-if="error" class="error">{{ error }}</div>
-      
-      <form @submit.prevent="handleLogin">
-        <div class="field">
-          <label>Email</label>
-          <input v-model="email" type="email" placeholder="Введите email" />
-        </div>
-        
-        <div class="field">
-          <label>Пароль</label>
-          <input v-model="password" type="password" placeholder="Введите пароль" />
-        </div>
-        
-        <button type="submit" :disabled="loading">
-          {{ loading ? 'Входим...' : 'Войти' }}
-        </button>
+  <div class="login">
+    <div class="login__card">
+      <div class="login__logo">
+        <svg viewBox="0 0 1280 1232" width="48" height="48">
+          <g transform="translate(0,1232) scale(0.1,-0.1)" fill="currentColor">
+            <path d="M8425 12296 c-714 -172 -1276 -774 -1548 -1656 -128 -415 -184 -930 -142 -1305 82 -741 432 -1322 951 -1583 176 -88 352 -134 520 -134 134 0 252 24 387 78 814 327 1377 1162 1499 2224 21 187 16 551 -11 770 -40 326 -87 500 -196 725 -171 353 -411 614 -705 764 -178 92 -325 130 -525 137 -113 3 -143 1 -230 -20z"/>
+            <path d="M3822 12255 c-408 -74 -780 -384 -1006 -839 -212 -426 -270 -1025 -160 -1654 140 -802 549 -1478 1131 -1868 128 -86 340 -191 484 -239 102 -34 128 -38 241 -43 150 -6 257 8 388 50 203 65 369 167 525 323 309 309 501 774 546 1323 18 226 -2 562 -51 825 -175 952 -690 1700 -1380 2003 -269 118 -506 157 -718 119z"/>
+            <path d="M11403 8606 c-661 -109 -1244 -566 -1604 -1260 -171 -329 -261 -613 -326 -1026 -23 -149 -27 -205 -27 -375 0 -208 12 -311 55 -479 115 -451 386 -818 723 -981 184 -89 352 -122 541 -105 459 40 868 247 1232 623 401 415 677 989 767 1592 23 151 39 446 32 567 -37 623 -371 1169 -836 1369 -180 77 -378 104 -557 75z"/>
+            <path d="M1051 8344 c-435 -73 -801 -377 -936 -779 -48 -142 -88 -345 -105 -530 -62 -671 173 -1424 618 -1985 98 -123 291 -317 414 -413 284 -225 627 -386 947 -447 85 -16 286 -14 367 4 359 78 662 328 834 689 106 222 160 505 160 838 0 205 -10 317 -46 507 -137 732 -582 1417 -1182 1820 -164 111 -397 229 -524 266 -159 46 -380 58 -547 30z"/>
+            <path d="M6240 5905 c-348 -39 -692 -132 -1031 -281 -518 -229 -1018 -610 -1341 -1024 -697 -894 -1181 -1862 -1378 -2755 -12 -55 -33 -138 -46 -185 -67 -243 -56 -519 31 -760 140 -388 443 -689 818 -815 224 -75 559 -74 932 4 243 50 425 108 941 299 718 267 917 318 1400 363 216 20 255 21 404 10 381 -27 682 -110 1260 -346 512 -209 798 -322 870 -342 720 -204 1435 47 1680 590 107 239 119 628 29 997 -88 359 -349 942 -599 1335 -704 1108 -1211 1729 -1790 2197 -549 442 -1005 650 -1571 713 -159 18 -447 18 -609 0z"/>
+          </g>
+        </svg>
+        <h1 class="login__title">ZooMatch</h1>
+      </div>
+
+      <div v-if="error" class="login__error">{{ error }}</div>
+
+      <form class="login__form" @submit.prevent="handleLogin">
+        <UiInput
+          v-model="email"
+          type="email"
+          label="Email"
+          placeholder="Введите email"
+        />
+        <UiInput
+          v-model="password"
+          type="password"
+          label="Пароль"
+          placeholder="Введите пароль"
+        />
+        <UiButton variant="primary" block :loading="loading" @click="handleLogin">
+          Войти
+        </UiButton>
       </form>
+
+      <p class="login__register">
+        Нет аккаунта?
+        <router-link to="/register">Зарегистрироваться</router-link>
+      </p>
     </div>
   </div>
 </template>
@@ -28,6 +46,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
+import UiInput from '../components/ui/UiInput.vue'
+import UiButton from '../components/ui/UiButton.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -40,11 +60,10 @@ const loading = ref(false)
 async function handleLogin() {
   error.value = null
   loading.value = true
-
   try {
     await authStore.loginAction(email.value, password.value)
-    router.push('/moderation')
-  } catch (e) {
+    router.push('/')
+  } catch {
     error.value = 'Неверный логин или пароль'
   } finally {
     loading.value = false
@@ -53,70 +72,67 @@ async function handleLogin() {
 </script>
 
 <style scoped>
-.login-container {
+.login {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: #f5f5f5;
+  min-height: 100vh;
+  background: var(--bg-main);
 }
 
-.login-box {
-  background: white;
+.login__card {
+  background: var(--bg-white);
   padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-  width: 360px;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  width: 400px;
 }
 
-h1 {
+.login__logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  color: var(--purple-primary);
+}
+
+.login__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--purple-primary);
+  margin: 0;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login__error {
+  background: #FEF2F2;
+  color: var(--red-accent);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.login__register {
   text-align: center;
-  margin-bottom: 24px;
-  color: #333;
-}
-
-.field {
-  margin-bottom: 16px;
-}
-
-label {
-  display: block;
-  margin-bottom: 6px;
-  color: #555;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  margin-top: 20px;
   font-size: 14px;
-  box-sizing: border-box;
+  color: var(--text-secondary);
 }
 
-button {
-  width: 100%;
-  padding: 12px;
-  background: #4a9b6f;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 8px;
+.login__register a {
+  color: var(--purple-primary);
+  font-weight: 500;
+  text-decoration: none;
 }
 
-button:disabled {
-  background: #aaa;
-  cursor: not-allowed;
-}
-
-.error {
-  background: #fee;
-  color: #c00;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 16px;
-  font-size: 14px;
+.login__register a:hover {
+  text-decoration: underline;
 }
 </style>

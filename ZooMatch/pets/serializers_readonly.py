@@ -38,7 +38,7 @@ class PetShortSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'is_male', 'age', 'avatar', 'is_active',
                   'animal_type', 'breed', 'distance_km', 'location',
                   'animal_type_custom', 'breed_custom', 'moderation_status',
-                  'owner')
+                  'has_pedigree', 'owner')
 
     def get_distance_km(self, obj) -> float | None:
         distance = getattr(obj, 'distance_km', None)

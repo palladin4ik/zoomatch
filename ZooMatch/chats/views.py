@@ -310,10 +310,14 @@ class ChatViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         ).values('sender').annotate(c=Count('id')).values('c')
 
         interlocutors = User.objects.filter(
-            Q(pets__sent_matches__pet_to__owner=user) |
-            Q(pets__received_matches__pet_from__owner=user),
-            Q(pets__sent_matches__status=Match.Status.ACCEPTED) |
-            Q(pets__received_matches__status=Match.Status.ACCEPTED)
+            Q(
+                pets__sent_matches__pet_to__owner=user,
+                pets__sent_matches__status=Match.Status.ACCEPTED
+            ) |
+            Q(
+                pets__received_matches__pet_from__owner=user,
+                pets__received_matches__status=Match.Status.ACCEPTED
+            )
         ).distinct().annotate(
             last_message_text=Subquery(last_message_qs),
             unread_count=Subquery(unread_qs)

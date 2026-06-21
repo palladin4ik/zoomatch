@@ -98,6 +98,7 @@ class MatchViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
     serializer_class = MatchSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = Match.objects.all()
+    pagination_class = None
     http_method_names = ['get', 'post', 'patch']
 
     def perform_create(self, serializer):
@@ -148,6 +149,12 @@ class MatchViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         new_status = request.data.get('status')
+
+        if match.status == new_status:
+            return Response(
+                {'detail': 'Статус уже установлен'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         if match.status == new_status:
             return Response(
