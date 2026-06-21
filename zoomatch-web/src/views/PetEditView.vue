@@ -107,13 +107,15 @@
         <label class="pet-edit__label">Документы питомца</label>
         <UiFileUpload
           v-model="pedigreeFile"
+          :existing-url="existingDocUrl"
+          @update:existing-url="existingDocUrl = $event"
           accept=".pdf"
           text="Ветпаспорт, веткнижка или документы родословной (PDF)"
         />
       </div>
 
       <div class="pet-edit__actions">
-        <UiButton v-if="isEdit" variant="danger" @click="handleDelete">Удалить питомца</UiButton>
+        <UiButton v-if="isEdit" variant="danger" type="button" @click="handleDelete">Удалить питомца</UiButton>
         <div class="pet-edit__actions-right">
           <UiButton variant="secondary" @click="$router.back()">Отмена</UiButton>
           <UiButton type="submit" variant="primary" :loading="saving">Сохранить</UiButton>
@@ -152,6 +154,7 @@ const photoInput = ref(null)
 const photoPreview = ref(null)
 const photoFile = ref(null)
 const pedigreeFile = ref(null)
+const existingDocUrl = ref(null)
 const saving = ref(false)
 
 const form = reactive({
@@ -297,8 +300,12 @@ async function handleSave() {
 
 async function handleDelete() {
   if (!confirm('Удалить питомца?')) return
-  await petsStore.deletePet(petId.value)
-  router.push('/pets')
+  try {
+    await petsStore.deletePet(petId.value)
+  } finally {
+    petsStore.currentPet = null
+    router.push('/pets')
+  }
 }
 
 function parseLocation(location) {
@@ -356,6 +363,10 @@ async function loadData() {
       if (pet.avatar) {
         const url = pet.avatar.startsWith('http') ? pet.avatar : `${import.meta.env.VITE_API_URL}${pet.avatar}`
         photoPreview.value = url
+      }
+
+      if (pet.pedigree_documents) {
+        existingDocUrl.value = pet.pedigree_documents
       }
     }
   }

@@ -63,7 +63,7 @@ export const usePetsStore = defineStore('pets', {
     async deletePet(id) {
       try {
         await api.delete(`/pets/${id}/`)
-        this.myPets = this.myPets.filter(p => p.id !== id)
+        this.myPets = this.myPets.filter(p => String(p.id) !== String(id))
       } catch (e) {
         this.error = e.response?.data?.detail || 'Не удалось удалить питомца'
         throw e

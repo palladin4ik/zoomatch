@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['ui-file-upload', { 'ui-file-upload--dragging': dragging, 'ui-file-upload--has-file': !!modelValue }]"
+    :class="['ui-file-upload', { 'ui-file-upload--dragging': dragging, 'ui-file-upload--has-file': !!modelValue || !!existingUrl }]"
     @dragover.prevent="dragging = true"
     @dragleave="dragging = false"
     @drop.prevent="handleDrop"
@@ -15,7 +15,14 @@
     />
     <div v-if="modelValue" class="ui-file-upload__preview">
       <span class="ui-file-upload__name">{{ modelValue.name }}</span>
-      <button class="ui-file-upload__remove" @click.stop="removeFile"><UiIcon name="close" size="sm" /></button>
+      <button type="button" class="ui-file-upload__remove" @click.stop="removeFile"><UiIcon name="close" size="sm" /></button>
+    </div>
+    <div v-else-if="existingUrl" class="ui-file-upload__preview">
+      <span class="ui-file-upload__name">{{ existingFileName }}</span>
+      <div class="ui-file-upload__actions">
+        <button type="button" class="ui-file-upload__view" @click.stop="openDocument">Просмотреть</button>
+        <button type="button" class="ui-file-upload__remove" @click.stop="removeExisting"><UiIcon name="close" size="sm" /></button>
+      </div>
     </div>
     <div v-else class="ui-file-upload__placeholder">
       <span class="ui-file-upload__icon"><UiIcon name="attach" /></span>
@@ -25,20 +32,33 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import UiIcon from './UiIcon.vue'
 
 const props = defineProps({
   modelValue: { type: Object, default: null },
+  existingUrl: { type: String, default: null },
   accept: { type: String, default: '*' },
   text: { type: String, default: 'Нажмите или перетащите файл' },
   maxSizeMB: { type: Number, default: 10 },
 })
 
-const emit = defineEmits(['update:modelValue', 'error'])
+const emit = defineEmits(['update:modelValue', 'update:existingUrl', 'error'])
 
 const inputRef = ref(null)
 const dragging = ref(false)
+
+const existingFileName = computed(() => {
+  if (!props.existingUrl) return ''
+  const parts = props.existingUrl.split('/')
+  return decodeURIComponent(parts[parts.length - 1])
+})
+
+const fullExistingUrl = computed(() => {
+  if (!props.existingUrl) return ''
+  if (props.existingUrl.startsWith('http')) return props.existingUrl
+  return (import.meta.env.VITE_API_URL || '') + props.existingUrl
+})
 
 function validateFile(file) {
   if (!file) return false
@@ -68,6 +88,21 @@ function handleDrop(e) {
 function removeFile() {
   emit('update:modelValue', null)
   if (inputRef.value) inputRef.value.value = ''
+}
+
+function removeExisting() {
+  emit('update:existingUrl', null)
+}
+
+function openDocument() {
+  if (!fullExistingUrl.value) return
+  const a = document.createElement('a')
+  a.href = fullExistingUrl.value
+  a.target = '_blank'
+  a.rel = 'noopener noreferrer'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
 }
 </script>
 
@@ -125,6 +160,26 @@ function removeFile() {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.ui-file-upload__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.ui-file-upload__view {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  color: var(--purple-primary);
+  cursor: pointer;
+}
+
+.ui-file-upload__view:hover {
+  text-decoration: underline;
 }
 
 .ui-file-upload__remove {
