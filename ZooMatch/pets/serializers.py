@@ -20,7 +20,7 @@ class AnimalTypeSerializer(serializers.ModelSerializer):
 class BreedSerializer(serializers.ModelSerializer):
     animal_type = AnimalTypeSerializer(read_only=True)
     animal_type_id = serializers.PrimaryKeyRelatedField(
-        queryset=AnimalType.objects.all(), write_only=True
+        queryset=AnimalType.objects.all(), source='animal_type', write_only=True
     )
 
     class Meta:

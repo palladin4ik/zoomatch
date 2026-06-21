@@ -180,7 +180,7 @@
         <div v-else class="moderation__list">
           <div v-for="breed in filteredBreeds" :key="breed.id" class="moderation-item">
             <span class="moderation-item__name">{{ breed.name }}</span>
-            <span class="moderation-item__type">{{ getTypeName(breed.animal_type) }}</span>
+            <span class="moderation-item__type">{{ getTypeName(breed.animal_type?.id) }}</span>
             <UiButton
               variant="ghost"
               size="sm"
@@ -259,7 +259,7 @@ const typeOptions = computed(() =>
 
 const filteredBreeds = computed(() => {
   if (!filterTypeId.value) return store.breeds
-  return store.breeds.filter(b => b.animal_type === filterTypeId.value)
+  return store.breeds.filter(b => b.animal_type?.id === filterTypeId.value)
 })
 
 function getPetAvatar(pet) {
@@ -333,7 +333,7 @@ async function handleAddBreed() {
   try {
     await store.addBreed({
       name: newBreedName.value.trim(),
-      animal_type: newBreedTypeId.value,
+      animal_type_id: newBreedTypeId.value,
     })
     newBreedName.value = ''
     newBreedTypeId.value = null
