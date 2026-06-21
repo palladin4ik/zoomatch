@@ -18,7 +18,7 @@ from pets.serializers_readonly import PetShortSerializer
 from geo.utils import parse_location, haversine_distance
 
 
-CACHE_TTL_HOURS = 24
+CACHE_TTL_MINUTES = 5
 
 
 @extend_schema_view(
@@ -147,7 +147,7 @@ class RecommendationViewSet(viewsets.GenericViewSet):
             }
         )
 
-        cache_expiry = timezone.now() - timedelta(hours=CACHE_TTL_HOURS)
+        cache_expiry = timezone.now() - timedelta(minutes=CACHE_TTL_MINUTES)
         cache = (
             RecommendationCache.objects
             .filter(pet=active_pet, updated_at__gte=cache_expiry)

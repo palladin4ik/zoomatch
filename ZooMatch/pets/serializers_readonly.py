@@ -30,7 +30,6 @@ class PetShortSerializer(serializers.ModelSerializer):
     breed = BreedIdNameSerializer(read_only=True)
     animal_type_custom = serializers.SerializerMethodField()
     breed_custom = serializers.SerializerMethodField()
-    moderation_status = serializers.SerializerMethodField()
     owner = PetShortOwnerSerializer(read_only=True)
 
     class Meta:
@@ -59,15 +58,3 @@ class PetShortSerializer(serializers.ModelSerializer):
         if mod and mod.breed:
             return mod.breed
         return None
-
-    def get_moderation_status(self, obj) -> str | None:
-        mod = getattr(obj, 'moderation_request', None)
-        if mod is None:
-            return None
-        from moderation.models import ModerationRequest
-        status_map = {
-            ModerationRequest.Status.PENDING: 'pending',
-            ModerationRequest.Status.APPROVED: 'approved',
-            ModerationRequest.Status.REJECTED: 'rejected',
-        }
-        return status_map.get(mod.status, None)
