@@ -20,7 +20,7 @@ class ModerationRequest(models.Model):
         PENDING = 0
         APPROVED = 1
         REJECTED = 2
-    
+
     status = models.PositiveSmallIntegerField(
         choices=Status,
         default=Status.PENDING

@@ -12,10 +12,9 @@ from drf_spectacular.utils import (extend_schema, extend_schema_view,
 from .serializers import (
     AnimalTypeSerializer, BreedSerializer,
     PetSerializer, PetCreateUpdateSerializer,
-    PetInfoSerializer, CommentSerializer,
     PetAvatarSerializer, PetDocumentSerializer
 )
-from .models import AnimalType, Breed, Pet, PetInfo, Comment
+from .models import AnimalType, Breed, Pet
 from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 
 from matching.models import Action, ActionCategory
@@ -170,13 +169,18 @@ class PetViewSet(viewsets.ModelViewSet):
             qs = Pet.objects.filter(owner=user)
 
         elif self.action in ['list', 'view']:
-            qs = Pet.objects.filter(is_active=True).exclude(owner=user)
+            qs = Pet.objects.filter(is_active=True,
+                                    moderation_status=Pet.ModerationStatus.
+                                    APPROVED
+                                    ).exclude(owner=user)
 
             if animal_type:
                 qs = qs.filter(animal_type=animal_type)
 
         elif self.action == 'retrieve':
-            qs = Pet.objects.filter(Q(is_active=True) | Q(owner=user))
+            qs = Pet.objects.filter(Q(is_active=True,
+                                      moderation_status=Pet.ModerationStatus.
+                                      APPROVED) | Q(owner=user))
 
         else:
             qs = Pet.objects.none()

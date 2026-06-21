@@ -17,10 +17,12 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /srv/zoomatch/ZooMatch
+            git reset --hard
             git pull origin main
             docker compose up --build -d
             docker compose exec -T backend python manage.py migrate
             cd /srv/zoomatch/zoomatch-web
+            git reset --hard
             git pull origin main
             npm ci
             npm run build

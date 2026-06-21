@@ -59,7 +59,7 @@ class PetSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'animal_type', 'breed', 'is_male',
                   'age', 'owner', 'avatar', 'location', 'has_pedigree',
                   'pedigree_documents', 'awards', 'tags', 'description',
-                  'is_active')
+                  'is_active', 'moderation_status')
         read_only_fields = ('id',)
 
     @extend_schema_field(TagSerializer(many=True))
@@ -122,7 +122,7 @@ class PetCreateUpdateSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tags', [])
 
         if animal_type_custom or breed_custom:
-            validated_data['is_active'] = False
+            validated_data['moderation_status'] = Pet.ModerationStatus.PENDING
 
         breed = validated_data.get('breed')
         if breed:

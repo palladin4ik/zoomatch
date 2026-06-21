@@ -21,17 +21,27 @@ pip install -r requirements.txt
 
 Создайте файл `.env` в корне проекта и добавьте необходимые переменные.
 
-**Структура `.env`:**
+**Структура `.env.example`:**
 ```bash
-# DATABSE
-DB_NAME=
-DB_USER=
-DB_PASSWORD=
+# DATABASE
+POSTGRES_DB=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
 DB_HOST=
 DB_PORT=
 
-# Django SECRET_KEY
+# Django settings
 SECRET_KEY=
+DEBUG=True
+ALLOWED_HOSTS=
+CORS_ALLOWED_ORIGINS=
+
+# REDIS
+REDIS_URL=
+
+# CELERY
+CELERY_BROKER_URL=
+CELERY_RESULT_BACKEND=
 
 # Yandex Maps API
 YANDEX_MAPS_API_KEY=
@@ -45,29 +55,13 @@ python manage.py migrate
 7. Установите фикстуры для базы данных
 ```bash
 python manage.py flush
-python manage.py loaddata ../fixtures/test_data.json
-```
-Для изменения паролей тестовых пользователей
-```bash
-python manage.py shell
-
-from users.models import User
-
-for u in User.objects.all():
-    u.set_password("<Любой пароль>")
-    u.save()
-
-exit()
+python manage.py loaddata fixtures/action_categories.json
+python manage.py loaddata fixtures/test_data.json
 ```
 
-8. Установите и запустите Redis в Docker
+8. Запустите docker-контейнер
 ```bash
-docker run -d --name redis -p 6379:6379 redis
-```
-
-9. Запустите сервер разработки
-```bash
-daphne -p 8000 ZooMatch.asgi:application
+docker compose up -d
 ```
 
 ## Документация

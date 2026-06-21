@@ -35,6 +35,7 @@ def generate_candidates(active_pet, radius_km=None):
             breed=active_pet.breed,
             is_male=not active_pet.is_male,
             is_active=True,
+            moderation_status=Pet.ModerationStatus.APPROVED,
         )
         .exclude(owner=active_pet.owner)
         .exclude(location__isnull=True)

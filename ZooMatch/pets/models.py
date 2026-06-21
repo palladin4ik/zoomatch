@@ -28,6 +28,12 @@ class Tag(models.Model):
 
 
 class Pet(models.Model):
+
+    class ModerationStatus(models.TextChoices):
+        PENDING = 'pending', 'На модерации'
+        APPROVED = 'approved', 'Одобрено'
+        REJECTED = 'rejected', 'Отклонено'
+
     name = models.CharField(max_length=150)
     animal_type = models.ForeignKey(
         AnimalType,
@@ -68,6 +74,12 @@ class Pet(models.Model):
         )
     description = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=False, db_index=True)
+    moderation_status = models.CharField(
+        max_length=20,
+        choices=ModerationStatus.choices,
+        default=ModerationStatus.APPROVED,
+        db_index=True
+    )
 
     last_mating_date = models.DateField(blank=True, null=True)
     mating_count = models.PositiveSmallIntegerField(default=0)
@@ -77,6 +89,7 @@ class Pet(models.Model):
             models.Index(fields=['animal_type', 'breed']),
             models.Index(fields=['animal_type', 'is_active']),
             models.Index(fields=['location', 'animal_type']),
+            models.Index(fields=['is_active', 'moderation_status']),
         ]
 
 
