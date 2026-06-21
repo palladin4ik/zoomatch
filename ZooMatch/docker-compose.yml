@@ -37,8 +37,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - media_files:/app/backend/media
-      - log_files:/app/backend/logs
+      - ./media_files:/app/backend/media
+      - ./log_files:/app/backend/logs
   
   celery:
     build:
@@ -53,8 +53,8 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - media_files:/app/backend/media
-      - log_files:/app/backend/logs
+      - ./media_files:/app/backend/media
+      - ./log_files:/app/backend/logs
   
   celery-beat:
     build:
@@ -72,5 +72,3 @@ services:
 
 volumes:
   postgres_data:
-  media_files:
-  log_files:
