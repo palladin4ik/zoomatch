@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:background="@color/purple_background">
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Чаты"
+    android:textColor="@color/purple_primary"
+    android:textSize="28sp"
+    android:textStyle="bold"
+    android:paddingHorizontal="20dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="8dp" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rv_chats"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:clipToPadding="false"
+    android:paddingHorizontal="12dp"
+    android:paddingBottom="8dp" />
+
+  <LinearLayout
+    android:id="@+id/emptyState"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:visibility="gone">
+
+    <ImageView
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:src="@drawable/ic_chat_bubble"
+      android:alpha="0.3"
+      android:layout_marginBottom="16dp"
+      android:contentDescription="Chat icon" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Пока нет чатов"
+      android:textSize="18sp"
+      android:textStyle="bold"
+      android:textColor="@color/purple_primary"
+      android:layout_marginBottom="8dp" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Примите заявку, чтобы начать общение с другим владельцем"
+      android:textSize="14sp"
+      android:textColor="@color/gray"
+      android:textAlignment="center" />
+
+  </LinearLayout>
+
+</LinearLayout>

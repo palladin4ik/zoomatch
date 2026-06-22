@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:name=".ZooMatchApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ZooMatch"
+        android:usesCleartextTraffic="true" >
+
+        <meta-data
+            android:name="com.yandex.mapkit.api_key"
+            android:value="ad2824c2-51b6-4e70-a2ec-723514800de5" />
+
+        <activity
+            android:name=".ui.location.LocationPickerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.homeScreen.pets.EditPetActivity"
+            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".ui.homeScreen.pets.PetFragment"-->
+<!--            android:exported="false" />-->
+        <activity
+            android:name=".ui.homeScreen.profile.EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.homeScreen.search.MatchingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.homeScreen.search.OwnerProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.homeScreen.settings.utils.TermsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.homeScreen.settings.utils.PrivacyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.homeScreen.settings.utils.ApproveProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.homeScreen.settings.utils.EditPassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.homeScreen.settings.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.LayoutWip"
+            android:exported="false" />
+        <activity
+            android:name=".data.startScreen.SplashActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.homeScreen.HomeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_home" />
+        <activity
+            android:name=".ui.startScreen.StartActivity"
+            android:exported="false"
+            android:label="@string/title_activity_start" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>

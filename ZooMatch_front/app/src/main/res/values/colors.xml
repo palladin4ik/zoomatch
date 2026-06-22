@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="gray">#999999</color>
+    <color name="green">#68A66F</color>
+    <color name="orange">#DEA772</color>
+
+    <color name="purple_primary">#7C3AED</color>
+    <color name="purple_light">#F3EEFE</color>
+    <color name="purple_medium">#DDD6FE</color>
+    <color name="purple_dark">#5B21B6</color>
+    <color name="purple_background">#F5F0FF</color>
+    <color name="red_delete">#DC2626</color>
+    <color name="green_active">#16A34A</color>
+    <color name="green_light">#DCFCE7</color>
+    <color name="gray_light">#F3F4F6</color>
+    <color name="gray_border">#E5E7EB</color>
+    <color name="orange_light">#FEF3C7</color>
+    <color name="orange_badge">#F59E0B</color>
+    <color name="teal_badge">#14B8A6</color>
+    <color name="blue_badge">#3B82F6</color>
+    <color name="green_badge">#10B981</color>
+    <color name="purple_card_gradient_start">#C084FC</color>
+    <color name="purple_card_gradient_end">#9333EA</color>
+</resources>
